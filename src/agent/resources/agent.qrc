@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/icon">
+        <file>poker.ico</file>
+        <file>poker.png</file>
+    </qresource>
+</RCC>
+
