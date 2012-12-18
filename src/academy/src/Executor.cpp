@@ -76,7 +76,7 @@ void Executor::start()
    QVariant sett = settings.value("Settings");
    data_ = qvariant_cast<SettingsData>(sett);
 
-   interval_ = data_.interval;
+   interval_ = 100;//data_.interval;
 
    lastIsFold_ = false;
    //запускаем таймер
@@ -144,15 +144,15 @@ void Executor::timerEvent(QTimerEvent *)
    GetClientRect(FgWnd, &roomRect);
    
    int start_x = 0;
-   int start_y = 50;
-   const int width = roomRect.right - roomRect.left - 210;
-   const int height = roomRect.bottom - roomRect.top - 60;
+   int start_y = 0;
+   const int width = roomRect.right - roomRect.left/* - 210*/;
+   const int height = roomRect.bottom - roomRect.top/* - 60*/;
    
    QPixmap pixRoom = QPixmap::grabWindow(FgWnd, start_x, start_y,
       width, height);
    QImage imgRoom  = pixRoom.toImage();
    
-   //imgRoom.save("1.bmp");
+   imgRoom.save("1.bmp");
 
    cardProc_->setImage(imgRoom);
    //CardProcessing::HoldemLevel hl = cardProc_->holdemLevel();
