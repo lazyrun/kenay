@@ -4,21 +4,22 @@
 #include "BoolMatrix.h"
 
 //! Перевод в черно-белое по значению серого
-void toBlackWhite(QImage & img, uchar threshold = 240);
+static void toBlackWhite(QImage & img, uchar threshold = 240);
 
 //! Перевод в черно-белое по maxHue
-void toBlackWhiteByHue(QImage & img);
-void toBlackWhiteByValue(QImage & img, int minHue, int maxHue);
+static void toBlackWhiteByHue(QImage & img);
+static void toBlackWhiteByValue(QImage & img, int minHue, int maxHue);
 
-void toBlackWhiteByHue(QImage & img, int minHue, int maxHue);
+static void toBlackWhiteByHue(QImage & img, int minHue, int maxHue);
 
-void toBlackWhiteMid(QImage & img, const int threshold);
+static void toBlackWhiteMid(QImage & img, const int threshold);
 
 //убрать шум
-void denoise(QImage & img, uchar threshold);
+static void denoise(QImage & img, uchar threshold);
 
 //! Подсчет пикселей заданного оттенка
-int hueCount(const QImage & img, int minHue, int maxHue, int fromw, int fromh, int thr, QPoint & pt);
+static int hueCount(const QImage & img, int minHue, int maxHue, 
+                    int fromw, int fromh, int thr, QPoint & pt);
 
 //! Поиск максимального значения оттенка
 int maxHue(const QImage & img);

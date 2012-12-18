@@ -1,9 +1,6 @@
 #ifndef CARDOCR_H
 #define CARDOCR_H
 
-#include <QImage>
-#include <QtCore>
-
 class BoolMatrix;
 typedef QList<QPoint> PointList;
 

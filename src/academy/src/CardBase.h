@@ -1,7 +1,6 @@
 #ifndef CARDBASE_H
 #define CARDBASE_H
 
-#include <QList>
 #include "BoolMatrix.h"
 
 class CardBase
@@ -19,7 +18,6 @@ protected:
       QString nominal;
    };
    QList<Card> cards;
-
 };
 
 inline CardBase::CardBase()

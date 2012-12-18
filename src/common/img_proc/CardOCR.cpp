@@ -1,4 +1,3 @@
-#include <QColor>
 #include "CardOCR.h"
 #include "BoolMatrix.h"
 #include "ImageProc.h"

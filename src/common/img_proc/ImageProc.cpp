@@ -1,4 +1,3 @@
-
 #include "ImageProc.h"
 
 int hueCount(const QImage & img, int minHue, int maxHue, int fromw, int fromh, int thr, QPoint & pt)

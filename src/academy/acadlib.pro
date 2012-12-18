@@ -17,20 +17,15 @@ INCLUDEPATH  += ./ src ../common/common
 DEPENDPATH   += ./ src ../common/common
 
 # Input
-HEADERS += Executor.h \
-           qtincludes.h \
-           ProcAcad.h \
-           CardBase.h \
-           SettingsData.h \
+HEADERS += qtincludes.h \
            acadlib.h \
-           AlarmWidget.h \
+           $$files(src/*.h) \
+           SettingsData.h \
            Hooker.h
 
-SOURCES += Executor.cpp \
-           ProcAcad.cpp \
+SOURCES += acadlib.cpp \
+           $$files(src/*.cpp) \
            SettingsData.cpp \
-           acadlib.cpp \
-           AlarmWidget.cpp \
            Hooker.cpp
 
 win32:QMAKE_CXXFLAGS += -MP

@@ -6,8 +6,7 @@ static QSystemTrayIcon * trayIcon_;
 
 void CALLBACK showMessageCallbackFunc(const char * hand)
 {
-   QString regKey = QDir::current().dirName();
-   trayIcon_->showMessage(regKey, 
+   trayIcon_->showMessage("Kenay", 
       QString(hand),
       QSystemTrayIcon::Information, 1000);
 }
@@ -106,10 +105,9 @@ void Agent::load(const QString & module)
    
    if (loadedModules_.contains(module))
    {
-      trayIcon_->showMessage(regKey, 
+      trayIcon_->showMessage("Kenay", 
          tr("Kenay for %1 is already loaded.").arg(module),
          QSystemTrayIcon::Information, 5000);
-
    }
    else
    {
@@ -129,7 +127,7 @@ void Agent::load(const QString & module)
 
          char * name = new char[100];
          f_name(name, 100);
-         trayIcon_->showMessage(regKey,
+         trayIcon_->showMessage("Kenay",
             tr("Kenay for %1 has been loaded.").arg(name),
             QSystemTrayIcon::Information, 5000);
          trayIcon_->setToolTip(tr("Kenay for %1.").arg(name));
@@ -149,11 +147,10 @@ void Agent::load(const QString & module)
       }
       else
       {
-         trayIcon_->showMessage(regKey, 
+         trayIcon_->showMessage("Kenay", 
             tr("Kenay cannot load module %1. Wrong format of dll.").arg(module),
             QSystemTrayIcon::Information, 500);
          return;
-
       }
    }
 }

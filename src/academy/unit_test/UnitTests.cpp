@@ -2,6 +2,7 @@
 
 #include "tut.h"
 #include "TstUtils.h"
+#include "CardBase.h"
 
 namespace tut
 {
@@ -20,6 +21,7 @@ namespace tut
    template<>   template<>
    void testobject::test<1>()
    {
+      CardBase base;
       tensure(__FILE__, __LINE__, 1 == 1);
    }
 }
