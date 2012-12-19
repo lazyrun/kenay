@@ -20,7 +20,7 @@ public:
       River
    };
    //! ctor.
-   CardProcessing(const QString & mapfile);
+   CardProcessing();
    //! dtor.
    virtual ~CardProcessing();
    //! Задасет скрин стола
@@ -48,8 +48,12 @@ public:
    virtual qreal stack() const = 0;
 
 protected:
+   //! проверка цвета пикселя
+   bool controlPixel(const QString & sx, const QString & sy, 
+                            const QString & scl) const;
+protected:
    //! оригинальная картинка
-   QImage original_;
+   QImage img_;
    //! булева матрица
    BoolMatrix * matrix_;
    //! порог перевода в ч/б

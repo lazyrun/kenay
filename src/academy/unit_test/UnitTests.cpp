@@ -105,7 +105,6 @@ namespace tut
       tensure(__FILE__, __LINE__, proc.hasCall());
       tensure(__FILE__, __LINE__, proc.hasCheck());
       tensure(__FILE__, __LINE__, proc.hasRaise());
-      //tensure(__FILE__, __LINE__, proc.hasRaise());
       //   proc.holeFirst()
       //   proc.holeSecond()
       //   proc.pot()
