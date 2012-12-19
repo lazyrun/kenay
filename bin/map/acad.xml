@@ -1,0 +1,14 @@
+﻿<?xml version='1.0' encoding='UTF-8'?>
+<root version="1.0" type="map" name="acad" desc="Poker Academy Map">
+	<window width="808" height="635" />
+	<buttons>
+		<fold x="158" y="605" w="122" h="24" />
+		<call x="342" y="605" w="122" h="24" />
+		<check x="342" y="605" w="122" h="24" />
+		<raise x="525" y="605" w="122" h="24" />
+	</buttons>
+	<hole>
+		<first x="366" y="412" w="15" y="29"/>
+		<second x="382" y="423" w="15" y="29"/>
+	</hole>
+</root>
