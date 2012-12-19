@@ -15,9 +15,8 @@ INCLUDEPATH  += . ../../common/tut ../../common/utils ../src
 DEPENDPATH   += . ../../common/tut ../../common/utils ../src
 
 # Input
-HEADERS +=  qtincludes.h TstUtils.h CardBase.h
-SOURCES +=  main.cpp TstUtils.cpp UnitTests.cpp
-            
+HEADERS +=  qtincludes.h TstUtils.h CardBase.h Config.h ProcAcad.h
+SOURCES +=  main.cpp TstUtils.cpp UnitTests.cpp Config.cpp ProcAcad.cpp
 
 QMAKE_LIBDIR += ../lib
 win32: LIBS += acad_d.lib
@@ -28,3 +27,4 @@ OBJECTS_DIR = $$PWD/obj/Debug
 MOC_DIR = $$PWD/obj/Debug/moc
 
 include(../../common/img_proc/ImageProc.pri)
+include(../../common/DirectMap/src/DirectMap.pri)

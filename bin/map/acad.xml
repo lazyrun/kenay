@@ -1,14 +1,32 @@
 ﻿<?xml version='1.0' encoding='UTF-8'?>
-<root version="1.0" type="map" name="acad" desc="Poker Academy Map">
-	<window width="808" height="635" />
+<root version="1.0" type="map" name="acad" desc="Poker Academy Map 6-max">
+	<window width="1018" height="695" />
 	<buttons>
-		<fold x="158" y="605" w="122" h="24" />
-		<call x="342" y="605" w="122" h="24" />
-		<check x="342" y="605" w="122" h="24" />
-		<raise x="525" y="605" w="122" h="24" />
+		<fold x="158" y="655" w="122" h="24">
+		   <control x="179" y="659">#E5C0B5</control>
+		</fold>
+		<call x="342" y="655" w="122" h="24">
+         <control x="354" y="659">#E5C0B5</control>
+      </call>
+		<check x="342" y="655" w="122" h="24">
+         <control x="354" y="659">#E5C0B5</control>
+		</check>
+		<raise x="525" y="655" w="122" h="24">
+         <control x="539" y="659">#E5C0B5</control>
+		</raise>
 	</buttons>
 	<hole>
-		<first x="366" y="412" w="15" y="29"/>
-		<second x="382" y="423" w="15" y="29"/>
+		<first x="366" y="462" w="15" y="29">
+   		<control x="366" y="462">#000000</control>
+		</first>
+		<second x="382" y="473" w="15" y="29">
+   		<control x="382" y="473">#000000</control>
+		</second>
 	</hole>
+	<pot x="71" y="323" w="133" h="14">
+   	<color>#FFFF00</color>
+	</pot>
+   <stack x="358" y="588" w="84" h="16">
+      <color>#00FF00</color>
+   </stack>
 </root>

@@ -6,6 +6,7 @@ typedef QList<QPoint> Border;
 class BoolMatrix
 {
 public:
+   //! Конструктор
    BoolMatrix();
    //! копирующий конструктор
    BoolMatrix(const BoolMatrix & rhs);
@@ -14,7 +15,7 @@ public:
    BoolMatrix(const QImage & img, uchar threshold);
    //! Подается черно белая картинка
    BoolMatrix(const QImage * img);
-   //!
+   //! 
    BoolMatrix(const QImage & img, uchar grayThresh, uint minBright, uint maxBright);
    //! матрица создается но не заполняется
    BoolMatrix(const QImage & img);
@@ -41,31 +42,6 @@ public:
    bool isBlack(int x, int y) const;
    //! залить область
    void fillRect(const QRect & rect, bool color);
-   //! Поиск наиболее белой области
-   /*!
-   \param dim Размерность области
-   \return Координаты области
-   */
-   QRect findMaxWhiteRect(int dim_x, int dim_y = -1) const;
-   
-   //! Поиск вертикальных границ
-   /*!
-   \param minSize Минимальный размер границы
-   \return Список границ длины не меньше чем минимальная
-   */
-   QList<Border> verticalBorders(int minSize) const;
-
-   //! Поиск горизонтальных границ
-   /*!
-   \param minSize Минимальный размер границы
-   \return Список границ длины не меньше чем минимальная
-   */
-   QList<Border> horizontalBorders(int minSize) const;
-
-   //!
-   int minDiff(const BoolMatrix & rhs);
-protected:
-   int distForLeftBlack(const QPoint & pt) const;
 protected:
    bool ** matrix_;
    bool * bits_;

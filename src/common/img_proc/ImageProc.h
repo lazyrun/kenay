@@ -3,30 +3,14 @@
 
 #include "BoolMatrix.h"
 
-//! Перевод в черно-белое по значению серого
-static void toBlackWhite(QImage & img, uchar threshold = 240);
-
-//! Перевод в черно-белое по maxHue
-static void toBlackWhiteByHue(QImage & img);
-static void toBlackWhiteByValue(QImage & img, int minHue, int maxHue);
-
-static void toBlackWhiteByHue(QImage & img, int minHue, int maxHue);
-
-static void toBlackWhiteMid(QImage & img, const int threshold);
-
-//убрать шум
-static void denoise(QImage & img, uchar threshold);
-
-//! Подсчет пикселей заданного оттенка
-static int hueCount(const QImage & img, int minHue, int maxHue, 
-                    int fromw, int fromh, int thr, QPoint & pt);
-
-//! Поиск максимального значения оттенка
-int maxHue(const QImage & img);
-
+/*!
+\class CardProcessing
+\brief Абстрактный класс обработки скрина стола
+*/
 class CardProcessing
 {
 public:
+   //! Текущий уровень игры
    enum HoldemLevel
    {
       Undefined,
@@ -35,33 +19,42 @@ public:
       Turn,
       River
    };
-
-   CardProcessing();
+   //! ctor.
+   CardProcessing(const QString & mapfile);
+   //! dtor.
    virtual ~CardProcessing();
-   //! Задать изображение
-   void setImage(const QImage & img);
-   //! Проверка на стадию префлопа
-   bool isPreflop() const;
-   //! Вернуть уровень
+   //! Задасет скрин стола
+   virtual void setImage(const QImage & img);
+   //! Проверяет на стадию префлопа
+   bool isPreflop() const {return holdemLevel_ == Preflop; }
+   //! Проверяет на стадию флопа
+   bool isFlop() const {return holdemLevel_ == Flop; }
+   //! Проверяет на стадию терна
+   bool isTurn() const {return holdemLevel_ == Turn; }
+   //! Проверяет на стадию ривера
+   bool isRiver() const {return holdemLevel_ == River; }
+   //! Возвращает текущую стадию
    HoldemLevel holdemLevel() const;
-   //! Получить координаты карманных карт
-   QPair<QRect, QRect> getHoleCards(bool * ok);
-   
+   //! Возвращает порог фильтрации
    uchar threshold() const {return threshold_; }
-protected:
-   //! Выделение области флопа
-   QRect flopRect(const QImage & img) const;
-protected:
-   BoolMatrix * matrix_;
-   QRect maxWhite_;
-   QList<Border> verticals_;
-   QList<Border> horizontals_;
-   
-   uchar threshold_;
-   uchar dim_;
-   uchar minSizeVertical_;
-   uchar minSizeHorizontal_;
 
+   virtual bool hasFold() const = 0;
+   virtual bool hasCall() const = 0;
+   virtual bool hasCheck() const = 0;
+   virtual bool hasRaise() const = 0;
+   virtual QString holeFirst() const = 0;
+   virtual QString holeSecond() const = 0;
+   virtual qreal pot() const = 0;
+   virtual qreal stack() const = 0;
+
+protected:
+   //! оригинальная картинка
+   QImage original_;
+   //! булева матрица
+   BoolMatrix * matrix_;
+   //! порог перевода в ч/б
+   uchar threshold_;
+   //! текущий уровень
    HoldemLevel holdemLevel_;
 };
 
