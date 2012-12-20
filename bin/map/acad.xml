@@ -16,10 +16,10 @@
 		</raise>
 	</buttons>
 	<hole>
-		<first x="366" y="462" w="15" y="29">
+		<first x="366" y="462" w="15" h="29">
    		<control x="366" y="462">#000000</control>
 		</first>
-		<second x="382" y="473" w="15" y="29">
+		<second x="382" y="473" w="15" h="29">
    		<control x="382" y="473">#000000</control>
 		</second>
 	</hole>

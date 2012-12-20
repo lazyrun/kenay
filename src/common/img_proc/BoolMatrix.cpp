@@ -167,6 +167,35 @@ BoolMatrix::BoolMatrix(const QImage & img, uchar threshold)
    }
 }
 
+BoolMatrix::BoolMatrix(const QImage & img, const QColor & color)
+{
+   width_  = img.width();
+   height_ = img.height();
+
+	matrix_ = new bool* [width_];
+   bits_ = new bool[width_ * height_];
+   for (int i = 0; i < width_; ++i)
+   {
+      matrix_[i] = bits_ + i * height_;
+   }
+
+   for (int w = 0; w < width_; ++w)
+   {
+      for (int h = 0; h < height_; ++h)
+      {
+         QRgb rgb = img.pixel(w, h);
+         if (rgb == color.rgb())
+         {
+            matrix_[w][h] = 1;//черный
+         }
+         else
+         {
+            matrix_[w][h] = 0;//белый
+         }
+      }
+   }
+}
+
 BoolMatrix::BoolMatrix(const QImage & img, uchar grayThresh, 
                        uint minBright, uint maxBright)
 {
@@ -279,5 +308,25 @@ QString BoolMatrix::toString() const
       }
    }
    
+   return res;
+}
+
+bool BoolMatrix::save(const QString & filename)
+{
+   bool res = false;
+   QImage img(width_, height_, QImage::Format_Mono);
+   QVector<QRgb> palette;
+   palette.append(qRgb(255, 255, 255));//белый
+   palette.append(qRgb(0, 0, 0));//черный
+   img.setColorTable(palette);
+
+   for (int x = 0; x < width_; ++x)
+   {
+      for (int y = 0; y < height_; ++y)
+      {
+         img.setPixel(x, y, matrix_[x][y]);
+      }
+   }
+   img.save(filename);
    return res;
 }

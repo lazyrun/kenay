@@ -42,8 +42,7 @@ public:
    virtual bool hasCall() const = 0;
    virtual bool hasCheck() const = 0;
    virtual bool hasRaise() const = 0;
-   virtual QString holeFirst() const = 0;
-   virtual QString holeSecond() const = 0;
+   virtual QString holeCard(const QString & card) const = 0;
    virtual qreal pot() const = 0;
    virtual qreal stack() const = 0;
 

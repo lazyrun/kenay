@@ -1,7 +1,7 @@
 #include "ImgUtils.h"
-#include "BoolMatrix.h"
 
-int hueCount(const QImage & img, int minHue, int maxHue, 
+
+int ImgUtils::hueCount(const QImage & img, int minHue, int maxHue, 
              int fromw, int fromh, int thr, QPoint & pt)
 {
    int hue = 0;
@@ -36,7 +36,7 @@ int hueCount(const QImage & img, int minHue, int maxHue,
    return hue;
 }
 
-int maxHue(const QImage & img)
+int ImgUtils::maxHue(const QImage & img)
 {
    QMap<int, int> hueGist;
    QMap<int, int> hueGray;
@@ -71,7 +71,7 @@ int maxHue(const QImage & img)
    return maxHueValue;
 }
 
-void toBlackWhiteMid(QImage & img, const int threshold)
+void ImgUtils::toBlackWhiteMid(QImage & img, const int threshold)
 {
    int grWhite = 0, grBlack = 0;
    int points = 0;
@@ -128,7 +128,7 @@ void toBlackWhiteMid(QImage & img, const int threshold)
    toBlackWhite(img, mid);
 }
 
-void toBlackWhiteByHue(QImage & img, int minHue, int maxHue)
+void ImgUtils::toBlackWhiteByHue(QImage & img, int minHue, int maxHue)
 {
    const int width = img.width();
    const int height = img.height();
@@ -152,7 +152,7 @@ void toBlackWhiteByHue(QImage & img, int minHue, int maxHue)
    }
 }
 
-void toBlackWhiteByHue(QImage & img)
+void ImgUtils::toBlackWhiteByHue(QImage & img)
 {
    int maxH = maxHue(img);
    const int width = img.width();
@@ -178,7 +178,7 @@ void toBlackWhiteByHue(QImage & img)
    }
 }
 
-void denoise(QImage & img, uchar threshold)
+void ImgUtils::denoise(QImage & img, uchar threshold)
 {
    //убрать одиночные белые пиксели
    for (int x = 0; x < img.width(); x++)
@@ -212,7 +212,7 @@ void denoise(QImage & img, uchar threshold)
    }
 }
 
-void toBlackWhite(QImage & img, uchar threshold)
+void ImgUtils::toBlackWhite(QImage & img, uchar threshold)
 {
    for (int w = 0; w < img.width(); w++)
    {
@@ -233,7 +233,7 @@ void toBlackWhite(QImage & img, uchar threshold)
    }
 }
 
-int countCheckLetters(const QImage & imgCheck)
+int ImgUtils::countCheckLetters(const QImage & imgCheck)
 {
    //очерняем
    const int width = imgCheck.width();
@@ -258,6 +258,52 @@ int countCheckLetters(const QImage & imgCheck)
          }
       }
    }
+
+   //сканируем рисунок на предмет пробелов
+   int countLetters = 0;
+   int count = 0;
+
+   bool isBlackLinePrev = true;
+   bool isBlackLineCurr = true;
+   bool isLetterFinish  = false;
+
+   QPoint ptLeft, ptRight;
+   for (int w = 0; w < width; ++w)
+   {
+      isLetterFinish = false;
+      isBlackLineCurr = true;
+      for (int h = 0; h < height; ++h)
+      {
+         if (checkMatrix.at(w, h) == true)
+         {
+            isBlackLineCurr = false;
+            break;
+         }
+      }
+      if ((isBlackLinePrev == true) && (isBlackLineCurr == false))
+      {
+         countLetters++;
+         isBlackLinePrev = false;
+      }
+      else if ((isBlackLinePrev == false) && (isBlackLineCurr == true))
+      {
+         isBlackLinePrev = true;
+         isLetterFinish = true;
+      }
+      if (isLetterFinish)
+      {
+         count++;
+      }
+   }
+   
+   return count;
+}
+
+int ImgUtils::countCheckLetters(const BoolMatrix & checkMatrix)
+{
+   //очерняем
+   const int width = checkMatrix.width();
+   const int height = checkMatrix.height();
 
    //сканируем рисунок на предмет пробелов
    int countLetters = 0;

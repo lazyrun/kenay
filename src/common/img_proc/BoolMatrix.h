@@ -10,6 +10,8 @@ public:
    BoolMatrix();
    //! копирующий конструктор
    BoolMatrix(const BoolMatrix & rhs);
+   //! ¬ матрице остаютс€ только пиксели заданного цвета
+   BoolMatrix(const QImage & img, const QColor & color);
 
    //! ћатрица сразу режетс€ по серому
    BoolMatrix(const QImage & img, uchar threshold);
@@ -42,6 +44,9 @@ public:
    bool isBlack(int x, int y) const;
    //! залить область
    void fillRect(const QRect & rect, bool color);
+   //! —охранить матрицу как ч/б картинку
+   bool save(const QString & filename);
+
 protected:
    bool ** matrix_;
    bool * bits_;
