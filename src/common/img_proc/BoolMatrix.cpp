@@ -26,6 +26,27 @@ BoolMatrix::BoolMatrix(const BoolMatrix & rhs)
    }
 }
 
+BoolMatrix::BoolMatrix(const BoolMatrix & rhs, const QRect & rect)
+{
+   width_  = rect.width();
+   height_ = rect.height();
+   matrix_ = new bool* [width_];
+   bits_ = new bool[width_ * height_];
+   for (int i = 0; i < width_; ++i)
+   {
+      matrix_[i] = bits_ + i * height_;
+   }
+
+   for (int x = 0; x < width_; ++x)
+   {
+      for (int y = 0; y < height_; ++y)
+      {
+         matrix_[x][y] = rhs.matrix_[rect.x() + x][rect.y() + y];
+      }
+   }
+
+}
+
 BoolMatrix & BoolMatrix::operator=(const BoolMatrix & rhs)
 {
    delete [] matrix_;

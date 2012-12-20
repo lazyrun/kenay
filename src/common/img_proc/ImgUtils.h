@@ -6,7 +6,7 @@
 class ImgUtils
 {
 public:
-   ImgUtils() {};
+   ImgUtils() {}
    //! Переводит изображение в черно-белое по значению серого
    static void toBlackWhite(QImage & img, uchar threshold = 240);
    //! Переводит изображение в черно-белое по maxHue
@@ -26,6 +26,19 @@ public:
    static int countCheckLetters(const QImage & img);
    //! Подсчет букв в матрице
    static int countCheckLetters(const BoolMatrix & checkMatrix);
+   //! Разделение по буквам
+   static QList<BoolMatrix> splitByLetters(const BoolMatrix & matrix);
+
+   // Функции распознавания цифры
+   //! Замкнутые области
+   static QList<int> closedAreas(const BoolMatrix & bmatr_in);
+   //! Возвращает цифру
+   static qreal parseDigit(const BoolMatrix & bm);
+   //! Проверка на точку
+   static bool isDot(const BoolMatrix & bm);
+protected:
+   //! 
+   static void fillMatrix(BoolMatrix & bm, int x, int y);
 };
 
 #endif

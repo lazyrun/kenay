@@ -21,8 +21,6 @@ public:
    virtual qreal stack() const;
    QString cardFromImage(QImage & img) const;
 protected:
-   //! Банк из картинки
-   qreal potFromImage(QImage & img) const;
    //! База карт
    CardBase cardBase_;
 };

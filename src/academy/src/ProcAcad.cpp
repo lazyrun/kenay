@@ -132,11 +132,38 @@ qreal ProcAcad::pot() const
 
    QImage imgPot = img_.copy(x, y, w, h);
    BoolMatrix * potMatrix = new BoolMatrix(imgPot, QColor(scl));
-   potMatrix->save("1.bmp");
    //нарезаем по буквам
-   int letters = ImgUtils::countCheckLetters(*potMatrix);
-   
-   return 0.;
+   QList<BoolMatrix> letts = 
+      ImgUtils::splitByLetters(*potMatrix);
+   //отбрасываем 4 первые буквы слова Pot:
+   QList<BoolMatrix> potLetts = letts.mid(4);
+   qreal val = 0.0;
+   int dot = 0;
+   //считаем целую часть
+   for (int i = 0; i < potLetts.count(); i++)
+   {
+      bool dot = ImgUtils::isDot(potLetts[i]);
+      if (!dot)
+      {
+         qreal digit = ImgUtils::parseDigit(potLetts[i]);
+         val = val * 10. + digit;
+      }
+      else
+      {
+         dot = i + 1;
+         break;
+      }
+   }
+   //считаем дробную часть
+   qreal fract = 0.0;
+   for (int i = 0; i < potLetts.count() - dot; i++)
+   {
+      qreal digit = ImgUtils::parseDigit(potLetts[dot + i]);
+      fract = fract + digit / qPow(10., i + 1);
+   }
+
+   val += fract;
+   return val;
 }
 
 qreal ProcAcad::stack() const

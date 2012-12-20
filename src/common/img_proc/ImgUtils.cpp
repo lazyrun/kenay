@@ -267,7 +267,6 @@ int ImgUtils::countCheckLetters(const QImage & imgCheck)
    bool isBlackLineCurr = true;
    bool isLetterFinish  = false;
 
-   QPoint ptLeft, ptRight;
    for (int w = 0; w < width; ++w)
    {
       isLetterFinish = false;
@@ -313,7 +312,6 @@ int ImgUtils::countCheckLetters(const BoolMatrix & checkMatrix)
    bool isBlackLineCurr = true;
    bool isLetterFinish  = false;
 
-   QPoint ptLeft, ptRight;
    for (int w = 0; w < width; ++w)
    {
       isLetterFinish = false;
@@ -344,3 +342,123 @@ int ImgUtils::countCheckLetters(const BoolMatrix & checkMatrix)
    
    return count;
 }
+
+QList<BoolMatrix> ImgUtils::splitByLetters(const BoolMatrix & checkMatrix)
+{
+   QList<BoolMatrix> letters;
+   //очерняем
+   const int width = checkMatrix.width();
+   const int height = checkMatrix.height();
+
+   //сканируем рисунок на предмет пробелов
+   int countLetters = 0;
+   int count = 0;
+
+   bool isBlackLinePrev = true;
+   bool isBlackLineCurr = true;
+   bool isLetterFinish  = false;
+
+   int w_begin = 0;
+   int w_end = 0;
+   for (int w = 0; w < width; ++w)
+   {
+      isLetterFinish = false;
+      isBlackLineCurr = true;
+      for (int h = 0; h < height; ++h)
+      {
+         if (checkMatrix.at(w, h) == true)
+         {
+            isBlackLineCurr = false;
+            break;
+         }
+      }
+      if ((isBlackLinePrev == true) && (isBlackLineCurr == false))
+      {
+         w_begin = w;
+         countLetters++;
+         isBlackLinePrev = false;
+      }
+      else if ((isBlackLinePrev == false) && (isBlackLineCurr == true))
+      {
+         isBlackLinePrev = true;
+         isLetterFinish = true;
+      }
+      if (isLetterFinish)
+      {
+         w_end = w - 1;
+         count++;
+         QRect rect(QPoint(w_begin, 0), QPoint(w_end, height));
+         BoolMatrix bm(checkMatrix, rect);
+         letters << bm;
+      }
+   }
+   
+   return letters;
+}
+
+QList<int> ImgUtils::closedAreas(const BoolMatrix & bmatr_in)
+{
+   BoolMatrix bmBak = bmatr_in;
+  
+   int wCount = -1;
+   int wx = 0;
+   int wy = 0;
+
+   QList<int> counts;
+   while (wCount != 0)
+   {
+      fillMatrix(bmBak, wx, wy);
+      
+      wx = -1;
+      wy = -1;
+      int whiteCount = 0;
+      for (int x = 0; x < bmBak.width(); x++)
+      {
+         for (int y = 0; y < bmBak.height(); y++)
+         {
+            if (bmBak.isWhite(x, y))
+            {
+               if (wx == -1)
+                  wx = x;
+               if (wy == -1)
+                  wy = y;
+               whiteCount++;
+            }
+         }
+      }
+      if (wCount != -1)
+         counts << wCount - whiteCount;
+
+      wCount = whiteCount;
+   }
+   
+   return counts;
+}
+
+void ImgUtils::fillMatrix(BoolMatrix & bm, int x, int y)
+{
+   if (x < 0 || y < 0) 
+      return;
+
+   if (bm.isWhite(x, y))
+   {
+      bm.set(x, y, true);
+      fillMatrix(bm, x, y - 1);
+      fillMatrix(bm, x - 1, y);
+      fillMatrix(bm, x, y + 1);
+      fillMatrix(bm, x + 1, y);
+   }
+}
+
+qreal ImgUtils::parseDigit(const BoolMatrix & bm)
+{
+   QList<int> areas = closedAreas(bm);
+   return 0.;
+}
+
+bool ImgUtils::isDot(const BoolMatrix & bm)
+{
+   return false;
+}
+
+

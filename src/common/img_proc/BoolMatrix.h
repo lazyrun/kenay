@@ -10,6 +10,8 @@ public:
    BoolMatrix();
    //! копирующий конструктор
    BoolMatrix(const BoolMatrix & rhs);
+   //!
+   BoolMatrix(const BoolMatrix & rhs, const QRect & rect);
    //! ¬ матрице остаютс€ только пиксели заданного цвета
    BoolMatrix(const QImage & img, const QColor & color);
 
