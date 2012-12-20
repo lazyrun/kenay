@@ -453,6 +453,8 @@ void ImgUtils::fillMatrix(BoolMatrix & bm, int x, int y)
 qreal ImgUtils::parseDigit(const BoolMatrix & bm)
 {
    QList<int> areas = closedAreas(bm);
+   QString s;
+   qDebug() << areas;
    return 0.;
 }
 
