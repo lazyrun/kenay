@@ -1,6 +1,5 @@
 #include "ImgUtils.h"
 
-
 int ImgUtils::hueCount(const QImage & img, int minHue, int maxHue, 
              int fromw, int fromh, int thr, QPoint & pt)
 {
@@ -396,66 +395,219 @@ QList<BoolMatrix> ImgUtils::splitByLetters(const BoolMatrix & checkMatrix)
    return letters;
 }
 
-QList<int> ImgUtils::closedAreas(const BoolMatrix & bmatr_in)
+QList<PointList> ImgUtils::closedAreas(const BoolMatrix & bmatr_in)
 {
-   BoolMatrix bmBak = bmatr_in;
-  
-   int wCount = -1;
-   int wx = 0;
-   int wy = 0;
+   //матрица в которой уже готовые области закрашиваются черным
+   BoolMatrix bmatr(bmatr_in);
+   //
+   //рабочая матрица для одной области
+   BoolMatrix bm(bmatr);
+   const int w = bm.width();
+   const int h = bm.height();
 
-   QList<int> counts;
-   while (wCount != 0)
+   //отбираем точки с углом
+   PointList startPoints;
+   for (int y = 1; y < h - 1; ++y)
    {
-      fillMatrix(bmBak, wx, wy);
-      
-      wx = -1;
-      wy = -1;
-      int whiteCount = 0;
-      for (int x = 0; x < bmBak.width(); x++)
+      for (int x = 1; x < w - 1; ++x)
       {
-         for (int y = 0; y < bmBak.height(); y++)
+         //белый
+         if (bm.at(x, y) == 0)
          {
-            if (bmBak.isWhite(x, y))
+            //смотрим черный угол
+            if (bm.at(x - 1, y)     == 1 &&
+                //bm.at(x - 1, y - 1) == 1 &&
+                bm.at(x, y - 1)     == 1)
+               
             {
-               if (wx == -1)
-                  wx = x;
-               if (wy == -1)
-                  wy = y;
-               whiteCount++;
+               startPoints << QPoint(x, y);
             }
          }
       }
-      if (wCount != -1)
-         counts << wCount - whiteCount;
-
-      wCount = whiteCount;
    }
    
-   return counts;
+   if (startPoints.isEmpty())
+   {
+      return QList<PointList>();
+   }
+   QList<PointList> areas;
+   PointList currentArea;
+   QPoint pt = startPoints.at(0);
+
+   //для всех стартовых точек строим замыкание
+   for (int si = 0; si < startPoints.count(); ++si)
+   {
+      QPoint s = startPoints.at(si);
+      //стартовая точка - белая
+      if ((bm.at(s.x(), s.y()) == 0) && isCrux(bm, s.x(), s.y()))
+      {
+         QPoint pt = s;
+         for (;;)
+         {
+            //8ми связность
+            const QPoint pt1 = QPoint(pt.x(),      pt.y() - 1);
+            const QPoint pt2 = QPoint(pt.x() + 1,  pt.y() - 1);
+            const QPoint pt3 = QPoint(pt.x() + 1,  pt.y());
+            const QPoint pt4 = QPoint(pt.x() + 1,  pt.y() + 1);
+            const QPoint pt5 = QPoint(pt.x(),      pt.y() + 1);
+            const QPoint pt6 = QPoint(pt.x() - 1,  pt.y() + 1);
+            const QPoint pt7 = QPoint(pt.x() - 1,  pt.y());
+            const QPoint pt8 = QPoint(pt.x() - 1,  pt.y() - 1);
+
+            QList<QPoint> sublingPoints;
+            sublingPoints << pt1 << pt2 << pt3 << pt4 << pt5 << pt6 << pt7 << pt8;
+
+            //крутим в поисках черной точки
+            int first_black = 0;
+            if (bm.at(pt1.x(), pt1.y()) == 1)
+            {
+               foreach (QPoint spt, sublingPoints)
+               {
+                  if (bm.at(spt.x(), spt.y()) == 1)
+                  {
+                     first_black = sublingPoints.indexOf(spt);
+                     break;
+                  }
+               }
+            }
+            else
+            {
+               first_black = 0;
+            }
+            QList<QPoint> swap1 = sublingPoints.mid(first_black);
+            QList<QPoint> swap2 = sublingPoints.mid(0, first_black);
+            QList<QPoint> circularedPoints;
+            circularedPoints << swap1 << swap2;
+            
+            bool hasSibling = false;
+            bool isBreak = false;
+            foreach (QPoint spt, circularedPoints)
+            {
+               //ищем в окрестности белую точку
+               if (bm.at(spt.x(), spt.y()) == 0)
+               {
+                  bm.set(pt.x(), pt.y(), 1);
+                  if (isCrux(bmatr, spt.x(), spt.y()))
+                  {
+                     currentArea << pt;
+                     //startPoints.removeOne(pt);
+                     pt = spt;
+                     hasSibling = true;
+                     break;
+                  }
+                  else
+                  {
+                     //область разорвана - стартовая точка - лажа
+                     //выходим и пробуем со следующей
+                     //очищаем матрицу
+                     bm = bmatr;
+                     currentArea.clear();
+                     isBreak = true;
+                     break;
+                  }
+               }
+            }
+            if (isBreak)
+               break;
+
+            if (!hasSibling)
+            {
+               bm.set(pt.x(), pt.y(), 1);
+               currentArea << pt;
+               areas << currentArea;
+               bmatr = bm;
+               currentArea.clear();
+               break;
+            }
+         }
+      }
+   }
+
+   return areas;
 }
 
-void ImgUtils::fillMatrix(BoolMatrix & bm, int x, int y)
+bool ImgUtils::isCrux(const BoolMatrix & bm, const int sx, const int sy)
 {
-   if (x < 0 || y < 0) 
-      return;
-
-   if (bm.isWhite(x, y))
+   int leftBound     = -1;
+   int rightBound    = -1;
+   int topBound      = -1;
+   int bottomBound   = -1;
+   for (int x = sx - 1; x >= 0; x--)
    {
-      bm.set(x, y, true);
-      fillMatrix(bm, x, y - 1);
-      fillMatrix(bm, x - 1, y);
-      fillMatrix(bm, x, y + 1);
-      fillMatrix(bm, x + 1, y);
+      if (bm.at(x, sy) == 1)
+      {
+         leftBound = x;
+         break;
+      }
    }
+   
+   for (int x = sx + 1; x < bm.width(); x++)
+   {
+      if (bm.at(x, sy) == 1)
+      {
+         rightBound = x;
+         break;
+      }
+   }
+
+   for (int y = sy - 1; y >= 0; y--)
+   {
+      if (bm.at(sx, y) == 1)
+      {
+         topBound = y;
+         break;
+      }
+   }
+   
+   for (int y = sy + 1; y < bm.height(); y++)
+   {
+      if (bm.at(sx, y) == 1)
+      {
+         bottomBound = y;
+         break;
+      }
+   }
+   
+   if (leftBound != -1 && rightBound != -1 && topBound != -1 && bottomBound != -1)
+   {
+      if ((rightBound - leftBound > 2) || (bottomBound - topBound > 2))
+      {
+         return true;
+      }
+   }
+   return false;
 }
 
 qreal ImgUtils::parseDigit(const BoolMatrix & bm)
 {
-   QList<int> areas = closedAreas(bm);
-   QString s;
-   qDebug() << areas;
-   return 0.;
+   QList<PointList> areas = closedAreas(bm);
+   qDebug() << areas.count();
+   //ошибка
+   if (areas.count() > 2)
+      return -1.;
+   //Однозначно 8
+   if (areas.count() == 2)
+      return 8.0;
+   
+   //сканируем профили
+   //построить профиль слева
+   QVector<ProfileItem> leftProfile = scanLeftProfile(bm);
+   //построить профиль справа
+   QVector<ProfileItem> rightProfile = scanRightProfile(bm);
+   if (areas.count() == 1)
+   {
+      //6, 9, 0
+      bool leftIsSix = isSixProfile(leftProfile);
+      bool rightIsSix = isSixProfile(rightProfile);
+      if (leftIsSix && rightIsSix)
+         return 0.0;
+      if (leftIsSix)
+         return 6.0;
+      if (rightIsSix)
+         return 9.0;
+   }
+   
+   return -1.;
 }
 
 bool ImgUtils::isDot(const BoolMatrix & bm)
@@ -463,4 +615,258 @@ bool ImgUtils::isDot(const BoolMatrix & bm)
    return false;
 }
 
+QVector<ProfileItem> ImgUtils::scanLeftProfile(const BoolMatrix & imgMatrix)
+{
+   //сканирование левого профиля
+   const int w = imgMatrix.width();
+   const int h = imgMatrix.height();
+   int min_x = w, max_x = 0;
 
+   QVector<int> x_array;
+   for (int y = 0; y < h; ++y)
+   {
+      for (int x = 0; x < w; ++x)
+      {
+         if (imgMatrix.at(x, y) == 1)
+         {
+            if (x < min_x)
+               min_x = x;
+            if (x > max_x)
+               max_x = x;
+            x_array.push_back(x);
+            break;
+         }
+      }
+   }
+   
+   //определяем середину
+   int x_border = min_x + (max_x - min_x) / 2;
+   //формируем портрет профиля
+   QVector<bool> prof;
+   QVector<ProfileItem> profile;
+
+   //qDebug() << x_array;
+   int ccnt = 0;
+   bool item = true;
+   foreach (int x, x_array)
+   {
+      item = (x > x_border);
+      if (prof.size() == 0)
+      {
+         prof.push_back(item);
+         ccnt++;
+      }
+      else
+      {
+         if (prof.last() != item)
+         {
+            ProfileItem it;
+            it.item = !item;
+            it.value = qreal(ccnt) / qreal(h);
+            profile.push_back(it);
+            prof.push_back(item);
+            ccnt = 1;
+         }
+         else
+         {
+            ccnt++;
+         }
+      }
+   }
+
+   if (ccnt != 0)
+   {
+      ProfileItem it;
+      it.item = item;
+      it.value = qreal(ccnt) / qreal(h);
+      profile.push_back(it);
+   }
+   
+   return profile;
+}
+
+QVector<ProfileItem> ImgUtils::scanRightProfile(const BoolMatrix & imgMatrix)
+{
+   //сканирование правого профиля
+   const int w = imgMatrix.width();
+   const int h = imgMatrix.height();
+   int min_x = w, max_x = 0;
+
+   QVector<int> x_array;
+   for (int y = 0; y < h; ++y)
+   {
+      for (int x = w - 1; x >= 0; --x)
+      {
+         if (imgMatrix.at(x, y) == 1)
+         {
+            if (x < min_x)
+               min_x = x;
+            if (x > max_x)
+               max_x = x;
+            x_array.push_back(x);
+            break;
+         }
+      }
+   }
+   
+   //определяем середину
+   int x_border = min_x + (int)qRound(qreal(max_x - min_x) / 2. + 0.1);
+   //формируем портрет профиля
+   QVector<bool> prof;
+   QVector<ProfileItem> profile;
+
+   //qDebug() << x_array;
+   int ccnt = 0;
+   bool item = true;
+   foreach (int x, x_array)
+   {
+      item = (x < x_border);
+      if (prof.size() == 0)
+      {
+         prof.push_back(item);
+         ccnt++;
+      }
+      else
+      {
+         if (prof.last() != item)
+         {
+            ProfileItem it;
+            it.item = !item;
+            it.value = qreal(ccnt) / qreal(h);
+            profile.push_back(it);
+            prof.push_back(item);
+            ccnt = 1;
+         }
+         else
+         {
+            ccnt++;
+         }
+      }
+   }
+
+   if (ccnt != 0)
+   {
+      ProfileItem it;
+      it.item = item;
+      it.value = qreal(ccnt) / qreal(h);
+      profile.push_back(it);
+   }
+   
+   return profile;
+}
+
+QVector<ProfileItem> ImgUtils::scanDownProfile(const BoolMatrix & imgMatrix)
+{
+   //сканирование нижнего профиля
+   const int w = imgMatrix.width();
+   const int h = imgMatrix.height();
+   int min_y = h, max_y = 0;
+
+   QVector<int> y_array;
+   for (int x = 1; x < w; ++x)
+   {
+      for (int y = h - 1; y >= 0; --y)
+      {
+         if (imgMatrix.at(x, y) == 1)
+         {
+            if (y < min_y)
+               min_y = y;
+            if (y > max_y)
+               max_y = y;
+            y_array.push_back(y);
+            break;
+         }
+      }
+   }
+   
+   //определяем середину
+   int y_border = min_y + (max_y - min_y) / 2;
+   //формируем портрет профиля
+   QVector<bool> prof;
+   QVector<ProfileItem> profile;
+
+   //qDebug() << x_array;
+   int ccnt = 0;
+   bool item = true;
+   foreach (int y, y_array)
+   {
+      item = (y < y_border);
+      if (prof.size() == 0)
+      {
+         prof.push_back(item);
+         ccnt++;
+      }
+      else
+      {
+         if (prof.last() != item)
+         {
+            ProfileItem it;
+            it.item = !item;
+            it.value = qreal(ccnt) / qreal(w);
+            profile.push_back(it);
+            prof.push_back(item);
+            ccnt = 1;
+         }
+         else
+         {
+            ccnt++;
+         }
+      }
+   }
+
+   if (ccnt != 0)
+   {
+      ProfileItem it;
+      it.item = item;
+      it.value = qreal(ccnt) / qreal(w);
+      profile.push_back(it);
+   }
+   
+   return profile;
+}
+
+bool ImgUtils::isSixProfile(const QVector<ProfileItem> & profile)
+{
+   //описание профиля 6
+   //     1) одна из частей сильно больше остальных 
+   //или  2) всего одна часть и она почти равна всей длине стороны
+   bool isSix = true;
+   if (profile.count() > 1)
+   {
+      //поиск максимальной части
+      int max_idx = 0;
+      qreal maxval = 0.;
+      for (int i = 0; i < profile.count(); ++i)
+      {
+         if (profile.at(i).value > maxval)
+         {
+            maxval = profile.at(i).value;
+            max_idx = i;
+         }
+      }
+      
+      for (int i = 0; i < profile.count(); ++i)
+      {
+         if (i == max_idx)
+            continue;
+         
+         if (profile.at(i).value * 5. >= maxval)
+         {
+            //условие не выполнено
+            isSix = false;
+            break;
+         }
+      }
+   }
+   else if (profile.count() == 1)
+   {
+      if (profile.at(0).value < 0.75)
+         isSix = false;
+   }
+   else
+   {
+      isSix = false;
+   }
+
+   return isSix;
+}

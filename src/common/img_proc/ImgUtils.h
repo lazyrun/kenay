@@ -3,6 +3,16 @@
 
 #include "BoolMatrix.h"
 
+typedef QList<QPoint> PointList;
+
+struct ProfileItem
+{
+   //отклонение
+   bool item;
+   //величина выраженная в процентах ко всей области
+   qreal value;
+};
+
 class ImgUtils
 {
 public:
@@ -31,14 +41,22 @@ public:
 
    // Функции распознавания цифры
    //! Замкнутые области
-   static QList<int> closedAreas(const BoolMatrix & bmatr_in);
+   static QList<PointList> closedAreas(const BoolMatrix & bmatr_in);
    //! Возвращает цифру
    static qreal parseDigit(const BoolMatrix & bm);
    //! Проверка на точку
    static bool isDot(const BoolMatrix & bm);
 protected:
-   //! 
-   static void fillMatrix(BoolMatrix & bm, int x, int y);
+   //! Проверка на крест
+   static bool isCrux(const BoolMatrix & bm, const int sx, const int sy);
+   //! Сканирование левого профиля
+   static QVector<ProfileItem> scanLeftProfile(const BoolMatrix & imgMatrix);
+   //! Сканирование правого профиля
+   static QVector<ProfileItem> scanRightProfile(const BoolMatrix & imgMatrix);
+   //! Сканирование нижнего профиля
+   static QVector<ProfileItem> scanDownProfile(const BoolMatrix & imgMatrix);
+   //! Профиль шестерки
+   static bool isSixProfile(const QVector<ProfileItem> & profile);
 };
 
 #endif

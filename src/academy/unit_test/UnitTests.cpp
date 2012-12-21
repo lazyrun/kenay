@@ -58,19 +58,90 @@ namespace tut
    template<>   template<>
    void testobject::test<3>()
    {
-      QImage imgTable("sshot/acad_1.bmp");
-      tensure(__FILE__, __LINE__, !imgTable.isNull());
-
       ProcAcad proc("map/acad.xml");
-      proc.setImage(imgTable);
-      tensure(__FILE__, __LINE__, proc.hasFold());
-      tensure(__FILE__, __LINE__, proc.hasCall());
-      tensure(__FILE__, __LINE__, proc.hasCheck());
-      tensure(__FILE__, __LINE__, proc.hasRaise());
-      tensure(__FILE__, __LINE__, proc.holeCard("first") == "2s");
-      tensure(__FILE__, __LINE__, proc.holeCard("second") == "As");
-      
-      proc.pot();
-      //   proc.stack()
+      {
+         QImage imgTable("sshot/acad_1.bmp");
+         tensure(__FILE__, __LINE__, !imgTable.isNull());
+         proc.setImage(imgTable);
+         tensure(__FILE__, __LINE__, proc.hasFold());
+         tensure(__FILE__, __LINE__, proc.hasCall());
+         tensure(__FILE__, __LINE__, proc.hasCheck());
+         tensure(__FILE__, __LINE__, proc.hasRaise());
+         tensure(__FILE__, __LINE__, proc.holeCard("first") == "2s");
+         tensure(__FILE__, __LINE__, proc.holeCard("second") == "As");
+         proc.pot();
+      }
+      {
+         QImage imgTable("sshot/acad_2.bmp");
+         tensure(__FILE__, __LINE__, !imgTable.isNull());
+         proc.setImage(imgTable);
+         tensure(__FILE__, __LINE__, proc.hasFold());
+         tensure(__FILE__, __LINE__, proc.hasCall());
+         tensure(__FILE__, __LINE__, proc.hasCheck());
+         tensure(__FILE__, __LINE__, proc.hasRaise());
+         tensure(__FILE__, __LINE__, proc.holeCard("first") == "8d");
+         tensure(__FILE__, __LINE__, proc.holeCard("second") == "9h");
+         //proc.pot();
+      }
+      {
+         QImage imgTable("sshot/acad_3.bmp");
+         tensure(__FILE__, __LINE__, !imgTable.isNull());
+         proc.setImage(imgTable);
+         tensure(__FILE__, __LINE__, proc.hasFold());
+         tensure(__FILE__, __LINE__, proc.hasCall());
+         tensure(__FILE__, __LINE__, proc.hasCheck());
+         tensure(__FILE__, __LINE__, proc.hasRaise());
+         tensure(__FILE__, __LINE__, proc.holeCard("first") == "Th");
+         tensure(__FILE__, __LINE__, proc.holeCard("second") == "Ac");
+         //proc.pot();
+      }
+      {
+         QImage imgTable("sshot/acad_4.bmp");
+         tensure(__FILE__, __LINE__, !imgTable.isNull());
+         proc.setImage(imgTable);
+         tensure(__FILE__, __LINE__, proc.hasFold());
+         tensure(__FILE__, __LINE__, proc.hasCall());
+         tensure(__FILE__, __LINE__, proc.hasCheck());
+         tensure(__FILE__, __LINE__, proc.hasRaise());
+         tensure(__FILE__, __LINE__, proc.holeCard("first") == "As");
+         tensure(__FILE__, __LINE__, proc.holeCard("second") == "6s");
+         //proc.pot();
+      }
+      {
+         QImage imgTable("sshot/acad_5.bmp");
+         tensure(__FILE__, __LINE__, !imgTable.isNull());
+         proc.setImage(imgTable);
+         tensure(__FILE__, __LINE__, proc.hasFold());
+         tensure(__FILE__, __LINE__, proc.hasCall());
+         tensure(__FILE__, __LINE__, proc.hasCheck());
+         tensure(__FILE__, __LINE__, proc.hasRaise());
+         tensure(__FILE__, __LINE__, proc.holeCard("first") == "7s");
+         tensure(__FILE__, __LINE__, proc.holeCard("second") == "8s");
+         //proc.pot();
+      }
+      {
+         QImage imgTable("sshot/acad_6.bmp");
+         tensure(__FILE__, __LINE__, !imgTable.isNull());
+         proc.setImage(imgTable);
+         tensure(__FILE__, __LINE__, proc.hasFold());
+         tensure(__FILE__, __LINE__, proc.hasCall());
+         tensure(__FILE__, __LINE__, proc.hasCheck());
+         tensure(__FILE__, __LINE__, proc.hasRaise());
+         tensure(__FILE__, __LINE__, proc.holeCard("first") == "8h");
+         tensure(__FILE__, __LINE__, proc.holeCard("second") == "4c");
+         //proc.pot();
+      }
+      {
+         QImage imgTable("sshot/acad_7.bmp");
+         tensure(__FILE__, __LINE__, !imgTable.isNull());
+         proc.setImage(imgTable);
+         tensure(__FILE__, __LINE__, proc.hasFold());
+         tensure(__FILE__, __LINE__, proc.hasCall());
+         tensure(__FILE__, __LINE__, proc.hasCheck());
+         tensure(__FILE__, __LINE__, proc.hasRaise());
+         tensure(__FILE__, __LINE__, proc.holeCard("first") == "5s");
+         tensure(__FILE__, __LINE__, proc.holeCard("second") == "Ah");
+         //proc.pot();
+      }
    }
 }
