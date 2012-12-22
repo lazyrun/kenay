@@ -69,7 +69,6 @@ namespace tut
          tensure(__FILE__, __LINE__, proc.hasRaise());
          tensure(__FILE__, __LINE__, proc.holeCard("first") == "2s");
          tensure(__FILE__, __LINE__, proc.holeCard("second") == "As");
-         proc.pot();
       }
       {
          QImage imgTable("sshot/acad_2.bmp");
@@ -81,7 +80,6 @@ namespace tut
          tensure(__FILE__, __LINE__, proc.hasRaise());
          tensure(__FILE__, __LINE__, proc.holeCard("first") == "8d");
          tensure(__FILE__, __LINE__, proc.holeCard("second") == "9h");
-         //proc.pot();
       }
       {
          QImage imgTable("sshot/acad_3.bmp");
@@ -93,7 +91,6 @@ namespace tut
          tensure(__FILE__, __LINE__, proc.hasRaise());
          tensure(__FILE__, __LINE__, proc.holeCard("first") == "Th");
          tensure(__FILE__, __LINE__, proc.holeCard("second") == "Ac");
-         //proc.pot();
       }
       {
          QImage imgTable("sshot/acad_4.bmp");
@@ -105,7 +102,6 @@ namespace tut
          tensure(__FILE__, __LINE__, proc.hasRaise());
          tensure(__FILE__, __LINE__, proc.holeCard("first") == "As");
          tensure(__FILE__, __LINE__, proc.holeCard("second") == "6s");
-         //proc.pot();
       }
       {
          QImage imgTable("sshot/acad_5.bmp");
@@ -117,7 +113,6 @@ namespace tut
          tensure(__FILE__, __LINE__, proc.hasRaise());
          tensure(__FILE__, __LINE__, proc.holeCard("first") == "7s");
          tensure(__FILE__, __LINE__, proc.holeCard("second") == "8s");
-         //proc.pot();
       }
       {
          QImage imgTable("sshot/acad_6.bmp");
@@ -129,7 +124,6 @@ namespace tut
          tensure(__FILE__, __LINE__, proc.hasRaise());
          tensure(__FILE__, __LINE__, proc.holeCard("first") == "8h");
          tensure(__FILE__, __LINE__, proc.holeCard("second") == "4c");
-         //proc.pot();
       }
       {
          QImage imgTable("sshot/acad_7.bmp");
@@ -141,7 +135,18 @@ namespace tut
          tensure(__FILE__, __LINE__, proc.hasRaise());
          tensure(__FILE__, __LINE__, proc.holeCard("first") == "5s");
          tensure(__FILE__, __LINE__, proc.holeCard("second") == "Ah");
-         //proc.pot();
+      }
+   }
+
+   template<>   template<>
+   void testobject::test<4>()
+   {
+      ProcAcad proc("map/acad.xml");
+      {
+         QImage imgTable("sshot/acad_8.bmp");
+         tensure(__FILE__, __LINE__, !imgTable.isNull());
+         proc.setImage(imgTable);
+         proc.pot();
       }
    }
 }

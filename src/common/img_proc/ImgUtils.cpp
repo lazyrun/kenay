@@ -395,7 +395,7 @@ QList<BoolMatrix> ImgUtils::splitByLetters(const BoolMatrix & checkMatrix)
    return letters;
 }
 
-QList<PointList> ImgUtils::closedAreas(const BoolMatrix & bmatr_in)
+QList<PointList> ImgUtils::closedAreas(const BoolMatrix & bmatr_in, Coherence coh)
 {
    //матрица в которой уже готовые области закрашиваются черным
    BoolMatrix bmatr(bmatr_in);
@@ -444,18 +444,30 @@ QList<PointList> ImgUtils::closedAreas(const BoolMatrix & bmatr_in)
          QPoint pt = s;
          for (;;)
          {
-            //8ми связность
-            const QPoint pt1 = QPoint(pt.x(),      pt.y() - 1);
-            const QPoint pt2 = QPoint(pt.x() + 1,  pt.y() - 1);
-            const QPoint pt3 = QPoint(pt.x() + 1,  pt.y());
-            const QPoint pt4 = QPoint(pt.x() + 1,  pt.y() + 1);
-            const QPoint pt5 = QPoint(pt.x(),      pt.y() + 1);
-            const QPoint pt6 = QPoint(pt.x() - 1,  pt.y() + 1);
-            const QPoint pt7 = QPoint(pt.x() - 1,  pt.y());
-            const QPoint pt8 = QPoint(pt.x() - 1,  pt.y() - 1);
-
             QList<QPoint> sublingPoints;
-            sublingPoints << pt1 << pt2 << pt3 << pt4 << pt5 << pt6 << pt7 << pt8;
+            const QPoint pt1 = QPoint(pt.x(),      pt.y() - 1);
+            if (coh == Eight)
+            {
+               //8ми связность
+               const QPoint pt2 = QPoint(pt.x() + 1,  pt.y() - 1);
+               const QPoint pt3 = QPoint(pt.x() + 1,  pt.y());
+               const QPoint pt4 = QPoint(pt.x() + 1,  pt.y() + 1);
+               const QPoint pt5 = QPoint(pt.x(),      pt.y() + 1);
+               const QPoint pt6 = QPoint(pt.x() - 1,  pt.y() + 1);
+               const QPoint pt7 = QPoint(pt.x() - 1,  pt.y());
+               const QPoint pt8 = QPoint(pt.x() - 1,  pt.y() - 1);
+
+               sublingPoints << pt1 << pt2 << pt3 << pt4 << pt5 << pt6 << pt7 << pt8;
+            }
+            else
+            {
+               //4-х связность
+               const QPoint pt3 = QPoint(pt.x() + 1,  pt.y());
+               const QPoint pt5 = QPoint(pt.x(),      pt.y() + 1);
+               const QPoint pt7 = QPoint(pt.x() - 1,  pt.y());
+
+               sublingPoints << pt1 << pt3 << pt5 << pt7;
+            }
 
             //крутим в поисках черной точки
             int first_black = 0;
@@ -580,8 +592,7 @@ bool ImgUtils::isCrux(const BoolMatrix & bm, const int sx, const int sy)
 
 qreal ImgUtils::parseDigit(const BoolMatrix & bm)
 {
-   QList<PointList> areas = closedAreas(bm);
-   qDebug() << areas.count();
+   QList<PointList> areas = closedAreas(bm, Four);
    //ошибка
    if (areas.count() > 2)
       return -1.;
@@ -596,15 +607,17 @@ qreal ImgUtils::parseDigit(const BoolMatrix & bm)
    QVector<ProfileItem> rightProfile = scanRightProfile(bm);
    if (areas.count() == 1)
    {
-      //6, 9, 0
+      //6, 9, 0, 4
       bool leftIsSix = isSixProfile(leftProfile);
       bool rightIsSix = isSixProfile(rightProfile);
       if (leftIsSix && rightIsSix)
          return 0.0;
-      if (leftIsSix)
+      else if (leftIsSix)
          return 6.0;
-      if (rightIsSix)
+      else if (rightIsSix)
          return 9.0;
+      else
+         return 4.0;
    }
    
    return -1.;
@@ -612,6 +625,24 @@ qreal ImgUtils::parseDigit(const BoolMatrix & bm)
 
 bool ImgUtils::isDot(const BoolMatrix & bm)
 {
+   //подсчитать количество черных точек - их очень мало
+   const int w = bm.width();
+   const int h = bm.height();
+
+   int black = 0;
+   for (int y = 0; y < h; ++y)
+   {
+      for (int x = 0; x < w; ++x)
+      {
+         if (bm.at(x, y) == 1)
+         {
+            black++;
+         }
+      }
+   }
+   if (black < 6 && black > 0)
+      return true;
+
    return false;
 }
 

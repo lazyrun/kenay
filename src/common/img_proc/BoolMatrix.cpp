@@ -332,7 +332,7 @@ QString BoolMatrix::toString() const
    return res;
 }
 
-bool BoolMatrix::save(const QString & filename)
+bool BoolMatrix::save(const QString & filename) const
 {
    bool res = false;
    QImage img(width_, height_, QImage::Format_Mono);

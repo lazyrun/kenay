@@ -1,6 +1,18 @@
 #include "ProcAcad.h"
 #include "ImgUtils.h"
 
+double round (double x, int precision)
+{
+   int mul = 10;
+   
+   for (int i = 0; i < precision; i++)
+      mul *= mul;
+   if (x > 0)
+      return floor(x * mul + .5) / mul;
+   else
+      return ceil(x * mul - .5) / mul;
+}
+
 //
 //ProcAcad
 //
@@ -137,13 +149,18 @@ qreal ProcAcad::pot() const
       ImgUtils::splitByLetters(*potMatrix);
    //отбрасываем 4 первые буквы слова Pot:
    QList<BoolMatrix> potLetts = letts.mid(4);
+   for (int i = 0; i < potLetts.count(); i++)
+   {
+      potLetts.at(i).save(QString("let_%1.bmp").arg(i));
+   }
+
    qreal val = 0.0;
    int dot = 0;
    //считаем целую часть
    for (int i = 0; i < potLetts.count(); i++)
    {
-      bool dot = ImgUtils::isDot(potLetts[i]);
-      if (!dot)
+      bool isDot = ImgUtils::isDot(potLetts[i]);
+      if (!isDot)
       {
          qreal digit = ImgUtils::parseDigit(potLetts[i]);
          val = val * 10. + digit;

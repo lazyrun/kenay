@@ -47,7 +47,7 @@ public:
    //! залить область
    void fillRect(const QRect & rect, bool color);
    //! —охранить матрицу как ч/б картинку
-   bool save(const QString & filename);
+   bool save(const QString & filename) const;
 
 protected:
    bool ** matrix_;

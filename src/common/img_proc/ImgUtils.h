@@ -17,6 +17,11 @@ class ImgUtils
 {
 public:
    ImgUtils() {}
+   enum Coherence
+   {
+      Eight,
+      Four
+   };
    //! Переводит изображение в черно-белое по значению серого
    static void toBlackWhite(QImage & img, uchar threshold = 240);
    //! Переводит изображение в черно-белое по maxHue
@@ -40,8 +45,10 @@ public:
    static QList<BoolMatrix> splitByLetters(const BoolMatrix & matrix);
 
    // Функции распознавания цифры
-   //! Замкнутые области
-   static QList<PointList> closedAreas(const BoolMatrix & bmatr_in);
+   //! Замкнутые области 8-ми связность
+   static QList<PointList> closedAreas(const BoolMatrix & bmatr_in,
+      Coherence c = Eight);
+
    //! Возвращает цифру
    static qreal parseDigit(const BoolMatrix & bm);
    //! Проверка на точку
