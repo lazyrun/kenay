@@ -149,10 +149,11 @@ qreal ProcAcad::pot() const
       ImgUtils::splitByLetters(*potMatrix);
    //отбрасываем 4 первые буквы слова Pot:
    QList<BoolMatrix> potLetts = letts.mid(4);
-   for (int i = 0; i < potLetts.count(); i++)
-   {
-      potLetts.at(i).save(QString("let_%1.bmp").arg(i));
-   }
+   
+   //for (int i = 0; i < potLetts.count(); i++)
+   //{
+   //   potLetts.at(i).save(QString("let_%1.bmp").arg(i));
+   //}
 
    qreal val = 0.0;
    int dot = 0;
@@ -172,14 +173,16 @@ qreal ProcAcad::pot() const
       }
    }
    //считаем дробную часть
-   qreal fract = 0.0;
-   for (int i = 0; i < potLetts.count() - dot; i++)
+   if (dot)//при наличии точки
    {
-      qreal digit = ImgUtils::parseDigit(potLetts[dot + i]);
-      fract = fract + digit / qPow(10., i + 1);
+      qreal fract = 0.0;
+      for (int i = 0; i < potLetts.count() - dot; i++)
+      {
+         qreal digit = ImgUtils::parseDigit(potLetts[dot + i]);
+         fract = fract + digit / qPow(10., i + 1);
+      }
+      val += fract;
    }
-
-   val += fract;
    return val;
 }
 

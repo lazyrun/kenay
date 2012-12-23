@@ -143,10 +143,82 @@ namespace tut
    {
       ProcAcad proc("map/acad.xml");
       {
+         QImage imgTable("sshot/acad_1.bmp");
+         tensure(__FILE__, __LINE__, !imgTable.isNull());
+         proc.setImage(imgTable);
+         tensure(__FILE__, __LINE__, qFuzzyCompare(proc.pot(), 0.15));
+      }
+      {
+         QImage imgTable("sshot/acad_2.bmp");
+         tensure(__FILE__, __LINE__, !imgTable.isNull());
+         proc.setImage(imgTable);
+         tensure(__FILE__, __LINE__, qFuzzyCompare(proc.pot(), 0.35));
+      }
+      {
+         QImage imgTable("sshot/acad_3.bmp");
+         tensure(__FILE__, __LINE__, !imgTable.isNull());
+         proc.setImage(imgTable);
+         tensure(__FILE__, __LINE__, qFuzzyCompare(proc.pot(), 0.15));
+      }
+      {
+         QImage imgTable("sshot/acad_4.bmp");
+         tensure(__FILE__, __LINE__, !imgTable.isNull());
+         proc.setImage(imgTable);
+         tensure(__FILE__, __LINE__, qFuzzyCompare(proc.pot(), 0.25));
+      }
+      {
+         QImage imgTable("sshot/acad_5.bmp");
+         tensure(__FILE__, __LINE__, !imgTable.isNull());
+         proc.setImage(imgTable);
+         tensure(__FILE__, __LINE__, qFuzzyCompare(proc.pot(), 0.15));
+      }
+      {
+         QImage imgTable("sshot/acad_6.bmp");
+         tensure(__FILE__, __LINE__, !imgTable.isNull());
+         proc.setImage(imgTable);
+         tensure(__FILE__, __LINE__, qFuzzyCompare(proc.pot(), 0.15));
+      }
+      {
+         QImage imgTable("sshot/acad_7.bmp");
+         tensure(__FILE__, __LINE__, !imgTable.isNull());
+         proc.setImage(imgTable);
+         tensure(__FILE__, __LINE__, qFuzzyCompare(proc.pot(), 0.25));
+      }
+      {
          QImage imgTable("sshot/acad_8.bmp");
          tensure(__FILE__, __LINE__, !imgTable.isNull());
          proc.setImage(imgTable);
-         proc.pot();
+         tensure(__FILE__, __LINE__, qFuzzyCompare(proc.pot(), 0.95));
+      }
+      {
+         QImage imgTable("sshot/acad_9.bmp");
+         tensure(__FILE__, __LINE__, !imgTable.isNull());
+         proc.setImage(imgTable);
+         tensure(__FILE__, __LINE__, qFuzzyCompare(proc.pot(), 1.85));
+      }
+      {
+         QImage imgTable("sshot/acad_10.bmp");
+         tensure(__FILE__, __LINE__, !imgTable.isNull());
+         proc.setImage(imgTable);
+         tensure(__FILE__, __LINE__, qFuzzyCompare(proc.pot(), 2.45));
+      }
+      {
+         QImage imgTable("sshot/acad_11.bmp");
+         tensure(__FILE__, __LINE__, !imgTable.isNull());
+         proc.setImage(imgTable);
+         tensure(__FILE__, __LINE__, qFuzzyCompare(proc.pot(), 1.0));
+      }
+      {
+         QImage imgTable("sshot/acad_12.bmp");
+         tensure(__FILE__, __LINE__, !imgTable.isNull());
+         proc.setImage(imgTable);
+         tensure(__FILE__, __LINE__, qFuzzyCompare(proc.pot(), 0.65));
+      }
+      {
+         QImage imgTable("sshot/acad_13.bmp");
+         tensure(__FILE__, __LINE__, !imgTable.isNull());
+         proc.setImage(imgTable);
+         tensure(__FILE__, __LINE__, qFuzzyCompare(proc.pot(), 0.75));
       }
    }
 }
