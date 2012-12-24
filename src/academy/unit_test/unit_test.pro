@@ -15,8 +15,8 @@ INCLUDEPATH  += . ../../common/tut ../../common/utils ../src
 DEPENDPATH   += . ../../common/tut ../../common/utils ../src
 
 # Input
-HEADERS +=  qtincludes.h TstUtils.h CardBase.h Config.h ProcAcad.h
-SOURCES +=  main.cpp TstUtils.cpp UnitTests.cpp Config.cpp ProcAcad.cpp
+HEADERS +=  qtincludes.h TstUtils.h CardBase.h Config.h ProcAcad.h PotParser.h StackParser.h
+SOURCES +=  main.cpp TstUtils.cpp UnitTests.cpp Config.cpp ProcAcad.cpp PotParser.cpp StackParser.cpp
 
 QMAKE_LIBDIR += ../lib
 win32: LIBS += acad_d.lib

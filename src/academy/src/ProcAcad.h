@@ -4,6 +4,7 @@
 #include "ImageProc.h"
 #include "CardBase.h"
 #include "Config.h"
+#include "ImgUtils.h"
 
 class ProcAcad : public CardProcessing
 {
@@ -21,6 +22,7 @@ public:
    virtual qreal stack() const;
    QString cardFromImage(QImage & img) const;
 protected:
+
    //! База карт
    CardBase cardBase_;
 };

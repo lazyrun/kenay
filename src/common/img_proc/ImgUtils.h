@@ -13,6 +13,34 @@ struct ProfileItem
    qreal value;
 };
 
+class Parser
+{
+friend class ImgUtils;
+protected:
+   //! Профиль шестерки
+   virtual bool isSixProfile(const QVector<ProfileItem> & profile) const = 0;
+   //! Правый профиль тройки
+   virtual bool isRightThreeProfile(const QVector<ProfileItem> & profile) const = 0;
+   //! Левый профиль тройки
+   virtual bool isLeftThreeProfile(const QVector<ProfileItem> & profile) const = 0;
+   //! Левый профиль пятерки
+   virtual bool isLeftFiveProfile(const QVector<ProfileItem> & profile) const = 0;
+   //! Правый профиль пятерки
+   virtual bool isRightFiveProfile(const QVector<ProfileItem> & profile) const = 0;
+   //! Левый профиль двойки
+   virtual bool isLeftTwoProfile(const QVector<ProfileItem> & profile) const = 0;
+   //! Правый профиль двойки
+   virtual bool isRightTwoProfile(const QVector<ProfileItem> & profile) const = 0;
+   //! Левый профиль единички
+   virtual bool isLeftOneProfile(const QVector<ProfileItem> & profile) const = 0;
+   //! Правый профиль единички
+   virtual bool isRightOneProfile(const QVector<ProfileItem> & profile) const = 0;
+   //! Левый профиль семерки
+   virtual bool isLeftSevenProfile(const QVector<ProfileItem> & profile) const = 0;
+   //! Правый профиль семерки
+   virtual bool isRightSevenProfile(const QVector<ProfileItem> & profile) const = 0;
+};
+
 class ImgUtils
 {
 public:
@@ -45,17 +73,19 @@ public:
    static QList<BoolMatrix> splitByLetters(const BoolMatrix & matrix);
 
    // Функции распознавания цифры
+   //! Парсит вещественное число
+   static qreal parseRealNumber(const QList<BoolMatrix> & list, 
+      const Parser * parser);
+protected:
    //! Замкнутые области 8-ми связность
    static QList<PointList> closedAreas(const BoolMatrix & bmatr_in,
       Coherence c = Eight);
-
-   //! Возвращает цифру
-   static qreal parseDigit(const BoolMatrix & bm);
-   //! Проверка на точку
-   static bool isDot(const BoolMatrix & bm);
    //! Обрезать снизу и сверху
    static BoolMatrix cropTopBottom(const BoolMatrix & bm);
-protected:
+   //! Парсит одну цифру
+   static qreal parseDigit(const BoolMatrix & bm, const Parser * parser);
+   //! Проверка на точку
+   static bool isDot(const BoolMatrix & bm);
    //! Проверка на крест
    static bool isCrux(const BoolMatrix & bm, const int sx, const int sy);
    //! Сканирование левого профиля
@@ -64,28 +94,6 @@ protected:
    static QVector<ProfileItem> scanRightProfile(const BoolMatrix & imgMatrix);
    //! Сканирование нижнего профиля
    static QVector<ProfileItem> scanDownProfile(const BoolMatrix & imgMatrix);
-   //! Профиль шестерки
-   static bool isSixProfile(const QVector<ProfileItem> & profile);
-   //! Правый профиль тройки
-   static bool isRightThreeProfile(const QVector<ProfileItem> & profile);
-   //! Левый профиль тройки
-   static bool isLeftThreeProfile(const QVector<ProfileItem> & profile);
-   //! Левый профиль пятерки
-   static bool isLeftFiveProfile(const QVector<ProfileItem> & profile);
-   //! Правый профиль пятерки
-   static bool isRightFiveProfile(const QVector<ProfileItem> & profile);
-   //! Левый профиль двойки
-   static bool isLeftTwoProfile(const QVector<ProfileItem> & profile);
-   //! Правый профиль двойки
-   static bool isRightTwoProfile(const QVector<ProfileItem> & profile);
-   //! Левый профиль единички
-   static bool isLeftOneProfile(const QVector<ProfileItem> & profile);
-   //! Правый профиль единички
-   static bool isRightOneProfile(const QVector<ProfileItem> & profile);
-   //! Левый профиль семерки
-   static bool isLeftSevenProfile(const QVector<ProfileItem> & profile);
-   //! Правый профиль семерки
-   static bool isRightSevenProfile(const QVector<ProfileItem> & profile);
 };
 
 #endif

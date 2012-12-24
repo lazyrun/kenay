@@ -1,17 +1,5 @@
 #include "ProcAcad.h"
-#include "ImgUtils.h"
-
-double round (double x, int precision)
-{
-   int mul = 10;
-   
-   for (int i = 0; i < precision; i++)
-      mul *= mul;
-   if (x > 0)
-      return floor(x * mul + .5) / mul;
-   else
-      return ceil(x * mul - .5) / mul;
-}
+#include "PotParser.h"
 
 //
 //ProcAcad
@@ -144,6 +132,7 @@ qreal ProcAcad::pot() const
 
    QImage imgPot = img_.copy(x, y, w, h);
    BoolMatrix * potMatrix = new BoolMatrix(imgPot, QColor(scl));
+   
    //нарезаем по буквам
    QList<BoolMatrix> letts = 
       ImgUtils::splitByLetters(*potMatrix);
@@ -154,35 +143,8 @@ qreal ProcAcad::pot() const
    //{
    //   potLetts.at(i).save(QString("let_%1.bmp").arg(i));
    //}
-
-   qreal val = 0.0;
-   int dot = 0;
-   //считаем целую часть
-   for (int i = 0; i < potLetts.count(); i++)
-   {
-      bool isDot = ImgUtils::isDot(potLetts[i]);
-      if (!isDot)
-      {
-         qreal digit = ImgUtils::parseDigit(potLetts[i]);
-         val = val * 10. + digit;
-      }
-      else
-      {
-         dot = i + 1;
-         break;
-      }
-   }
-   //считаем дробную часть
-   if (dot)//при наличии точки
-   {
-      qreal fract = 0.0;
-      for (int i = 0; i < potLetts.count() - dot; i++)
-      {
-         qreal digit = ImgUtils::parseDigit(potLetts[dot + i]);
-         fract = fract + digit / qPow(10., i + 1);
-      }
-      val += fract;
-   }
+   PotParser potParser;
+   qreal val = ImgUtils::parseRealNumber(potLetts, &potParser);
    return val;
 }
 
