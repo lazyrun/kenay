@@ -232,7 +232,6 @@ namespace tut
          proc.setImage(imgTable);
          tensure(__FILE__, __LINE__, qFuzzyCompare(proc.stack(), 8.95));
       }
-      return;
       {
          QImage imgTable("sshot/acad_2.bmp");
          tensure(__FILE__, __LINE__, !imgTable.isNull());
@@ -304,6 +303,12 @@ namespace tut
          tensure(__FILE__, __LINE__, !imgTable.isNull());
          proc.setImage(imgTable);
          tensure(__FILE__, __LINE__, qFuzzyCompare(proc.stack(), 8.0));
+      }
+      {
+         QImage imgTable("sshot/acad_14.bmp");
+         tensure(__FILE__, __LINE__, !imgTable.isNull());
+         proc.setImage(imgTable);
+         tensure(__FILE__, __LINE__, qFuzzyCompare(proc.stack(), 9.20));
       }
    }
 }

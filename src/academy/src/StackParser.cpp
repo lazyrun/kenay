@@ -5,6 +5,11 @@ bool StackParser::isSixProfile(const QVector<ProfileItem> & profile) const
    //описание профиля 6
    //     1) одна из частей сильно больше остальных 
    //или  2) всего одна часть и она почти равна всей длине стороны
+/*
+profile = [2](
+{item=false value=0.77777777777777779 },
+{item=true value=0.22222222222222221 })
+*/
    bool isSix = true;
    if (profile.count() > 1)
    {
@@ -25,7 +30,7 @@ bool StackParser::isSixProfile(const QVector<ProfileItem> & profile) const
          if (i == max_idx)
             continue;
          
-         if (profile.at(i).value * 5. >= maxval)
+         if (profile.at(i).value * 3. >= maxval)
          {
             //условие не выполнено
             isSix = false;
@@ -81,6 +86,14 @@ bool StackParser::isLeftThreeProfile(const QVector<ProfileItem> & profile) const
    {item=true value=0.33333333333333331 },
    {item=false value=0.22222222222222221 })
 */
+/*
+profile = [5](
+{item=false value=0.22222222222222221 },
+{item=true value=0.22222222222222221 },
+{item=false value=0.11111111111111110 },
+{item=true value=0.22222222222222221 },
+{item=false value=0.22222222222222221 })
+*/
    if (profile.count() < 3)
       return false;
    if (profile.count() == 5)
@@ -91,9 +104,8 @@ bool StackParser::isLeftThreeProfile(const QVector<ProfileItem> & profile) const
           (profile.at(3).item == true) && 
           (profile.at(4).item == false))
       {
-         if (qFuzzyCompare(profile.at(0).value, profile.at(4).value) &&
-             qFuzzyCompare(profile.at(1).value, profile.at(2).value) &&
-             profile.at(3).value > 0.3)
+         if (profile.at(0).value > profile.at(2).value &&
+             profile.at(4).value > profile.at(2).value)
              return true;
       }
    }
@@ -374,16 +386,27 @@ profile = [3](
 {item=false value=0.33333333333333331 },
 {item=true value=0.55555555555555558 })
 */
+/*
+profile = [4](
+{item=true value=0.14285714285714285 },
+{item=false value=0.14285714285714285 },
+{item=true value=0.57142857142857140 },
+{item=false value=0.14285714285714285 })
+*/
    if (profile.count() < 3)
       return false;
-   if (profile.count() == 3)
+   if (profile.count() >= 3)
    {
       if ((profile.at(0).item == true)     &&
           (profile.at(1).item == false)  &&
           (profile.at(2).item == true))
       {
-         if (profile.at(2).value > 0.5)
-             return true;
+         //найти максимальную часть. она должна быть > 50%
+         foreach (ProfileItem item, profile)
+         {
+            if (item.value > 0.5)
+               return true;
+         }
       }
    }
    return false;
@@ -395,8 +418,16 @@ bool StackParser::isRightOneProfile(const QVector<ProfileItem> & profile) const
 profile = [1](
 {item=false value=1.0000000000000000 })
 */
-   if (profile.count() == 1 && profile.at(0).value >= 0.99)
-      return true;
+/*
+profile = [2](
+{item=true value=0.85714285714285710 },
+{item=false value=0.14285714285714285 })
+*/
+   foreach (ProfileItem item, profile)
+   {
+      if (item.value >= 0.80)
+         return true;
+   }
    return false;
 }
 
@@ -408,6 +439,12 @@ profile = [3](
 {item=true value=0.33333333333333331 },
 {item=false value=0.55555555555555558 })
 */
+/*
+profile = [3](
+{item=false value=0.33333333333333331 },
+{item=true value=0.33333333333333331 },
+{item=false value=0.33333333333333331 })
+*/
    if (profile.count() < 3)
       return false;
    if (profile.count() == 3)
@@ -416,7 +453,8 @@ profile = [3](
           (profile.at(1).item == true)  &&
           (profile.at(2).item == false))
       {
-         if (profile.at(2).value > 0.5)
+         if (profile.at(0).value > 0.3 && profile.at(1).value > 0.3 &&
+             profile.at(2).value > 0.3)
              return true;
       }
    }
