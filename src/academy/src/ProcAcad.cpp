@@ -1,5 +1,6 @@
 #include "ProcAcad.h"
 #include "PotParser.h"
+#include "StackParser.h"
 
 //
 //ProcAcad
@@ -110,7 +111,6 @@ QString ProcAcad::holeCard(const QString & scard) const
 
 qreal ProcAcad::pot() const
 {
-   //контрольная точка рейза
    Settings & config = 
       ConfigGlobal<MainConfig>::Instance();
    //цвет
@@ -150,7 +150,42 @@ qreal ProcAcad::pot() const
 
 qreal ProcAcad::stack() const
 {
-   return 0.;
+   Settings & config = 
+      ConfigGlobal<MainConfig>::Instance();
+   //цвет
+   QString scl =
+      config.settingValue("stack", "color", "").toString();
+   //координаты
+   QString sx = config.settingAttribute("x", "stack", "");
+   QString sy = config.settingAttribute("y", "stack", "");
+   QString sw = config.settingAttribute("w", "stack", "");
+   QString sh = config.settingAttribute("h", "stack", "");
+   
+   int sok = 0; bool ok = false;
+   int x = sx.toInt(&ok); sok += ok;
+   int y = sy.toInt(&ok); sok += ok;
+   int w = sw.toInt(&ok); sok += ok;
+   int h = sh.toInt(&ok); sok += ok;
+   if (sok != 4)
+      return 0.0;
+
+   QImage imgStack = img_.copy(x, y, w, h);
+   BoolMatrix * stackMatrix = new BoolMatrix(imgStack, QColor(scl));
+   
+   //нарезаем по буквам
+   QList<BoolMatrix> letts = 
+      ImgUtils::splitByLetters(*stackMatrix);
+   //отбрасываем 1
+   QList<BoolMatrix> stackLetts = letts.mid(1);
+
+   for (int i = 0; i < stackLetts.count(); i++)
+   {
+      stackLetts.at(i).save(QString("stack_%1.bmp").arg(i));
+   }
+
+   StackParser stackParser;
+   qreal val = ImgUtils::parseRealNumber(stackLetts, &stackParser);
+   return val;
 }
 
 QString ProcAcad::cardFromImage(QImage & img) const

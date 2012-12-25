@@ -345,7 +345,6 @@ int ImgUtils::countCheckLetters(const BoolMatrix & checkMatrix)
 QList<BoolMatrix> ImgUtils::splitByLetters(const BoolMatrix & checkMatrix)
 {
    QList<BoolMatrix> letters;
-   //очерняем
    const int width = checkMatrix.width();
    const int height = checkMatrix.height();
 
@@ -435,7 +434,7 @@ QList<PointList> ImgUtils::closedAreas(const BoolMatrix & bmatr_in, Coherence co
 {
    //матрица в которой уже готовые области закрашиваются черным
    BoolMatrix bmatr(bmatr_in);
-   //
+   
    //рабочая матрица для одной области
    BoolMatrix bm(bmatr);
    const int w = bm.width();
