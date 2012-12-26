@@ -136,6 +136,18 @@ namespace tut
          tensure(__FILE__, __LINE__, proc.holeCard("first") == "5s");
          tensure(__FILE__, __LINE__, proc.holeCard("second") == "Ah");
       }
+      {
+         QImage imgTable("sshot/acad_14.bmp");
+         tensure(__FILE__, __LINE__, !imgTable.isNull());
+         proc.setImage(imgTable);
+         tensure(__FILE__, __LINE__, proc.hasFold());
+         tensure(__FILE__, __LINE__, proc.hasCall());
+         tensure(__FILE__, __LINE__, proc.hasCheck());
+         tensure(__FILE__, __LINE__, proc.hasRaise());
+         tensure(__FILE__, __LINE__, proc.holeCard("first") == "Ts");
+         tensure(__FILE__, __LINE__, proc.holeCard("second") == "Qh");
+      }
+
    }
 
    template<>   template<>

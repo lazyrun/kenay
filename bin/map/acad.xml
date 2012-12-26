@@ -29,4 +29,12 @@
    <stack x="358" y="588" w="84" h="16">
       <color>#00FF00</color>
    </stack>
+   <opps>
+      <opp num="1">
+         <card x="0" y="0">#FFFFFF</card>
+         <dealer x="0" y="0">#FFFFFF</dealer>
+         <nickname x="0" y="0" w="0" h="0">#FFFFFF</nickname>
+         <stack x="0" y="0" w="0" h="0">#FFFFFF</stack>
+      </opp>
+   </opps>
 </root>
