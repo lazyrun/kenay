@@ -11,21 +11,25 @@ public:
    //! копирующий конструктор
    BoolMatrix(const BoolMatrix & rhs);
    //!
-   BoolMatrix(const BoolMatrix & rhs, const QRect & rect);
+   explicit BoolMatrix(const BoolMatrix & rhs, const QRect & rect);
    //! В матрице остаются только пиксели заданного цвета
-   BoolMatrix(const QImage & img, const QColor & color);
+   explicit BoolMatrix(const QImage & img, const QColor & color);
 
-   //! Матрица сразу режется по серому (белое на черном)
-   BoolMatrix(const QImage & img, uchar threshold, bool inverse = false);
+   //! В матрице остаются только пиксели R,G,B которых больше заданого значения
+   explicit BoolMatrix(const QImage & img, int r, int g, int b);
+
+   //! Матрица сразу режется по серому 
+   explicit BoolMatrix(const QImage & img, uchar threshold, bool inverse = false);
 
    //! Подается черно белая картинка
-   BoolMatrix(const QImage * img);
+   explicit BoolMatrix(const QImage * img);
    //! 
-   BoolMatrix(const QImage & img, uchar grayThresh, uint minBright, uint maxBright);
+   explicit BoolMatrix(const QImage & img, uchar grayThresh,
+      uint minBright, uint maxBright);
    //! матрица создается но не заполняется
-   BoolMatrix(const QImage & img);
+   explicit BoolMatrix(const QImage & img);
    //! матрица создается из строки
-   BoolMatrix(const QString & str);
+   explicit BoolMatrix(const QString & str);
    //!
    ~BoolMatrix();
 

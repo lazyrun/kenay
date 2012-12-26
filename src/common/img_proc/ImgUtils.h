@@ -77,7 +77,7 @@ public:
    static qreal parseRealNumber(const QList<BoolMatrix> & list, 
       const Parser * parser);
 
-   //! Замкнутые области 8-ми связность
+   //! Замкнутые области 4-х, 8-ми связность
    static QList<PointList> closedAreas(const BoolMatrix & bmatr_in,
       Coherence c = Eight);
 

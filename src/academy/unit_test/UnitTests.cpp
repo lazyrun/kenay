@@ -51,7 +51,7 @@ namespace tut
       str = config.settingAttribute("y", "buttons", "check", "control", "");
       tensure(__FILE__, __LINE__, str == "659"); 
       str =
-         config.settingValue("stack", "color", "").toString();
+         config.settingValue("stack", "").toString();
       tensure(__FILE__, __LINE__, str == "#00FF00"); 
    }
 
@@ -69,6 +69,7 @@ namespace tut
          tensure(__FILE__, __LINE__, proc.hasRaise());
          tensure(__FILE__, __LINE__, proc.holeCard("first") == "2s");
          tensure(__FILE__, __LINE__, proc.holeCard("second") == "As");
+         tensure(__FILE__, __LINE__, !proc.isDealer());
       }
       {
          QImage imgTable("sshot/acad_2.bmp");
@@ -80,6 +81,7 @@ namespace tut
          tensure(__FILE__, __LINE__, proc.hasRaise());
          tensure(__FILE__, __LINE__, proc.holeCard("first") == "8d");
          tensure(__FILE__, __LINE__, proc.holeCard("second") == "9h");
+         tensure(__FILE__, __LINE__, !proc.isDealer());
       }
       {
          QImage imgTable("sshot/acad_3.bmp");
@@ -91,6 +93,7 @@ namespace tut
          tensure(__FILE__, __LINE__, proc.hasRaise());
          tensure(__FILE__, __LINE__, proc.holeCard("first") == "Th");
          tensure(__FILE__, __LINE__, proc.holeCard("second") == "Ac");
+         tensure(__FILE__, __LINE__, !proc.isDealer());
       }
       {
          QImage imgTable("sshot/acad_4.bmp");
@@ -102,6 +105,7 @@ namespace tut
          tensure(__FILE__, __LINE__, proc.hasRaise());
          tensure(__FILE__, __LINE__, proc.holeCard("first") == "As");
          tensure(__FILE__, __LINE__, proc.holeCard("second") == "6s");
+         tensure(__FILE__, __LINE__, !proc.isDealer());
       }
       {
          QImage imgTable("sshot/acad_5.bmp");
@@ -113,6 +117,7 @@ namespace tut
          tensure(__FILE__, __LINE__, proc.hasRaise());
          tensure(__FILE__, __LINE__, proc.holeCard("first") == "7s");
          tensure(__FILE__, __LINE__, proc.holeCard("second") == "8s");
+         tensure(__FILE__, __LINE__, !proc.isDealer());
       }
       {
          QImage imgTable("sshot/acad_6.bmp");
@@ -124,6 +129,7 @@ namespace tut
          tensure(__FILE__, __LINE__, proc.hasRaise());
          tensure(__FILE__, __LINE__, proc.holeCard("first") == "8h");
          tensure(__FILE__, __LINE__, proc.holeCard("second") == "4c");
+         tensure(__FILE__, __LINE__, !proc.isDealer());
       }
       {
          QImage imgTable("sshot/acad_7.bmp");
@@ -135,6 +141,7 @@ namespace tut
          tensure(__FILE__, __LINE__, proc.hasRaise());
          tensure(__FILE__, __LINE__, proc.holeCard("first") == "5s");
          tensure(__FILE__, __LINE__, proc.holeCard("second") == "Ah");
+         tensure(__FILE__, __LINE__, proc.isDealer());
       }
       {
          QImage imgTable("sshot/acad_14.bmp");
@@ -146,6 +153,7 @@ namespace tut
          tensure(__FILE__, __LINE__, proc.hasRaise());
          tensure(__FILE__, __LINE__, proc.holeCard("first") == "Ts");
          tensure(__FILE__, __LINE__, proc.holeCard("second") == "Qh");
+         tensure(__FILE__, __LINE__, !proc.isDealer());
       }
 
    }
@@ -327,26 +335,376 @@ namespace tut
    template<>   template<>
    void testobject::test<6>()
    {
+      //протестируем стеки оппонентов
       ProcAcad proc("map/acad.xml");
-      //получить хэши-ников
-      QImage imgTable("sshot/acad_2.bmp");
-      tensure(__FILE__, __LINE__, !imgTable.isNull());
-      proc.setImage(imgTable);
-      OppNick nick = proc.opp("1").nick();
+      {
+         QImage imgTable("sshot/acad_1.bmp");
+         tensure(__FILE__, __LINE__, !imgTable.isNull());
+         proc.setImage(imgTable);
+         Opp opp1 = proc.opp("1");
+         Opp opp2 = proc.opp("2");
+         Opp opp3 = proc.opp("3");
+         Opp opp4 = proc.opp("4");
+         Opp opp5 = proc.opp("5");
+         Opp opp6 = proc.opp("645");
+         tensure(__FILE__, __LINE__, qFuzzyCompare(opp1.stack(), 9.85));
+         tensure(__FILE__, __LINE__, qFuzzyCompare(opp2.stack(), 9.35));
+         tensure(__FILE__, __LINE__, qFuzzyCompare(opp3.stack(), 9));
+         tensure(__FILE__, __LINE__, qFuzzyCompare(opp4.stack(), 10.95));
+         tensure(__FILE__, __LINE__, qFuzzyCompare(opp5.stack(), 11.75));
+         tensure(__FILE__, __LINE__, qFuzzyCompare(opp6.stack(), 0));
+      }
+      {
+         QImage imgTable("sshot/acad_12.bmp");
+         tensure(__FILE__, __LINE__, !imgTable.isNull());
+         proc.setImage(imgTable);
+         Opp opp1 = proc.opp("1");
+         Opp opp2 = proc.opp("2");
+         Opp opp3 = proc.opp("3");
+         Opp opp4 = proc.opp("4");
+         Opp opp5 = proc.opp("5");
+         tensure(__FILE__, __LINE__, qFuzzyCompare(opp1.stack(), 13.10));
+         tensure(__FILE__, __LINE__, qFuzzyCompare(opp2.stack(), 11.20));
+         tensure(__FILE__, __LINE__, qFuzzyCompare(opp3.stack(), 10.10));
+         tensure(__FILE__, __LINE__, qFuzzyCompare(opp4.stack(), 10.85));
+         tensure(__FILE__, __LINE__, qFuzzyCompare(opp5.stack(), 9.15));
+      }
+   }
 
-      QImage imgTable1("sshot/acad_3.bmp");
-      tensure(__FILE__, __LINE__, !imgTable1.isNull());
-      proc.setImage(imgTable1);
-      OppNick nick1 = proc.opp("1").nick();
+   template<>   template<>
+   void testobject::test<7>()
+   {
+      ProcAcad proc("map/acad.xml");
+      {
+         //получить хэши-ников
+         QImage imgTable("sshot/acad_2.bmp");
+         tensure(__FILE__, __LINE__, !imgTable.isNull());
+         proc.setImage(imgTable);
+         OppNick nick = proc.opp("1").nick();
 
-      tensure(__FILE__, __LINE__, nick == nick1);
+         QImage imgTable1("sshot/acad_3.bmp");
+         tensure(__FILE__, __LINE__, !imgTable1.isNull());
+         proc.setImage(imgTable1);
+         OppNick nick1 = proc.opp("1").nick();
 
-      QImage imgTable2("sshot/acad_1.bmp");
-      tensure(__FILE__, __LINE__, !imgTable2.isNull());
-      proc.setImage(imgTable2);
-      OppNick nick2 = proc.opp("1").nick();
+         tensure(__FILE__, __LINE__, nick == nick1);
 
-      tensure(__FILE__, __LINE__, !(nick == nick2));
+         QImage imgTable2("sshot/acad_4.bmp");
+         tensure(__FILE__, __LINE__, !imgTable2.isNull());
+         proc.setImage(imgTable2);
+         OppNick nick2 = proc.opp("1").nick();
 
+         tensure(__FILE__, __LINE__, nick == nick2);
+
+         QImage imgTable3("sshot/acad_15.bmp");
+         tensure(__FILE__, __LINE__, !imgTable3.isNull());
+         proc.setImage(imgTable3);
+         OppNick nick3 = proc.opp("4").nick();
+
+         tensure(__FILE__, __LINE__, nick == nick3);
+      }
+      {
+         QImage imgTable1("sshot/acad_1.bmp");
+         tensure(__FILE__, __LINE__, !imgTable1.isNull());
+         proc.setImage(imgTable1);
+         OppNick nick1 = proc.opp("1").nick();
+
+         QImage imgTable2("sshot/acad_2.bmp");
+         tensure(__FILE__, __LINE__, !imgTable2.isNull());
+         proc.setImage(imgTable2);
+         OppNick nick2 = proc.opp("5").nick();
+
+         tensure(__FILE__, __LINE__, nick1 == nick2);
+      }
+      {
+         QImage imgTable1("sshot/acad_1.bmp");
+         tensure(__FILE__, __LINE__, !imgTable1.isNull());
+         proc.setImage(imgTable1);
+         OppNick nick1 = proc.opp("1").nick();
+
+         QImage imgTable2("sshot/acad_2.bmp");
+         tensure(__FILE__, __LINE__, !imgTable2.isNull());
+         proc.setImage(imgTable2);
+         OppNick nick2 = proc.opp("5").nick();
+
+         tensure(__FILE__, __LINE__, nick1 == nick2);
+      }
+      {
+         QImage imgTable1("sshot/acad_7.bmp");
+         tensure(__FILE__, __LINE__, !imgTable1.isNull());
+         proc.setImage(imgTable1);
+         OppNick nick1 = proc.opp("2").nick();
+
+         QImage imgTable2("sshot/acad_13.bmp");
+         tensure(__FILE__, __LINE__, !imgTable2.isNull());
+         proc.setImage(imgTable2);
+         OppNick nick2 = proc.opp("5").nick();
+
+         tensure(__FILE__, __LINE__, nick1 == nick2);
+      }
+      {
+         QImage imgTable1("sshot/acad_7.bmp");
+         tensure(__FILE__, __LINE__, !imgTable1.isNull());
+         proc.setImage(imgTable1);
+         OppNick nick1 = proc.opp("2").nick();
+         
+         //поиск позиции этого персонажа на второй картинке
+         QImage imgTable2("sshot/acad_13.bmp");
+         tensure(__FILE__, __LINE__, !imgTable2.isNull());
+         proc.setImage(imgTable2);
+         int pos = 0;
+         for (int i = 1; i < 6; i++)
+         {
+            OppNick nick2 = proc.opp(QString::number(i)).nick();
+            if (nick1 == nick2)
+            {
+               pos = i;
+               break;
+            }
+         }
+
+         tensure(__FILE__, __LINE__, pos == 5);
+      }
+      {
+         QImage imgTable1("sshot/acad_13.bmp");
+         tensure(__FILE__, __LINE__, !imgTable1.isNull());
+         proc.setImage(imgTable1);
+         OppNick nick1 = proc.opp("3").nick();
+         
+         //поиск позиции этого персонажа на второй картинке
+         QImage imgTable2("sshot/acad_14.bmp");
+         tensure(__FILE__, __LINE__, !imgTable2.isNull());
+         proc.setImage(imgTable2);
+         int pos = 0;
+         for (int i = 1; i < 6; i++)
+         {
+            OppNick nick2 = proc.opp(QString::number(i)).nick();
+            if (nick1 == nick2)
+            {
+               pos = i;
+               break;
+            }
+         }
+
+         tensure(__FILE__, __LINE__, pos == 4);
+      }
+      {
+         QImage imgTable1("sshot/acad_14.bmp");
+         tensure(__FILE__, __LINE__, !imgTable1.isNull());
+         proc.setImage(imgTable1);
+         OppNick nick1 = proc.opp("1").nick();
+         
+         //поиск позиции этого персонажа на второй картинке
+         QImage imgTable2("sshot/acad_15.bmp");
+         tensure(__FILE__, __LINE__, !imgTable2.isNull());
+         proc.setImage(imgTable2);
+         int pos = 0;
+         for (int i = 1; i < 6; i++)
+         {
+            OppNick nick2 = proc.opp(QString::number(i)).nick();
+            if (nick1 == nick2)
+            {
+               pos = i;
+               break;
+            }
+         }
+
+         tensure(__FILE__, __LINE__, pos == 2);
+      }
+      {
+         QImage imgTable1("sshot/acad_8.bmp");
+         tensure(__FILE__, __LINE__, !imgTable1.isNull());
+         proc.setImage(imgTable1);
+         OppNick nick1 = proc.opp("3").nick();
+         
+         //поиск позиции этого персонажа на второй картинке
+         QImage imgTable2("sshot/acad_1.bmp");
+         tensure(__FILE__, __LINE__, !imgTable2.isNull());
+         proc.setImage(imgTable2);
+         int pos = 0;
+         for (int i = 1; i < 6; i++)
+         {
+            OppNick nick2 = proc.opp(QString::number(i)).nick();
+            if (nick1 == nick2)
+            {
+               pos = i;
+               break;
+            }
+         }
+
+         tensure(__FILE__, __LINE__, pos == 5);
+      }
+      {
+         QImage imgTable1("sshot/acad_8.bmp");
+         tensure(__FILE__, __LINE__, !imgTable1.isNull());
+         proc.setImage(imgTable1);
+         OppNick nick1 = proc.opp("5").nick();
+         
+         //поиск позиции этого персонажа на второй картинке
+         QImage imgTable2("sshot/acad_8.bmp");
+         tensure(__FILE__, __LINE__, !imgTable2.isNull());
+         proc.setImage(imgTable2);
+         int pos = 0;
+         for (int i = 1; i < 6; i++)
+         {
+            OppNick nick2 = proc.opp(QString::number(i)).nick();
+            if (nick1 == nick2)
+            {
+               pos = i;
+               break;
+            }
+         }
+
+         tensure(__FILE__, __LINE__, pos == 5);
+      }
+   }
+
+   template<>   template<>
+   void testobject::test<8>()
+   {
+      //определение карт у оппов
+      ProcAcad proc("map/acad.xml");
+      {
+         QImage imgTable("sshot/acad_1.bmp");
+         tensure(__FILE__, __LINE__, !imgTable.isNull());
+         proc.setImage(imgTable);
+         Opp opp1 = proc.opp("1");
+         Opp opp2 = proc.opp("2");
+         Opp opp3 = proc.opp("3");
+         Opp opp4 = proc.opp("4");
+         Opp opp5 = proc.opp("5");
+         tensure(__FILE__, __LINE__,  opp1.hasCards());
+         tensure(__FILE__, __LINE__, !opp2.hasCards());
+         tensure(__FILE__, __LINE__, !opp3.hasCards());
+         tensure(__FILE__, __LINE__, !opp4.hasCards());
+         tensure(__FILE__, __LINE__, !opp5.hasCards());
+      }
+      {
+         QImage imgTable("sshot/acad_2.bmp");
+         tensure(__FILE__, __LINE__, !imgTable.isNull());
+         proc.setImage(imgTable);
+         Opp opp1 = proc.opp("1");
+         Opp opp2 = proc.opp("2");
+         Opp opp3 = proc.opp("3");
+         Opp opp4 = proc.opp("4");
+         Opp opp5 = proc.opp("5");
+         tensure(__FILE__, __LINE__, opp1.hasCards());
+         tensure(__FILE__, __LINE__, opp2.hasCards());
+         tensure(__FILE__, __LINE__, opp3.hasCards());
+         tensure(__FILE__, __LINE__, opp4.hasCards());
+         tensure(__FILE__, __LINE__, !opp5.hasCards());
+      }
+      {
+         QImage imgTable("sshot/acad_3.bmp");
+         tensure(__FILE__, __LINE__, !imgTable.isNull());
+         proc.setImage(imgTable);
+         Opp opp1 = proc.opp("1");
+         Opp opp2 = proc.opp("2");
+         Opp opp3 = proc.opp("3");
+         Opp opp4 = proc.opp("4");
+         Opp opp5 = proc.opp("5");
+         tensure(__FILE__, __LINE__, opp1.hasCards());
+         tensure(__FILE__, __LINE__, opp2.hasCards());
+         tensure(__FILE__, __LINE__, opp3.hasCards());
+         tensure(__FILE__, __LINE__, opp4.hasCards());
+         tensure(__FILE__, __LINE__, opp5.hasCards());
+      }
+      {
+         QImage imgTable("sshot/acad_8.bmp");
+         tensure(__FILE__, __LINE__, !imgTable.isNull());
+         proc.setImage(imgTable);
+         Opp opp1 = proc.opp("1");
+         Opp opp2 = proc.opp("2");
+         Opp opp3 = proc.opp("3");
+         Opp opp4 = proc.opp("4");
+         Opp opp5 = proc.opp("5");
+         tensure(__FILE__, __LINE__, !opp1.hasCards());
+         tensure(__FILE__, __LINE__, !opp2.hasCards());
+         tensure(__FILE__, __LINE__, !opp3.hasCards());
+         tensure(__FILE__, __LINE__, opp4.hasCards());
+         tensure(__FILE__, __LINE__, !opp5.hasCards());
+      }
+   }
+
+   template<>   template<>
+   void testobject::test<9>()
+   {
+      //определение фошки дилера у оппов
+      ProcAcad proc("map/acad.xml");
+      {
+         QImage imgTable("sshot/acad_1.bmp");
+         tensure(__FILE__, __LINE__, !imgTable.isNull());
+         proc.setImage(imgTable);
+         Opp opp1 = proc.opp("1");
+         Opp opp2 = proc.opp("2");
+         Opp opp3 = proc.opp("3");
+         Opp opp4 = proc.opp("4");
+         Opp opp5 = proc.opp("5");
+         tensure(__FILE__, __LINE__, !opp1.isDealer());
+         tensure(__FILE__, __LINE__, !opp2.isDealer());
+         tensure(__FILE__, __LINE__, !opp3.isDealer());
+         tensure(__FILE__, __LINE__, !opp4.isDealer());
+         tensure(__FILE__, __LINE__, opp5.isDealer());
+      }
+      {
+         QImage imgTable("sshot/acad_3.bmp");
+         tensure(__FILE__, __LINE__, !imgTable.isNull());
+         proc.setImage(imgTable);
+         Opp opp1 = proc.opp("1");
+         Opp opp2 = proc.opp("2");
+         Opp opp3 = proc.opp("3");
+         Opp opp4 = proc.opp("4");
+         Opp opp5 = proc.opp("5");
+         tensure(__FILE__, __LINE__, !opp1.isDealer());
+         tensure(__FILE__, __LINE__, !opp2.isDealer());
+         tensure(__FILE__, __LINE__, opp3.isDealer());
+         tensure(__FILE__, __LINE__, !opp4.isDealer());
+         tensure(__FILE__, __LINE__, !opp5.isDealer());
+      }
+      {
+         QImage imgTable("sshot/acad_4.bmp");
+         tensure(__FILE__, __LINE__, !imgTable.isNull());
+         proc.setImage(imgTable);
+         Opp opp1 = proc.opp("1");
+         Opp opp2 = proc.opp("2");
+         Opp opp3 = proc.opp("3");
+         Opp opp4 = proc.opp("4");
+         Opp opp5 = proc.opp("5");
+         tensure(__FILE__, __LINE__, !opp1.isDealer());
+         tensure(__FILE__, __LINE__, !opp2.isDealer());
+         tensure(__FILE__, __LINE__, !opp3.isDealer());
+         tensure(__FILE__, __LINE__, opp4.isDealer());
+         tensure(__FILE__, __LINE__, !opp5.isDealer());
+      }
+      {
+         QImage imgTable("sshot/acad_6.bmp");
+         tensure(__FILE__, __LINE__, !imgTable.isNull());
+         proc.setImage(imgTable);
+         Opp opp1 = proc.opp("1");
+         Opp opp2 = proc.opp("2");
+         Opp opp3 = proc.opp("3");
+         Opp opp4 = proc.opp("4");
+         Opp opp5 = proc.opp("5");
+         tensure(__FILE__, __LINE__, !opp1.isDealer());
+         tensure(__FILE__, __LINE__, opp2.isDealer());
+         tensure(__FILE__, __LINE__, !opp3.isDealer());
+         tensure(__FILE__, __LINE__, !opp4.isDealer());
+         tensure(__FILE__, __LINE__, !opp5.isDealer());
+      }
+      {
+         QImage imgTable("sshot/acad_2.bmp");
+         tensure(__FILE__, __LINE__, !imgTable.isNull());
+         proc.setImage(imgTable);
+         Opp opp1 = proc.opp("1");
+         Opp opp2 = proc.opp("2");
+         Opp opp3 = proc.opp("3");
+         Opp opp4 = proc.opp("4");
+         Opp opp5 = proc.opp("5");
+         tensure(__FILE__, __LINE__, opp1.isDealer());
+         tensure(__FILE__, __LINE__, !opp2.isDealer());
+         tensure(__FILE__, __LINE__, !opp3.isDealer());
+         tensure(__FILE__, __LINE__, !opp4.isDealer());
+         tensure(__FILE__, __LINE__, !opp5.isDealer());
+      }
    }
 }

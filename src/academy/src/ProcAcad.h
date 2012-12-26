@@ -22,6 +22,7 @@ public:
    virtual QString holeCard(const QString & card) const;
    virtual qreal pot() const;
    virtual qreal stack() const;
+   virtual bool isDealer() const;
    QString cardFromImage(QImage & img) const;
    Opp opp(const QString & num);
 protected:
@@ -66,15 +67,15 @@ struct OppNick
 class Opp
 {
 public:
-   Opp() {}
-   void setCard(bool v) {v;}
-   bool hasCard() const {return false;}
+   Opp() {stack_ = 0.; hasCards_ = false; isDealer_ = false;}
+   void setCards(bool v) {hasCards_ = v;}
+   bool hasCards() const {return hasCards_;}
 
-   void setDealer(bool v) {v;}
-   bool isDealer() const {return false;}
+   void setDealer(bool v) {isDealer_ = v;}
+   bool isDealer() const {return isDealer_;}
    
-   void setStack(qreal v) {v;}
-   qreal stack() const {return 0.;}
+   void setStack(qreal v) {stack_ = v;}
+   qreal stack() const {return stack_;}
    
    void setNick(const OppNick & nick) {nick_ = nick;}
    OppNick nick() const {return nick_;}
@@ -85,6 +86,9 @@ public:
    qreal pfr() const {return 0.;}
 protected:
    OppNick nick_;
+   qreal stack_;
+   bool hasCards_;
+   bool isDealer_;
 };
 #endif
 
