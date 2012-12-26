@@ -76,6 +76,7 @@ public:
    */
    QString fileName() const { return fileName_; }
 
+   QDomElement & root() { return rootElement_; }
 protected: 
    //! Инициализация
    void init(const QString & filename = "", const QString & rootName = "" );

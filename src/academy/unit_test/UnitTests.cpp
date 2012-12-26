@@ -323,4 +323,30 @@ namespace tut
          tensure(__FILE__, __LINE__, qFuzzyCompare(proc.stack(), 9.20));
       }
    }
+
+   template<>   template<>
+   void testobject::test<6>()
+   {
+      ProcAcad proc("map/acad.xml");
+      //получить хэши-ников
+      QImage imgTable("sshot/acad_2.bmp");
+      tensure(__FILE__, __LINE__, !imgTable.isNull());
+      proc.setImage(imgTable);
+      OppNick nick = proc.opp("1").nick();
+
+      QImage imgTable1("sshot/acad_3.bmp");
+      tensure(__FILE__, __LINE__, !imgTable1.isNull());
+      proc.setImage(imgTable1);
+      OppNick nick1 = proc.opp("1").nick();
+
+      tensure(__FILE__, __LINE__, nick == nick1);
+
+      QImage imgTable2("sshot/acad_1.bmp");
+      tensure(__FILE__, __LINE__, !imgTable2.isNull());
+      proc.setImage(imgTable2);
+      OppNick nick2 = proc.opp("1").nick();
+
+      tensure(__FILE__, __LINE__, !(nick == nick2));
+
+   }
 }

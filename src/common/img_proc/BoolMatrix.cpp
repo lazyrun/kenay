@@ -159,7 +159,7 @@ BoolMatrix::BoolMatrix(const QImage * img)
    }
 }
 
-BoolMatrix::BoolMatrix(const QImage & img, uchar threshold)
+BoolMatrix::BoolMatrix(const QImage & img, uchar threshold, bool inverse)
 {
    width_  = img.width();
    height_ = img.height();
@@ -178,11 +178,17 @@ BoolMatrix::BoolMatrix(const QImage & img, uchar threshold)
          QRgb rgb = img.pixel(w, h);
          if (qGray(rgb) < threshold)
          {
-            matrix_[w][h] = 1;//черный
+            if (!inverse)
+               matrix_[w][h] = 1;//черный
+            else
+               matrix_[w][h] = 0;//белый
          }
          else
          {
-            matrix_[w][h] = 0;//белый
+            if (!inverse)
+               matrix_[w][h] = 0;//белый
+            else
+               matrix_[w][h] = 1;//черный
          }
       }
    }

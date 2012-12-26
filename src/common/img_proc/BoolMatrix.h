@@ -15,8 +15,9 @@ public:
    //! В матрице остаются только пиксели заданного цвета
    BoolMatrix(const QImage & img, const QColor & color);
 
-   //! Матрица сразу режется по серому
-   BoolMatrix(const QImage & img, uchar threshold);
+   //! Матрица сразу режется по серому (белое на черном)
+   BoolMatrix(const QImage & img, uchar threshold, bool inverse = false);
+
    //! Подается черно белая картинка
    BoolMatrix(const QImage * img);
    //! 

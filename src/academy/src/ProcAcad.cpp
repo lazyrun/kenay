@@ -223,3 +223,78 @@ QString ProcAcad::cardFromImage(QImage & img) const
    
    return cardBase_.nominal(minIdx);
 }
+
+Opp ProcAcad::opp(const QString & num)
+{
+   if (oppMap_.isEmpty())
+   {
+      Settings & config = 
+         ConfigGlobal<MainConfig>::Instance();
+      
+      QDomElement & rootNode = config.root();
+      QDomElement oppsNode = rootNode.firstChildElement("opps");
+      QDomNodeList oppList = oppsNode.elementsByTagName("opp");
+      for (int i = 0; i < oppList.count(); i++)
+      {
+         QDomNode dnOpp = oppList.at(i);
+         QString num = dnOpp.attributes().namedItem("num").nodeValue();
+         oppMap_.insert(num, dnOpp);
+      }
+   }
+   QDomNode dnOpp = oppMap_.value(num);
+
+   if (dnOpp.isNull())
+      return Opp();
+   
+   QDomNode dnNick = dnOpp.firstChildElement("nickname");
+   if (dnNick.isNull())
+      return Opp();
+
+   QString sx = dnNick.attributes().namedItem("x").nodeValue();
+   QString sy = dnNick.attributes().namedItem("y").nodeValue();
+   QString sw = dnNick.attributes().namedItem("w").nodeValue();
+   QString sh = dnNick.attributes().namedItem("h").nodeValue();
+
+   int sok = 0; bool ok = false;
+   int x = sx.toInt(&ok); sok += ok;
+   int y = sy.toInt(&ok); sok += ok;
+   int w = sw.toInt(&ok); sok += ok;
+   int h = sh.toInt(&ok); sok += ok;
+   if (sok != 4)
+      return Opp();
+
+   QImage imgOpp = img_.copy(x, y, w, h);   
+   imgOpp.save("opp.bmp");
+
+   BoolMatrix bmOpp(imgOpp, 128, true);
+   bmOpp.save("wb_opp.bmp");
+
+   QList<BoolMatrix> letts = 
+      ImgUtils::splitByLetters(bmOpp);
+   
+   OppNick nick;
+   for (int i = 0; i < letts.count(); i++)
+   {
+      letts.at(i).save(QString("opp_%1.bmp").arg(i));
+      QList<PointList> areas = ImgUtils::closedAreas(letts.at(i),
+         ImgUtils::Four);      
+      OppNick::OppLetter letter;
+      letter.size = QSize(letts.at(i).width(), letts.at(i).height());
+      letter.closed = areas.count();
+      nick.letters.append(letter);
+   }
+   
+   Opp opp;
+   opp.setNick(nick);
+   ////цвет
+
+   //QString scl =
+   //   config.settingValue("stack", "color", "").toString();
+   ////координаты
+   //QString sx = config.settingAttribute("x", "stack", "");
+   //QString sy = config.settingAttribute("y", "stack", "");
+   //QString sw = config.settingAttribute("w", "stack", "");
+   //QString sh = config.settingAttribute("h", "stack", "");
+   
+   return opp;
+}

@@ -33,6 +33,12 @@
       <opp num="1">
          <card x="0" y="0">#FFFFFF</card>
          <dealer x="0" y="0">#FFFFFF</dealer>
+         <nickname x="17" y="518" w="90" h="42">#FFFFFF</nickname>
+         <stack x="0" y="0" w="0" h="0">#FFFFFF</stack>
+      </opp>
+      <opp num="2">
+         <card x="0" y="0">#FFFFFF</card>
+         <dealer x="0" y="0">#FFFFFF</dealer>
          <nickname x="0" y="0" w="0" h="0">#FFFFFF</nickname>
          <stack x="0" y="0" w="0" h="0">#FFFFFF</stack>
       </opp>

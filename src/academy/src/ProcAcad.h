@@ -6,6 +6,8 @@
 #include "Config.h"
 #include "ImgUtils.h"
 
+class Opp;
+
 class ProcAcad : public CardProcessing
 {
 public:
@@ -21,26 +23,68 @@ public:
    virtual qreal pot() const;
    virtual qreal stack() const;
    QString cardFromImage(QImage & img) const;
+   Opp opp(const QString & num);
 protected:
    //! База карт
    CardBase cardBase_;
+   //!
+   QMap<QString, QDomNode> oppMap_;
 };
 
-#if 0
+struct OppNick
+{
+   bool operator==(const OppNick & rhs)
+   {
+      if (&rhs == this)
+         return true;
+      if (letters.count() == rhs.letters.count())
+      {
+         return letters == rhs.letters;
+      }
+      return false;
+   }
+   struct OppLetter
+   {
+      bool operator==(const OppLetter & rhs)
+      {
+         if (&rhs == this)
+            return true;
+         if (size == rhs.size && closed == rhs.closed)
+            return true;
+         return false;
+      }      
+      //размеры буквы
+      QSize size;
+      //количество замкнутых областей
+      int closed;
+   };
+   //! Последовательность букв
+   QList<OppLetter> letters;
+};
+
+#if 1
 class Opp
 {
 public:
-   bool hasCard() const;
-   bool isDealer() const;
-   qreal stack() const;
-   //http://propokerpro.ru/shkola/cash-statistika.htm
-   //! Value in pot на префлопе
-   /*
-VPIP или VP$IP расшифровывается как "voluntary put $ in pot" и показывает в процентном выражение, как часто игрок инвестирует деньги в самом первом круге торговли. В этот процент включаются те случаи, когда игрок повышает на префлопе, коллирует повышение соперника или же просто коллирует большой блайнд, т.е. фактически все те случаи, в которых игрок инвестирует дополнительные деньги для того, чтобы дойти до следующего круга торговли. Если игрок делает обязательную ставку, т.е. играет в позиции большого блайнда, и никто из соперников не повышает перед ним, что даёт игроку возможность бесплатно посмотреть на флоп, то данные случаи не включаются в показатель VPIP.
-   */
-   qreal vpip() const;
+   Opp() {}
+   void setCard(bool v) {v;}
+   bool hasCard() const {return false;}
+
+   void setDealer(bool v) {v;}
+   bool isDealer() const {return false;}
+   
+   void setStack(qreal v) {v;}
+   qreal stack() const {return 0.;}
+   
+   void setNick(const OppNick & nick) {nick_ = nick;}
+   OppNick nick() const {return nick_;}
+   
+   //!http://propokerpro.ru/shkola/cash-statistika.htm
+   qreal vpip() const {return 0.;}
    //! Preflop raiser
-   qreal pfr() const;
+   qreal pfr() const {return 0.;}
+protected:
+   OppNick nick_;
 };
 #endif
 

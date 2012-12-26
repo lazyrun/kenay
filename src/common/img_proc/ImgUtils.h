@@ -76,10 +76,12 @@ public:
    //! Парсит вещественное число
    static qreal parseRealNumber(const QList<BoolMatrix> & list, 
       const Parser * parser);
-protected:
+
    //! Замкнутые области 8-ми связность
    static QList<PointList> closedAreas(const BoolMatrix & bmatr_in,
       Coherence c = Eight);
+
+protected:
    //! Обрезать снизу и сверху
    static BoolMatrix cropTopBottom(const BoolMatrix & bm);
    //! Парсит одну цифру
