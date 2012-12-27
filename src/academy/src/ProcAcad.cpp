@@ -266,7 +266,7 @@ Opp ProcAcad::opp(const QString & num)
    QImage imgOpp = img_.copy(x, y, w, h);   
    imgOpp.save("opp.bmp");
 
-   BoolMatrix bmOpp(imgOpp, 128, true);
+   BoolMatrix bmOpp(imgOpp, 188, true);
    bmOpp.save("wb_opp.bmp");
 
    QList<BoolMatrix> letts = 

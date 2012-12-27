@@ -341,12 +341,12 @@ namespace tut
 
       tensure(__FILE__, __LINE__, nick == nick1);
 
-      QImage imgTable2("sshot/acad_1.bmp");
+      QImage imgTable2("sshot/acad_4.bmp");
       tensure(__FILE__, __LINE__, !imgTable2.isNull());
       proc.setImage(imgTable2);
       OppNick nick2 = proc.opp("1").nick();
 
-      tensure(__FILE__, __LINE__, !(nick == nick2));
+      tensure(__FILE__, __LINE__, (nick == nick2));
 
    }
 }
