@@ -194,6 +194,36 @@ BoolMatrix::BoolMatrix(const QImage & img, uchar threshold, bool inverse)
    }
 }
 
+BoolMatrix::BoolMatrix(const QImage & img, int r, int g, int b)
+{
+   width_  = img.width();
+   height_ = img.height();
+
+	matrix_ = new bool* [width_];
+   bits_ = new bool[width_ * height_];
+   for (int i = 0; i < width_; ++i)
+   {
+      matrix_[i] = bits_ + i * height_;
+   }
+
+   for (int w = 0; w < width_; ++w)
+   {
+      for (int h = 0; h < height_; ++h)
+      {
+         QRgb p = img.pixel(w, h);
+         if (qRed(p) > r && qGreen(p) > g && qBlue(p) > b)
+         {
+            matrix_[w][h] = 1;//черный
+         }
+         else
+         {
+            matrix_[w][h] = 0;//белый
+         }
+      }
+   }
+
+}
+
 BoolMatrix::BoolMatrix(const QImage & img, const QColor & color)
 {
    width_  = img.width();

@@ -75,6 +75,21 @@ bool ProcAcad::hasRaise() const
    return controlPixel(sx, sy, scl);
 }
 
+bool ProcAcad::isDealer() const
+{
+   //контрольная точка фошки дилера
+   Settings & config = 
+      ConfigGlobal<MainConfig>::Instance();
+   //цвет
+   QString scl =
+      config.settingValue("dealer", "").toString();
+   //координаты
+   QString sx = config.settingAttribute("x", "dealer", "");
+   QString sy = config.settingAttribute("y", "dealer", "");
+
+   return controlPixel(sx, sy, scl);
+}
+
 QString ProcAcad::holeCard(const QString & scard) const
 {
    Settings & config = 
@@ -115,7 +130,7 @@ qreal ProcAcad::pot() const
       ConfigGlobal<MainConfig>::Instance();
    //цвет
    QString scl =
-      config.settingValue("pot", "color", "").toString();
+      config.settingValue("pot", "").toString();
    //координаты
    QString sx = config.settingAttribute("x", "pot", "");
    QString sy = config.settingAttribute("y", "pot", "");
@@ -136,6 +151,8 @@ qreal ProcAcad::pot() const
    //нарезаем по буквам
    QList<BoolMatrix> letts = 
       ImgUtils::splitByLetters(*potMatrix);
+   
+   delete potMatrix;
    //отбрасываем 4 первые буквы слова Pot:
    QList<BoolMatrix> potLetts = letts.mid(4);
    
@@ -154,7 +171,7 @@ qreal ProcAcad::stack() const
       ConfigGlobal<MainConfig>::Instance();
    //цвет
    QString scl =
-      config.settingValue("stack", "color", "").toString();
+      config.settingValue("stack", "").toString();
    //координаты
    QString sx = config.settingAttribute("x", "stack", "");
    QString sy = config.settingAttribute("y", "stack", "");
@@ -178,10 +195,12 @@ qreal ProcAcad::stack() const
    //отбрасываем 1
    QList<BoolMatrix> stackLetts = letts.mid(1);
 
-   for (int i = 0; i < stackLetts.count(); i++)
-   {
-      stackLetts.at(i).save(QString("stack_%1.bmp").arg(i));
-   }
+   delete stackMatrix;
+
+   //for (int i = 0; i < stackLetts.count(); i++)
+   //{
+   //   stackLetts.at(i).save(QString("stack_%1.bmp").arg(i));
+   //}
 
    StackParser stackParser;
    qreal val = ImgUtils::parseRealNumber(stackLetts, &stackParser);
@@ -254,6 +273,7 @@ Opp ProcAcad::opp(const QString & num)
    QString sy = dnNick.attributes().namedItem("y").nodeValue();
    QString sw = dnNick.attributes().namedItem("w").nodeValue();
    QString sh = dnNick.attributes().namedItem("h").nodeValue();
+   QString scl = dnNick.firstChild().nodeValue();
 
    int sok = 0; bool ok = false;
    int x = sx.toInt(&ok); sok += ok;
@@ -263,11 +283,18 @@ Opp ProcAcad::opp(const QString & num)
    if (sok != 4)
       return Opp();
 
-   QImage imgOpp = img_.copy(x, y, w, h);   
-   imgOpp.save("opp.bmp");
 
-   BoolMatrix bmOpp(imgOpp, 188, true);
-   bmOpp.save("wb_opp.bmp");
+   QImage imgOpp = img_.copy(x, y, w, h);   
+   //imgOpp.save("opp.bmp");
+   
+   if (scl.isEmpty())
+      return Opp();
+
+   QColor cl(scl);
+   int r = 0, g = 0, b = 0;
+   cl.getRgb(&r, &g, &b);
+   BoolMatrix bmOpp(imgOpp, r, g, b);
+   //bmOpp.save("wb_opp.bmp");
 
    QList<BoolMatrix> letts = 
       ImgUtils::splitByLetters(bmOpp);
@@ -275,7 +302,7 @@ Opp ProcAcad::opp(const QString & num)
    OppNick nick;
    for (int i = 0; i < letts.count(); i++)
    {
-      letts.at(i).save(QString("opp_%1.bmp").arg(i));
+      //letts.at(i).save(QString("opp_%1.bmp").arg(i));
       QList<PointList> areas = ImgUtils::closedAreas(letts.at(i),
          ImgUtils::Four);      
       OppNick::OppLetter letter;
@@ -286,15 +313,66 @@ Opp ProcAcad::opp(const QString & num)
    
    Opp opp;
    opp.setNick(nick);
-   ////цвет
-
-   //QString scl =
-   //   config.settingValue("stack", "color", "").toString();
-   ////координаты
-   //QString sx = config.settingAttribute("x", "stack", "");
-   //QString sy = config.settingAttribute("y", "stack", "");
-   //QString sw = config.settingAttribute("w", "stack", "");
-   //QString sh = config.settingAttribute("h", "stack", "");
    
+   //стек оппонента
+   qreal stack = 0.;
+   QDomNode dnStack = dnOpp.firstChildElement("stack");
+   if (!dnStack.isNull())
+   {
+      sx = dnStack.attributes().namedItem("x").nodeValue();
+      sy = dnStack.attributes().namedItem("y").nodeValue();
+      sw = dnStack.attributes().namedItem("w").nodeValue();
+      sh = dnStack.attributes().namedItem("h").nodeValue();
+      scl = dnStack.firstChild().nodeValue();
+      
+      sok = 0; ok = false;
+      x = sx.toInt(&ok); sok += ok;
+      y = sy.toInt(&ok); sok += ok;
+      w = sw.toInt(&ok); sok += ok;
+      h = sh.toInt(&ok); sok += ok;
+      if (sok == 4)
+      {
+         QImage imgStack = img_.copy(x, y, w, h);
+         BoolMatrix * stackMatrix = new BoolMatrix(imgStack, QColor(scl));
+   
+         //нарезаем по буквам
+         QList<BoolMatrix> letts = 
+            ImgUtils::splitByLetters(*stackMatrix);
+         //отбрасываем 1
+         QList<BoolMatrix> stackLetts = letts.mid(1);
+         delete stackMatrix;
+
+         StackParser stackParser;
+         stack = ImgUtils::parseRealNumber(stackLetts, &stackParser);
+      }
+   }
+   opp.setStack(stack);
+   
+   //наличие карт у оппонента
+   bool hasCards = false;
+   QDomNode dnCards = dnOpp.firstChildElement("cards");
+   if (!dnCards.isNull())
+   {
+      sx = dnCards.attributes().namedItem("x").nodeValue();
+      sy = dnCards.attributes().namedItem("y").nodeValue();
+      scl = dnCards.firstChild().nodeValue();
+      
+      hasCards = controlPixel(sx, sy, scl);
+   }
+   opp.setCards(hasCards);
+
+   //наличие фишки дилера
+   bool isDealer = false;
+   QDomNode dnDealer = dnOpp.firstChildElement("dealer");
+   if (!dnDealer.isNull())
+   {
+      sx = dnDealer.attributes().namedItem("x").nodeValue();
+      sy = dnDealer.attributes().namedItem("y").nodeValue();
+      scl = dnDealer.firstChild().nodeValue();
+      
+      isDealer = controlPixel(sx, sy, scl);
+   }
+   opp.setDealer(isDealer);
+
    return opp;
 }
