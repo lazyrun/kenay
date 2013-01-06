@@ -1,5 +1,7 @@
 ﻿<?xml version='1.0' encoding='UTF-8'?>
 <root version="1.0" type="map" name="acad" desc="Poker Academy Map 6-max">
+   <smallblind>0.05</smallblind>
+   <bigblind>0.10</bigblind>
    <window width="1018" height="695" />
    <buttons>
       <fold x="158" y="655" w="122" h="24">
@@ -32,30 +34,35 @@
          <dealer x="142" y="477">#EDEEBC</dealer>
          <nickname x="17" y="518" w="90" h="42">#8C8C8C</nickname>
          <stack x="17" y="518" w="90" h="42">#00FF00</stack>
+         <bet x="17" y="518" w="90" h="42">#FFFF00</bet>
       </opp>
       <opp num="2">
          <cards x="230" y="167">#FFFFFF</cards>
          <dealer x="210" y="184">#EDEEBC</dealer>
          <nickname x="179" y="85" w="90" h="45">#8C8C8C</nickname>
          <stack x="179" y="85" w="90" h="45">#00FF00</stack>
+         <bet x="179" y="85" w="90" h="45">#FFFF00</bet>
       </opp>
       <opp num="3">
          <cards x="387" y="163">#FFFFFF</cards>
          <dealer x="361" y="178">#EDEEBC</dealer>
          <nickname x="357" y="79" w="88" h="46">#8C8C8C</nickname>
          <stack x="357" y="79" w="88" h="46">#00FF00</stack>
+         <bet x="357" y="79" w="88" h="46">#FFFF00</bet>
       </opp>
       <opp num="4">
          <cards x="520" y="164">#FFFFFF</cards>
          <dealer x="503" y="178">#EDEEBC</dealer>
          <nickname x="530" y="84" w="87" h="46">#8C8C8C</nickname>
          <stack x="530" y="84" w="87" h="46">#00FF00</stack>
+         <bet x="530" y="84" w="87" h="46">#FFFF00</bet>
       </opp>
       <opp num="5">
          <cards x="636" y="420">#FFFFFF</cards>
          <dealer x="704" y="427">#EDEEBC</dealer>
          <nickname x="696" y="518" w="91" h="44">#8C8C8C</nickname>
          <stack x="696" y="518" w="91" h="44">#00FF00</stack>
+         <bet x="696" y="518" w="91" h="44">#FFFF00</bet>
       </opp>
    </opps>
 </root>

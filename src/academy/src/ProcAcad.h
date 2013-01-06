@@ -26,6 +26,12 @@ public:
    QString cardFromImage(QImage & img) const;
    Opp opp(const QString & num);
 protected:
+   void parseOppNick(const QDomNode & dnOpp, Opp & opp);
+   void parseOppStack(const QDomNode & dnOpp, Opp & opp);
+   void parseOppBet(const QDomNode & dnOpp, Opp & opp);
+   void parseOppInGame(const QDomNode & dnOpp, Opp & opp);
+   void parseOppIsDealer(const QDomNode & dnOpp, Opp & opp);
+
    //! База карт
    CardBase cardBase_;
    //!
@@ -67,7 +73,20 @@ struct OppNick
 class Opp
 {
 public:
-   Opp() {stack_ = 0.; hasCards_ = false; isDealer_ = false;}
+   enum Action
+   {
+      Nope,//заглушка
+      SmallBlind,
+      BigBlind,
+      Fold,
+      Check,
+      Call,
+      Bet,
+      Raise
+   };
+   
+   Opp() {bet_ = 0.; stack_ = 0.; hasCards_ = false; isDealer_ = false; action_ = Nope;}
+   
    void setCards(bool v) {hasCards_ = v;}
    bool hasCards() const {return hasCards_;}
 
@@ -80,6 +99,12 @@ public:
    void setNick(const OppNick & nick) {nick_ = nick;}
    OppNick nick() const {return nick_;}
    
+   void setBet(qreal v) {bet_ = v;}
+   qreal bet() const {return bet_;}
+
+   void setAction(Action a) {action_ = a;}
+   Action action() const {return action_;}
+
    //!http://propokerpro.ru/shkola/cash-statistika.htm
    qreal vpip() const {return 0.;}
    //! Preflop raiser
@@ -87,8 +112,10 @@ public:
 protected:
    OppNick nick_;
    qreal stack_;
+   qreal bet_;
    bool hasCards_;
    bool isDealer_;
+   Action action_;
 };
 #endif
 

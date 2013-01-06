@@ -1,6 +1,7 @@
 #include "ProcAcad.h"
 #include "PotParser.h"
 #include "StackParser.h"
+#include "BetParser.h"
 
 //
 //ProcAcad
@@ -265,9 +266,20 @@ Opp ProcAcad::opp(const QString & num)
    if (dnOpp.isNull())
       return Opp();
    
+   Opp opp;
+   parseOppNick(dnOpp, opp);
+   parseOppStack(dnOpp, opp);
+   parseOppInGame(dnOpp, opp);
+   parseOppIsDealer(dnOpp, opp);
+   parseOppBet(dnOpp, opp);
+   return opp;
+}
+
+void ProcAcad::parseOppNick(const QDomNode & dnOpp, Opp & opp)
+{
    QDomNode dnNick = dnOpp.firstChildElement("nickname");
    if (dnNick.isNull())
-      return Opp();
+      return;
 
    QString sx = dnNick.attributes().namedItem("x").nodeValue();
    QString sy = dnNick.attributes().namedItem("y").nodeValue();
@@ -281,14 +293,13 @@ Opp ProcAcad::opp(const QString & num)
    int w = sw.toInt(&ok); sok += ok;
    int h = sh.toInt(&ok); sok += ok;
    if (sok != 4)
-      return Opp();
-
+      return;
 
    QImage imgOpp = img_.copy(x, y, w, h);   
    //imgOpp.save("opp.bmp");
    
    if (scl.isEmpty())
-      return Opp();
+      return;
 
    QColor cl(scl);
    int r = 0, g = 0, b = 0;
@@ -311,25 +322,27 @@ Opp ProcAcad::opp(const QString & num)
       nick.letters.append(letter);
    }
    
-   Opp opp;
    opp.setNick(nick);
-   
+}
+
+void ProcAcad::parseOppStack(const QDomNode & dnOpp, Opp & opp)
+{
    //стек оппонента
    qreal stack = 0.;
    QDomNode dnStack = dnOpp.firstChildElement("stack");
    if (!dnStack.isNull())
    {
-      sx = dnStack.attributes().namedItem("x").nodeValue();
-      sy = dnStack.attributes().namedItem("y").nodeValue();
-      sw = dnStack.attributes().namedItem("w").nodeValue();
-      sh = dnStack.attributes().namedItem("h").nodeValue();
-      scl = dnStack.firstChild().nodeValue();
+      QString sx = dnStack.attributes().namedItem("x").nodeValue();
+      QString sy = dnStack.attributes().namedItem("y").nodeValue();
+      QString sw = dnStack.attributes().namedItem("w").nodeValue();
+      QString sh = dnStack.attributes().namedItem("h").nodeValue();
+      QString scl = dnStack.firstChild().nodeValue();
       
-      sok = 0; ok = false;
-      x = sx.toInt(&ok); sok += ok;
-      y = sy.toInt(&ok); sok += ok;
-      w = sw.toInt(&ok); sok += ok;
-      h = sh.toInt(&ok); sok += ok;
+      int sok = 0; bool ok = false;
+      int x = sx.toInt(&ok); sok += ok;
+      int y = sy.toInt(&ok); sok += ok;
+      int w = sw.toInt(&ok); sok += ok;
+      int h = sh.toInt(&ok); sok += ok;
       if (sok == 4)
       {
          QImage imgStack = img_.copy(x, y, w, h);
@@ -347,32 +360,162 @@ Opp ProcAcad::opp(const QString & num)
       }
    }
    opp.setStack(stack);
-   
+}
+
+void ProcAcad::parseOppInGame(const QDomNode & dnOpp, Opp & opp)
+{
    //наличие карт у оппонента
    bool hasCards = false;
    QDomNode dnCards = dnOpp.firstChildElement("cards");
    if (!dnCards.isNull())
    {
-      sx = dnCards.attributes().namedItem("x").nodeValue();
-      sy = dnCards.attributes().namedItem("y").nodeValue();
-      scl = dnCards.firstChild().nodeValue();
+      QString sx = dnCards.attributes().namedItem("x").nodeValue();
+      QString sy = dnCards.attributes().namedItem("y").nodeValue();
+      QString scl = dnCards.firstChild().nodeValue();
       
       hasCards = controlPixel(sx, sy, scl);
    }
    opp.setCards(hasCards);
+}
 
+void ProcAcad::parseOppIsDealer(const QDomNode & dnOpp, Opp & opp)
+{
    //наличие фишки дилера
    bool isDealer = false;
    QDomNode dnDealer = dnOpp.firstChildElement("dealer");
    if (!dnDealer.isNull())
    {
-      sx = dnDealer.attributes().namedItem("x").nodeValue();
-      sy = dnDealer.attributes().namedItem("y").nodeValue();
-      scl = dnDealer.firstChild().nodeValue();
+      QString sx = dnDealer.attributes().namedItem("x").nodeValue();
+      QString sy = dnDealer.attributes().namedItem("y").nodeValue();
+      QString scl = dnDealer.firstChild().nodeValue();
       
       isDealer = controlPixel(sx, sy, scl);
    }
    opp.setDealer(isDealer);
-
-   return opp;
 }
+
+void ProcAcad::parseOppBet(const QDomNode & dnOpp, Opp & opp)
+{
+   //ставка оппонента
+   qreal bet = 0.;
+   QDomNode dnBet = dnOpp.firstChildElement("bet");
+   if (!dnBet.isNull())
+   {
+      QString sx = dnBet.attributes().namedItem("x").nodeValue();
+      QString sy = dnBet.attributes().namedItem("y").nodeValue();
+      QString sw = dnBet.attributes().namedItem("w").nodeValue();
+      QString sh = dnBet.attributes().namedItem("h").nodeValue();
+      QString scl = dnBet.firstChild().nodeValue();
+      
+      int sok = 0; bool ok = false;
+      int x = sx.toInt(&ok); sok += ok;
+      int y = sy.toInt(&ok); sok += ok;
+      int w = sw.toInt(&ok); sok += ok;
+      int h = sh.toInt(&ok); sok += ok;
+      if (sok == 4)
+      {
+         QImage imgBet = img_.copy(x, y, w, h);
+         QScopedPointer<BoolMatrix> betMatrix(new BoolMatrix(imgBet, QColor(scl)));
+   
+         //нарезаем по буквам
+         QList<BoolMatrix> letts = 
+            ImgUtils::splitByLetters(*betMatrix);
+         if (letts.count() == 0)
+            return;
+
+         Settings & config = 
+            ConfigGlobal<MainConfig>::Instance();
+         //
+         QString ssb =
+            config.settingValue("smallblind", "").toString();
+         QString sbb =
+            config.settingValue("bigblind", "").toString();
+         
+         qreal smallBlind = ssb.toDouble(&ok);
+         if (!ok)
+            smallBlind = 0.;
+
+         qreal bigBlind   = sbb.toDouble(&ok);
+         if (!ok)
+            bigBlind = 0.;
+
+
+         //берем первую букву
+         //возможные варианты
+         // Blind $ - 2 дырки, Bet $
+         // Call $, Check  - ни одной
+         // Raise $ - 1 дырка {из за того что слитно, то первая буква идет как Ra = 2 дырки, но зато 4-я с дыркой}
+         // Fold
+         
+         for (int i = 0; i < letts.count(); i++)
+         {
+            letts.at(i).save(QString("bet_%1.bmp").arg(i));
+         }
+
+         QList<PointList> areasFirst = ImgUtils::closedAreas(letts.at(0),
+               ImgUtils::Four);
+         QList<PointList> areasSecond = ImgUtils::closedAreas(letts.at(1),
+               ImgUtils::Four);
+         QList<PointList> areasFour = ImgUtils::closedAreas(letts.at(3),
+               ImgUtils::Four);
+         
+         if (letts.count() == QString("Fold").count())
+         {
+            opp.setAction(Opp::Fold);
+         }
+         else if (letts.count() == QString("Check").count())
+         {
+            opp.setAction(Opp::Check);
+         }
+         else
+         {
+            int midPos = 0;
+            bool isBlind = false;
+            if (areasFirst.count() == 2)
+            {
+               if (areasFour.count() == 0)
+               {
+                  if (areasSecond.count() == 0)
+                  {
+                     midPos = QString("Blind$").count();
+                     isBlind = true;
+                  }
+               }
+               else if (areasFour.count() == 1)
+               {
+                  midPos = QString("Raise$").count();
+                  opp.setAction(Opp::Raise);
+               }
+               else if (areasFour.count() == 2)
+               {
+                  midPos = QString("Bet$").count();
+                  opp.setAction(Opp::Bet);
+               }
+            }
+            else
+            {
+               midPos = QString("Call$").count();
+               opp.setAction(Opp::Call);
+            }
+            //отбрасываем
+            QList<BoolMatrix> betLetts = letts.mid(midPos);
+            
+            BetParser betParser;
+            bet = ImgUtils::parseRealNumber(betLetts, &betParser);
+            if (isBlind)
+            {
+               if (qFuzzyCompare(bet, smallBlind))
+               {
+                  opp.setAction(Opp::SmallBlind);
+               }
+               else if (qFuzzyCompare(bet, bigBlind))
+               {
+                  opp.setAction(Opp::BigBlind);
+               }
+            }
+         }
+      }
+   }
+   opp.setBet(bet);
+}
+

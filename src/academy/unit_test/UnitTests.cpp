@@ -707,4 +707,140 @@ namespace tut
          tensure(__FILE__, __LINE__, !opp5.isDealer());
       }
    }
+
+   template<>   template<>
+   void testobject::test<10>()
+   {
+      //определение размера ставки
+      ProcAcad proc("map/acad.xml");
+      {
+         QImage imgTable("sshot/acad_1.bmp");
+         tensure(__FILE__, __LINE__, !imgTable.isNull());
+         proc.setImage(imgTable);
+         Opp opp1 = proc.opp("1");
+         Opp opp2 = proc.opp("2");
+         Opp opp3 = proc.opp("3");
+         Opp opp4 = proc.opp("4");
+         Opp opp5 = proc.opp("5");
+         tensure(__FILE__, __LINE__, qFuzzyCompare(opp1.bet(), 0.10));
+         tensure(__FILE__, __LINE__, opp1.action() == Opp::BigBlind);
+         tensure(__FILE__, __LINE__, qFuzzyCompare(opp2.bet(), 0.00));
+         tensure(__FILE__, __LINE__, opp2.action() == Opp::Fold);
+         tensure(__FILE__, __LINE__, qFuzzyCompare(opp3.bet(), 0.00));
+         tensure(__FILE__, __LINE__, opp3.action() == Opp::Fold);
+         tensure(__FILE__, __LINE__, qFuzzyCompare(opp4.bet(), 0.00));
+         tensure(__FILE__, __LINE__, opp4.action() == Opp::Fold);
+         tensure(__FILE__, __LINE__, qFuzzyCompare(opp5.bet(), 0.00));
+         tensure(__FILE__, __LINE__, opp5.action() == Opp::Fold);
+      }
+      {
+         QImage imgTable("sshot/acad_2.bmp");
+         tensure(__FILE__, __LINE__, !imgTable.isNull());
+         proc.setImage(imgTable);
+         Opp opp1 = proc.opp("1");
+         Opp opp2 = proc.opp("2");
+         Opp opp3 = proc.opp("3");
+         Opp opp4 = proc.opp("4");
+         Opp opp5 = proc.opp("5");
+         tensure(__FILE__, __LINE__, qFuzzyCompare(opp1.bet(), 0.00));
+         tensure(__FILE__, __LINE__, opp1.action() == Opp::Nope);
+         tensure(__FILE__, __LINE__, qFuzzyCompare(opp2.bet(), 0.05));
+         tensure(__FILE__, __LINE__, opp2.action() == Opp::SmallBlind);
+         tensure(__FILE__, __LINE__, qFuzzyCompare(opp3.bet(), 0.10));
+         tensure(__FILE__, __LINE__, opp3.action() == Opp::BigBlind);
+         tensure(__FILE__, __LINE__, qFuzzyCompare(opp4.bet(), 0.10));
+         tensure(__FILE__, __LINE__, opp4.action() == Opp::Raise);
+         tensure(__FILE__, __LINE__, qFuzzyCompare(opp5.bet(), 0.00));
+         tensure(__FILE__, __LINE__, opp5.action() == Opp::Fold);
+      }
+      {
+         QImage imgTable("sshot/acad_3.bmp");
+         tensure(__FILE__, __LINE__, !imgTable.isNull());
+         proc.setImage(imgTable);
+         Opp opp1 = proc.opp("1");
+         Opp opp2 = proc.opp("2");
+         Opp opp3 = proc.opp("3");
+         Opp opp4 = proc.opp("4");
+         Opp opp5 = proc.opp("5");
+         tensure(__FILE__, __LINE__, qFuzzyCompare(opp1.bet(), 0.00));
+         tensure(__FILE__, __LINE__, qFuzzyCompare(opp2.bet(), 0.00));
+         tensure(__FILE__, __LINE__, qFuzzyCompare(opp3.bet(), 0.00));
+         tensure(__FILE__, __LINE__, qFuzzyCompare(opp4.bet(), 0.05));
+         tensure(__FILE__, __LINE__, opp4.action() == Opp::SmallBlind);
+         tensure(__FILE__, __LINE__, qFuzzyCompare(opp5.bet(), 0.10));
+         tensure(__FILE__, __LINE__, opp5.action() == Opp::BigBlind);
+      }
+      {
+         QImage imgTable("sshot/acad_7.bmp");
+         tensure(__FILE__, __LINE__, !imgTable.isNull());
+         proc.setImage(imgTable);
+         Opp opp1 = proc.opp("1");
+         Opp opp2 = proc.opp("2");
+         Opp opp3 = proc.opp("3");
+         Opp opp4 = proc.opp("4");
+         Opp opp5 = proc.opp("5");
+         tensure(__FILE__, __LINE__, qFuzzyCompare(opp1.bet(), 0.05));
+         tensure(__FILE__, __LINE__, opp1.action() == Opp::SmallBlind);
+         tensure(__FILE__, __LINE__, qFuzzyCompare(opp2.bet(), 0.10));
+         tensure(__FILE__, __LINE__, opp2.action() == Opp::BigBlind);
+         tensure(__FILE__, __LINE__, qFuzzyCompare(opp3.bet(), 0.00));
+         tensure(__FILE__, __LINE__, opp3.action() == Opp::Fold);
+         tensure(__FILE__, __LINE__, qFuzzyCompare(opp4.bet(), 0.00));
+         tensure(__FILE__, __LINE__, opp4.action() == Opp::Fold);
+         tensure(__FILE__, __LINE__, qFuzzyCompare(opp5.bet(), 0.10));
+         tensure(__FILE__, __LINE__, opp5.action() == Opp::Call);
+      }
+      {
+         QImage imgTable("sshot/acad_8.bmp");
+         tensure(__FILE__, __LINE__, !imgTable.isNull());
+         proc.setImage(imgTable);
+         Opp opp1 = proc.opp("1");
+         Opp opp2 = proc.opp("2");
+         Opp opp3 = proc.opp("3");
+         Opp opp4 = proc.opp("4");
+         Opp opp5 = proc.opp("5");
+         tensure(__FILE__, __LINE__, qFuzzyCompare(opp1.bet(), 0.00));
+         tensure(__FILE__, __LINE__, qFuzzyCompare(opp2.bet(), 0.00));
+         tensure(__FILE__, __LINE__, qFuzzyCompare(opp3.bet(), 0.00));
+         tensure(__FILE__, __LINE__, qFuzzyCompare(opp4.bet(), 0.10));
+         tensure(__FILE__, __LINE__, opp4.action() == Opp::Bet);
+         tensure(__FILE__, __LINE__, qFuzzyCompare(opp5.bet(), 0.00));
+      }
+      {
+         QImage imgTable("sshot/acad_9.bmp");
+         tensure(__FILE__, __LINE__, !imgTable.isNull());
+         proc.setImage(imgTable);
+         Opp opp1 = proc.opp("1");
+         Opp opp2 = proc.opp("2");
+         Opp opp3 = proc.opp("3");
+         Opp opp4 = proc.opp("4");
+         Opp opp5 = proc.opp("5");
+         tensure(__FILE__, __LINE__, qFuzzyCompare(opp1.bet(), 0.00));
+         tensure(__FILE__, __LINE__, qFuzzyCompare(opp2.bet(), 0.00));
+         tensure(__FILE__, __LINE__, qFuzzyCompare(opp3.bet(), 0.00));
+         tensure(__FILE__, __LINE__, qFuzzyCompare(opp4.bet(), 0.00));
+         tensure(__FILE__, __LINE__, opp4.action() == Opp::Check);
+         tensure(__FILE__, __LINE__, qFuzzyCompare(opp5.bet(), 0.00));
+      }
+      {
+         QImage imgTable("sshot/acad_11.bmp");
+         tensure(__FILE__, __LINE__, !imgTable.isNull());
+         proc.setImage(imgTable);
+         Opp opp1 = proc.opp("1");
+         Opp opp2 = proc.opp("2");
+         Opp opp3 = proc.opp("3");
+         Opp opp4 = proc.opp("4");
+         Opp opp5 = proc.opp("5");
+         tensure(__FILE__, __LINE__, qFuzzyCompare(opp1.bet(), 0.20));
+         tensure(__FILE__, __LINE__, opp1.action() == Opp::Call);
+         tensure(__FILE__, __LINE__, qFuzzyCompare(opp2.bet(), 0.20));
+         tensure(__FILE__, __LINE__, opp2.action() == Opp::Call);
+         tensure(__FILE__, __LINE__, qFuzzyCompare(opp3.bet(), 0.00));
+         tensure(__FILE__, __LINE__, opp3.action() == Opp::Fold);
+         tensure(__FILE__, __LINE__, qFuzzyCompare(opp4.bet(), 0.10));
+         tensure(__FILE__, __LINE__, opp4.action() == Opp::Raise);
+         tensure(__FILE__, __LINE__, qFuzzyCompare(opp5.bet(), 0.00));
+         tensure(__FILE__, __LINE__, opp5.action() == Opp::Fold);
+      }
+   }
 }
