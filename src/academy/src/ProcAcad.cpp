@@ -1,7 +1,7 @@
 #include "ProcAcad.h"
 #include "PotParser.h"
 #include "StackParser.h"
-//#include "BetParser.h"
+#include "BetParser.h"
 
 //
 // OppNick
@@ -559,8 +559,8 @@ void ProcAcad::parseOppBet(const QDomNode & dnOpp, Opp & opp)
             //отбрасываем
             QList<BoolMatrix> betLetts = letts.mid(midPos);
             
-            //BetParser betParser;
-            //bet = ImgUtils::parseRealNumber(betLetts, &betParser);
+            BetParser betParser;
+            bet = ImgUtils::parseRealNumber(betLetts, &betParser);
             if (isBlind)
             {
                if (qFuzzyCompare(bet, smallBlind))
