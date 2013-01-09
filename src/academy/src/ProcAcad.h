@@ -46,6 +46,8 @@ protected:
 
 struct OppNick
 {
+   OppNick();
+   OppNick(const QString & hash);
    bool operator==(const OppNick & rhs)
    {
       if (&rhs == this)
@@ -70,9 +72,12 @@ struct OppNick
       QSize size;
       //количество замкнутых областей
       int closed;
+      
+      QString hash() const;
    };
    //! Последовательность букв
    QList<OppLetter> letters;
+   QString hash() const;
 };
 
 #if 1

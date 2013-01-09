@@ -843,4 +843,47 @@ namespace tut
          tensure(__FILE__, __LINE__, opp5.action() == Opp::Fold);
       }
    }
+
+   template<>   template<>
+   void testobject::test<11>()
+   {
+      ProcAcad proc("map/acad.xml");
+      {
+         //получить хэши-ников
+         QImage imgTable("sshot/acad_1.bmp");
+         tensure(__FILE__, __LINE__, !imgTable.isNull());
+         proc.setImage(imgTable);
+         OppNick nick1 = proc.opp("1").nick();
+         OppNick nick2 = proc.opp("2").nick();
+         OppNick nick3 = proc.opp("3").nick();
+         OppNick nick4 = proc.opp("4").nick();
+         OppNick nick5 = proc.opp("5").nick();
+         {
+         QString hash = nick1.hash();
+         OppNick nick_recon(hash);
+         tensure(__FILE__, __LINE__, nick1 == nick_recon);
+         }
+         {
+         QString hash = nick2.hash();
+         OppNick nick_recon(hash);
+         tensure(__FILE__, __LINE__, nick2 == nick_recon);
+         }
+         {
+         QString hash = nick3.hash();
+         OppNick nick_recon(hash);
+         tensure(__FILE__, __LINE__, nick3 == nick_recon);
+         }
+         {
+         QString hash = nick4.hash();
+         OppNick nick_recon(hash);
+         tensure(__FILE__, __LINE__, nick4 == nick_recon);
+         }
+         {
+         QString hash = nick5.hash();
+         OppNick nick_recon(hash);
+         tensure(__FILE__, __LINE__, nick5 == nick_recon);
+         }
+      }
+   }
 }
+
