@@ -519,3 +519,48 @@ void ProcAcad::parseOppBet(const QDomNode & dnOpp, Opp & opp)
    opp.setBet(bet);
 }
 
+const QRect ProcAcad::foldRect() const
+{
+   return buttonRect("fold");
+}
+
+const QRect ProcAcad::checkRect() const
+{
+   return buttonRect("check");
+}
+
+const QRect ProcAcad::callRect() const
+{
+   return buttonRect("call");
+}
+
+const QRect ProcAcad::raiseRect() const
+{
+   return buttonRect("raise");
+}
+
+const QRect ProcAcad::betRect() const
+{
+   return buttonRect("bet");
+}
+
+const QRect ProcAcad::buttonRect(const QString & btn) const
+{
+   Settings & config = 
+      ConfigGlobal<MainConfig>::Instance();
+   
+   QString sx = config.settingAttribute("x", "buttons", btn, "");
+   QString sy = config.settingAttribute("y", "buttons", btn, "");
+   QString sw = config.settingAttribute("w", "buttons", btn, "");
+   QString sh = config.settingAttribute("h", "buttons", btn, "");
+
+   int sok = 0; bool ok = false;
+   int x = sx.toInt(&ok); sok += ok;
+   int y = sy.toInt(&ok); sok += ok;
+   int w = sw.toInt(&ok); sok += ok;
+   int h = sh.toInt(&ok); sok += ok;
+   if (sok != 4)
+      return QRect();
+
+   return QRect(x, y, w, h);
+}

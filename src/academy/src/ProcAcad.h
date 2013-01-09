@@ -23,6 +23,11 @@ public:
    virtual qreal pot() const;
    virtual qreal stack() const;
    virtual bool isDealer() const;
+   const QRect foldRect() const;
+   const QRect checkRect() const;
+   const QRect callRect() const;
+   const QRect raiseRect() const;
+   const QRect betRect() const;
    QString cardFromImage(QImage & img) const;
    Opp opp(const QString & num);
 protected:
@@ -32,6 +37,7 @@ protected:
    void parseOppInGame(const QDomNode & dnOpp, Opp & opp);
    void parseOppIsDealer(const QDomNode & dnOpp, Opp & opp);
 
+   const QRect buttonRect(const QString & btn) const;
    //! База карт
    CardBase cardBase_;
    //!

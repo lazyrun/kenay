@@ -16,6 +16,9 @@
       <raise x="525" y="655" w="122" h="24">
          <control x="539" y="659">#E5C0B5</control>
       </raise>
+      <bet x="525" y="655" w="122" h="24">
+         <control x="539" y="659">#E5C0B5</control>
+      </bet>
    </buttons>
    <hole>
       <first x="366" y="462" w="15" h="29">

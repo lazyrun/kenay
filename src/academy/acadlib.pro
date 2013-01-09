@@ -1,10 +1,19 @@
-TEMPLATE = lib
+DEFINES += EXECUTOR_EXE
+
 TARGET = acad
+
+contains(DEFINES, EXECUTOR_EXE) {
+TEMPLATE = app
+DESTDIR = ../../bin
+} else {
+TEMPLATE = lib
 DESTDIR = lib
 DLLDESTDIR = ../../bin
-
 DEFINES += MAKE_EXEC_DLL
+}
+
 DEFINES += _CRT_SECURE_NO_DEPRECATE
+QT += xml
 
 CONFIG += debug_and_release
 CONFIG -= flat
@@ -13,20 +22,27 @@ CONFIG += precompile_header
 # Use Precompiled headers (PCH)
 PRECOMPILED_HEADER  = qtincludes.h
 
-INCLUDEPATH  += ./ src ../common/common
-DEPENDPATH   += ./ src ../common/common
+INCLUDEPATH  += ./ src ../common/common ../common/utils
+DEPENDPATH   += ./ src ../common/common ../common/utils
 
 # Input
 HEADERS += qtincludes.h \
-           acadlib.h \
            $$files(src/*.h) \
            SettingsData.h \
+           Config.h \
            Hooker.h
 
-SOURCES += acadlib.cpp \
-           $$files(src/*.cpp) \
+SOURCES += $$files(src/*.cpp) \
            SettingsData.cpp \
+           Config.cpp \
            Hooker.cpp
+
+contains(DEFINES, EXECUTOR_EXE) {
+SOURCES += main.cpp
+} else {
+HEADERS += acadlib.h
+SOURCES += acadlib.cpp
+}
 
 win32:QMAKE_CXXFLAGS += -MP
 
@@ -46,3 +62,8 @@ CONFIG(debug, debug|release) {
 }
 
 include(../common/img_proc/ImageProc.pri)
+include(../common/DirectMap/src/DirectMap.pri)
+
+contains(DEFINES, EXECUTOR_EXE) {
+include(../common/GlobalShortcut/GlobalShortcut.pri)
+}

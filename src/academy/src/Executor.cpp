@@ -53,7 +53,7 @@ void Executor::init()
    screen_res_y_ = GetSystemMetrics(SM_CYSCREEN);//Получить высоту экрана
 
    cardBase_ = new CardBase();
-   cardProc_ = new ProcAcad();
+   cardProc_ = new ProcAcad("map/acad.xml");
    alarm_ = new AlarmWidget();
 }
 
@@ -76,7 +76,7 @@ void Executor::start()
    QVariant sett = settings.value("Settings");
    data_ = qvariant_cast<SettingsData>(sett);
 
-   interval_ = 100;//data_.interval;
+   interval_ = 1000;//data_.interval;
 
    lastIsFold_ = false;
    //запускаем таймер
@@ -100,9 +100,6 @@ void Executor::timerEvent(QTimerEvent *)
    
    //ищем топовое окно заданного класса
    static const QString psClass = "SunAwtFrame";
-   static const int minFoldHue = 13;
-   static const int maxFoldHue = 33;
-   static const int maxFoldBlack = 400;
 
    //смотрим топовое окно
    WId FgWnd = GetForegroundWindow();
@@ -114,28 +111,22 @@ void Executor::timerEvent(QTimerEvent *)
       return;
    }
 
-   //возьмем кнопку фолд
-   static int foldRect_x = 160;
-   static int foldRect_y = 655;
-   static int foldRect_sz = 16;
-   //делаем скрин области кнопок
-   
    HwndToTop(FgWnd);
 
-   QPixmap pixFold = QPixmap::grabWindow(FgWnd, foldRect_x, foldRect_y, foldRect_sz, foldRect_sz);
-   QImage imgFold  = pixFold.toImage();
+   QPixmap pixTable = QPixmap::grabWindow(FgWnd);
+   QImage imgTable  = pixTable.toImage();
 
-   for (int x = 0; x < foldRect_sz; ++x)
+   cardProc_->setImage(imgTable);
+   if (cardProc_->hasFold())
    {
-      for (int y = 0; y < foldRect_sz; ++y)
-      {
-         QRgb rgb = imgFold.pixel(x, y);
-         QColor cl(rgb);
-         if (!(cl.hue() >= minFoldHue && cl.hue() <= maxFoldHue))
-            return;
-      }
+      //наш ход
+      //imgTable.save("table.bmp");
+      QString card1 = cardProc_->holeCard("first");
+      QString card2 = cardProc_->holeCard("second");
+      QString range = cardRangeFromHoles(card1, card2);
+      clickFold(FgWnd);
    }
-   
+#if 0
    //наш ход
    // устанавливаем изображение для обработки
    //обрезаем изображение
@@ -254,6 +245,7 @@ void Executor::timerEvent(QTimerEvent *)
          }
       }
    }
+#endif
 }
 
 HWND Executor::findTables(const QString & tClass, HWND BeginHandle)
@@ -289,13 +281,13 @@ void Executor::HwndToTop(WId hwnd)
 
 void Executor::clickCheck(WId hwnd)
 {
-   const QRect checkRect(354, 656, 100, 20);
+   const QRect checkRect = cardProc_->checkRect();
    clickTo(hwnd, checkRect);
 }
 
 void Executor::clickFold(WId hwnd)
 {
-   const QRect foldRect(160, 655, 100, 20);
+   const QRect foldRect = cardProc_->foldRect();
    clickTo(hwnd, foldRect);
 }
 
@@ -319,7 +311,8 @@ void Executor::clickTo(WId hwnd, int x, int y)
       QRect wndRect(rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top);
       RECT clrect;
       GetClientRect(hwnd, &clrect);
-      QRect clntRect(clrect.left, clrect.top, clrect.right - clrect.left, clrect.bottom - clrect.top);
+      QRect clntRect(clrect.left, clrect.top, clrect.right - clrect.left, 
+         clrect.bottom - clrect.top);
       x_border = (int)(wndRect.width() - clntRect.width()) / 2.;
       y_border = wndRect.height() - clntRect.height() - x_border;
    }
@@ -351,6 +344,7 @@ void Executor::clickTo(WId hwnd, int x, int y)
 
 void Executor::foldOrCheck(WId hwnd, bool realClick)
 {
+#if 0
    //фолдим, если можем - чекаем
    //вырезаем буквы с кнопки чек
    //и считаем их количество
@@ -394,6 +388,7 @@ void Executor::foldOrCheck(WId hwnd, bool realClick)
          clickFold(hwnd);
       }
    }
+#endif
 }
 
 QString Executor::cardFromImage(QImage & img)
