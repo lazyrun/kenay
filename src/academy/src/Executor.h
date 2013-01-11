@@ -51,7 +51,63 @@ protected:
    QString cardString(int nom, int suit);
    QString cardRangeFromHoles(const QString & first, const QString & second);
    
-   void saveStats();
+   void saveStats(const QString & session);
+   
+   
+   QList<Session> sessions;
+   struct Session
+   {
+      QString sessionID_;
+
+   };
+   //что я хочу знать
+   // активность оппа5 на префлопе
+   action(Preflop, 5)
+   рейз, рейз, рейз
+   //история
+   /*
+   сессия AsQd
+     Префлоп
+        круг1
+           опп1 - сб
+           опп2 - бб
+           опп3 - фолд
+           опп4 - фолд
+           опп5 - рейз
+        круг2
+           опп1 - фолд
+           опп2 - фолд
+           опп3 - фолд
+           опп4 - фолд
+           опп5 - рейз
+        круг3
+           опп1 - фолд
+           опп2 - фолд
+           опп3 - фолд
+           опп4 - фолд
+           опп5 - рейз
+     Флоп
+        круг1
+           опп1 - сб
+           опп2 - бб
+           опп3 - фолд
+           опп4 - фолд
+           опп5 - рейз
+        круг2
+           опп1 - фолд
+           опп2 - фолд
+           опп3 - фолд
+           опп4 - фолд
+           опп5 - рейз
+        круг3
+           опп1 - фолд
+           опп2 - фолд
+           опп3 - фолд
+           опп4 - фолд
+           опп5 - рейз
+
+
+   */
 };
 
 //

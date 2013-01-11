@@ -20,7 +20,7 @@ void CardProcessing::setImage(const QImage & img)
    delete matrix_;
    matrix_ = new BoolMatrix(img, threshold_);
    
-   holdemLevel_ = Undefined;
+   street_ = Undefined;
 }
 
 bool CardProcessing::controlPixel(const QString & sx, const QString & sy, 

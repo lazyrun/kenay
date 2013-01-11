@@ -2,6 +2,7 @@
 <root version="1.0" type="map" name="acad" desc="Poker Academy Map 6-max">
    <smallblind>0.05</smallblind>
    <bigblind>0.10</bigblind>
+   <bigbet>0.20</bigbet>
    <window width="1018" height="695" />
    <buttons>
       <fold x="158" y="655" w="122" h="24">
@@ -31,6 +32,10 @@
    <pot x="71" y="323" w="133" h="14">#FFFF00</pot>
    <stack x="358" y="588" w="84" h="16">#00FF00</stack>
    <dealer x="444" y="513">#EDEEBC</dealer>
+   <river  x="528" y="303">#FFFFFF</river>
+   <turn  x="472" y="303">#FFFFFF</turn>
+   <flop  x="303" y="303">#FFFFFF</flop>
+   <preflop  x="400" y="465">#FFFFFF</preflop>
    <opps>
       <opp num="1">
          <cards x="105" y="399">#FFFFFF</cards>

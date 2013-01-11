@@ -121,10 +121,10 @@ void Executor::timerEvent(QTimerEvent *)
    {
       //наш ход
       //imgTable.save("table.bmp");
-      saveStats();
       QString card1 = cardProc_->holeCard("first");
       QString card2 = cardProc_->holeCard("second");
       QString range = cardRangeFromHoles(card1, card2);
+      saveStats(card1 + card2);
       clickFold(FgWnd);
    }
 #if 0
@@ -249,9 +249,15 @@ void Executor::timerEvent(QTimerEvent *)
 #endif
 }
 
-void Executor::saveStats()
+void Executor::saveStats(const QString & session)
 {
-
+   
+   QList<Opp> oppList;
+   for (int i = 1; i <= 6; i++)
+   {
+      oppList << cardProc_->opp(QString::number(i));
+   }
+   //
 }
 
 HWND Executor::findTables(const QString & tClass, HWND BeginHandle)

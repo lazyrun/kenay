@@ -90,6 +90,46 @@ bool ProcAcad::hasFold() const
    return controlPixel(sx, sy, scl);
 }
 
+CardProcessing::Street ProcAcad::street()
+{
+   Settings & config = 
+      ConfigGlobal<MainConfig>::Instance();
+   //цвет
+   QString scl =
+      config.settingValue("river", "").toString();
+   //координаты
+   QString sx = config.settingAttribute("x", "river", "");
+   QString sy = config.settingAttribute("y", "river", "");
+
+   if (controlPixel(sx, sy, scl))
+   {
+      return street_ = River;
+   }
+   
+   sx = config.settingAttribute("x", "turn", "");
+   sy = config.settingAttribute("y", "turn", "");
+   if (controlPixel(sx, sy, scl))
+   {
+      return street_ = Turn;
+   }
+   
+   sx = config.settingAttribute("x", "flop", "");
+   sy = config.settingAttribute("y", "flop", "");
+   if (controlPixel(sx, sy, scl))
+   {
+      return street_ = Flop;
+   }
+   
+   sx = config.settingAttribute("x", "preflop", "");
+   sy = config.settingAttribute("y", "preflop", "");
+   if (controlPixel(sx, sy, scl))
+   {
+      return street_ = Preflop;
+   }
+
+   return Undefined;
+}
+
 bool ProcAcad::hasCall() const
 {
    //контрольная точка кола

@@ -11,7 +11,7 @@ class CardProcessing
 {
 public:
    //! Текущий уровень игры
-   enum HoldemLevel
+   enum Street
    {
       Undefined,
       Preflop,
@@ -26,15 +26,15 @@ public:
    //! Задасет скрин стола
    virtual void setImage(const QImage & img);
    //! Проверяет на стадию префлопа
-   bool isPreflop() const {return holdemLevel_ == Preflop; }
+   bool isPreflop() const {return street_ == Preflop; }
    //! Проверяет на стадию флопа
-   bool isFlop() const {return holdemLevel_ == Flop; }
+   bool isFlop() const {return street_ == Flop; }
    //! Проверяет на стадию терна
-   bool isTurn() const {return holdemLevel_ == Turn; }
+   bool isTurn() const {return street_ == Turn; }
    //! Проверяет на стадию ривера
-   bool isRiver() const {return holdemLevel_ == River; }
+   bool isRiver() const {return street_ == River; }
    //! Возвращает текущую стадию
-   HoldemLevel holdemLevel() const;
+   virtual Street street() = 0;
    //! Возвращает порог фильтрации
    uchar threshold() const {return threshold_; }
 
@@ -58,7 +58,7 @@ protected:
    //! порог перевода в ч/б
    uchar threshold_;
    //! текущий уровень
-   HoldemLevel holdemLevel_;
+   Street street_;
 };
 
 #endif

@@ -885,5 +885,46 @@ namespace tut
          }
       }
    }
+
+   template<>   template<>
+   void testproc::test<12>()
+   {
+      ProcAcad proc("map/acad.xml");
+      {
+         QImage imgTable("sshot/acad_1.bmp");
+         tensure(__FILE__, __LINE__, !imgTable.isNull());
+         proc.setImage(imgTable);
+         proc.street();
+         tensure(__FILE__, __LINE__, proc.isPreflop());
+      }
+      {
+         QImage imgTable("sshot/acad_2.bmp");
+         tensure(__FILE__, __LINE__, !imgTable.isNull());
+         proc.setImage(imgTable);
+         proc.street();
+         tensure(__FILE__, __LINE__, proc.isPreflop());
+      }
+      {
+         QImage imgTable("sshot/acad_8.bmp");
+         tensure(__FILE__, __LINE__, !imgTable.isNull());
+         proc.setImage(imgTable);
+         proc.street();
+         tensure(__FILE__, __LINE__, proc.isFlop());
+      }
+      {
+         QImage imgTable("sshot/acad_9.bmp");
+         tensure(__FILE__, __LINE__, !imgTable.isNull());
+         proc.setImage(imgTable);
+         proc.street();
+         tensure(__FILE__, __LINE__, proc.isRiver());
+      }
+      {
+         QImage imgTable("sshot/acad_13.bmp");
+         tensure(__FILE__, __LINE__, !imgTable.isNull());
+         proc.setImage(imgTable);
+         proc.street();
+         tensure(__FILE__, __LINE__, proc.isTurn());
+      }
+   }
 }
 

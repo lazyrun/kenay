@@ -23,6 +23,7 @@ public:
    virtual qreal pot() const;
    virtual qreal stack() const;
    virtual bool isDealer() const;
+   virtual Street street();
    const QRect foldRect() const;
    const QRect checkRect() const;
    const QRect callRect() const;
