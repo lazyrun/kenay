@@ -50,6 +50,8 @@ protected:
    QString cardFromImage(QImage & img);
    QString cardString(int nom, int suit);
    QString cardRangeFromHoles(const QString & first, const QString & second);
+   
+   void saveStats();
 };
 
 //

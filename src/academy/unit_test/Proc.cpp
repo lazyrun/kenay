@@ -8,18 +8,18 @@
 namespace tut
 {
    // Определение типов
-   struct bot_shared_data
+   struct proc_shared_data
    {
    };
 
-   typedef test_group<bot_shared_data, 20> tg_bot;// 20 tests
-   typedef tg_bot::object testobject;
+   typedef test_group<proc_shared_data, 20> tg_proc;// 20 tests
+   typedef tg_proc::object testproc;
 
-   tg_bot group_bot("ACAD");
+   tg_proc group_proc("IMAGEPROC");
 
    // Определение тестов
    template<>   template<>
-   void testobject::test<1>()
+   void testproc::test<1>()
    {
       QDir test_dir("test/acad");
       tensure(__FILE__, __LINE__, test_dir.exists());
@@ -35,7 +35,7 @@ namespace tut
    }
 
    template<>   template<>
-   void testobject::test<2>()
+   void testproc::test<2>()
    {
       Settings & config = 
          ConfigGlobal<MainConfig>::Instance("map/acad.xml", "root");
@@ -56,7 +56,7 @@ namespace tut
    }
 
    template<>   template<>
-   void testobject::test<3>()
+   void testproc::test<3>()
    {
       ProcAcad proc("map/acad.xml");
       {
@@ -159,7 +159,7 @@ namespace tut
    }
 
    template<>   template<>
-   void testobject::test<4>()
+   void testproc::test<4>()
    {
       ProcAcad proc("map/acad.xml");
       {
@@ -243,7 +243,7 @@ namespace tut
    }
    
    template<>   template<>
-   void testobject::test<5>()
+   void testproc::test<5>()
    {
       ProcAcad proc("map/acad.xml");
       {
@@ -333,7 +333,7 @@ namespace tut
    }
 
    template<>   template<>
-   void testobject::test<6>()
+   void testproc::test<6>()
    {
       //протестируем стеки оппонентов
       ProcAcad proc("map/acad.xml");
@@ -372,7 +372,7 @@ namespace tut
    }
 
    template<>   template<>
-   void testobject::test<7>()
+   void testproc::test<7>()
    {
       ProcAcad proc("map/acad.xml");
       {
@@ -560,7 +560,7 @@ namespace tut
    }
 
    template<>   template<>
-   void testobject::test<8>()
+   void testproc::test<8>()
    {
       //определение карт у оппов
       ProcAcad proc("map/acad.xml");
@@ -627,7 +627,7 @@ namespace tut
    }
 
    template<>   template<>
-   void testobject::test<9>()
+   void testproc::test<9>()
    {
       //определение фошки дилера у оппов
       ProcAcad proc("map/acad.xml");
@@ -709,7 +709,7 @@ namespace tut
    }
 
    template<>   template<>
-   void testobject::test<10>()
+   void testproc::test<10>()
    {
       //определение размера ставки
       ProcAcad proc("map/acad.xml");
@@ -845,7 +845,7 @@ namespace tut
    }
 
    template<>   template<>
-   void testobject::test<11>()
+   void testproc::test<11>()
    {
       ProcAcad proc("map/acad.xml");
       {

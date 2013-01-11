@@ -121,6 +121,7 @@ void Executor::timerEvent(QTimerEvent *)
    {
       //наш ход
       //imgTable.save("table.bmp");
+      saveStats();
       QString card1 = cardProc_->holeCard("first");
       QString card2 = cardProc_->holeCard("second");
       QString range = cardRangeFromHoles(card1, card2);
@@ -246,6 +247,11 @@ void Executor::timerEvent(QTimerEvent *)
       }
    }
 #endif
+}
+
+void Executor::saveStats()
+{
+
 }
 
 HWND Executor::findTables(const QString & tClass, HWND BeginHandle)
