@@ -4,8 +4,8 @@
 #include <windows.h>
 #include "SettingsData.h"
 #include "acadlib.h"
+#include "ProcAcad.h"
 
-class ProcAcad;
 class CardBase;
 class AlarmWidget;
 //class DBManager;
@@ -17,6 +17,14 @@ public:
    Executor(showMessageCBFunc fun, QObject * parent = 0);
    Executor(QObject * parent = 0);
    ~Executor();
+   
+   typedef QList<Opp::Action> ActionList;
+   struct Session
+   {
+      QString sessionID_;
+      QMap<CardProcessing::Street, QMap<int, ActionList> > history_;
+   };
+
 public slots:
    void start();
    void stop();
@@ -53,21 +61,24 @@ protected:
    
    void saveStats(const QString & session);
    
+   Session currentSession_;
+   //ActionList oppAction(const QString & sid, 
+   //   CardProcessing::Street street, 
+   //   int oppPos);
+   //void appendOppAction(const QString & sid, CardProcessing::Street street,
+   //   int oppPos, Action act);
    
-   QList<Session> sessions;
-   struct Session
-   {
-      QString sessionID_;
-
-   };
-   //что я хочу знать
    // активность оппа5 на префлопе
-   action(Preflop, 5)
-   рейз, рейз, рейз
    //история
    /*
    сессия AsQd
      Префлоп
+        опп1
+           рейз, рейз
+        опп2 
+           фолд
+        опп3
+           фолд
         круг1
            опп1 - сб
            опп2 - бб

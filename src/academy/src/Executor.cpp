@@ -125,7 +125,7 @@ void Executor::timerEvent(QTimerEvent *)
       QString card2 = cardProc_->holeCard("second");
       QString range = cardRangeFromHoles(card1, card2);
       saveStats(card1 + card2);
-      clickFold(FgWnd);
+      clickCheck(FgWnd);
    }
 #if 0
    //наш ход
@@ -251,13 +251,30 @@ void Executor::timerEvent(QTimerEvent *)
 
 void Executor::saveStats(const QString & session)
 {
-   
+   if (session != currentSession_.sessionID_)
+   {
+      //новая сессия
+      //сохранить в БД предыдущую сессию
+      saveToDB();
+      //начать запись новой сессии
+      currentSession_.history_.clear();
+      currentSession_.sessionID_ = session;
+   }
+   CardProcessing::Street street = cardProc_->street();
+   QMap<int, ActionList> & oppHist = currentSession_.history_[street];
+
    QList<Opp> oppList;
    for (int i = 1; i <= 6; i++)
    {
-      oppList << cardProc_->opp(QString::number(i));
+      Opp opp = cardProc_->opp(QString::number(i));
+      Opp::Action act = opp.action();
+      if (act != Opp::Nope && act != Opp::SmallBlind && act != Opp::BigBlind)
+      {
+         oppHist[i].append(act);
+      }
+      oppList << opp;
    }
-   //
+
 }
 
 HWND Executor::findTables(const QString & tClass, HWND BeginHandle)

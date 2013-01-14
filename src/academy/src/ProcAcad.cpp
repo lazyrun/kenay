@@ -643,7 +643,7 @@ const QRect ProcAcad::betRect() const
    return buttonRect("bet");
 }
 
-const QRect ProcAcad::buttonRect(const QString & btn) const
+const QRect ProcAcad::buttonRect(const char * btn) const
 {
    Settings & config = 
       ConfigGlobal<MainConfig>::Instance();

@@ -53,6 +53,10 @@ namespace tut
       str =
          config.settingValue("stack", "").toString();
       tensure(__FILE__, __LINE__, str == "#00FF00"); 
+      
+      str = config.settingAttribute("y", "buttons", "check", "");
+      tensure(__FILE__, __LINE__, str == "655"); 
+
    }
 
    template<>   template<>
