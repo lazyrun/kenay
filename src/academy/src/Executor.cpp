@@ -3,6 +3,8 @@
 #include "CardBase.h"
 #include "Hooker.h"
 #include "AlarmWidget.h"
+#include "MindFL6max.h"
+#include "Clicker.h"
 
 #ifdef EXECUTOR_EXE
 #include "qxtglobalshortcut.h"
@@ -55,6 +57,8 @@ void Executor::init()
    cardBase_ = new CardBase();
    cardProc_ = new ProcAcad("map/acad.xml");
    alarm_ = new AlarmWidget();
+   mind_ = new MindFL6max(cardProc_);
+   clicker_ = new Clicker();
 }
 
 Executor::~Executor()
@@ -62,6 +66,8 @@ Executor::~Executor()
    delete cardBase_;
    delete cardProc_;
    delete alarm_;
+   delete mind_;
+   delete clicker_;
 }
 
 void Executor::start()
@@ -121,6 +127,8 @@ void Executor::timerEvent(QTimerEvent *)
    {
       //наш ход
       //imgTable.save("table.bmp");
+      //Solution sol = mind_.think();
+
       QString card1 = cardProc_->holeCard("first");
       QString card2 = cardProc_->holeCard("second");
       QString range = cardRangeFromHoles(card1, card2);
@@ -255,7 +263,7 @@ void Executor::saveStats(const QString & session)
    {
       //новая сессия
       //сохранить в БД предыдущую сессию
-      saveToDB();
+      //saveToDB();
       //начать запись новой сессии
       currentSession_.history_.clear();
       currentSession_.sessionID_ = session;

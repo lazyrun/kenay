@@ -8,6 +8,9 @@
 
 class CardBase;
 class AlarmWidget;
+class MindFL6max;
+class Clicker;
+
 //class DBManager;
 
 class Executor : public QObject
@@ -37,6 +40,9 @@ protected:
 
    QString cache_;
    ProcAcad * cardProc_;
+   MindFL6max * mind_;
+   Clicker * clicker_;
+
    //DBManager * dbManager_;
    CardBase * cardBase_;
    QStringList playingCard_;
