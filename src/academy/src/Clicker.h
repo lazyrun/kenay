@@ -15,9 +15,9 @@ class Clicker
 {
 public:
    //! Конструктор
-  Clicker();
-  //! Деструктор
-  virtual ~Clicker() {}
+   Clicker() {}
+   //! Деструктор
+   virtual ~Clicker() {}
 protected:
 };
 

@@ -15,9 +15,9 @@ class Solution
 {
 public:
    //! Конструктор
-  Solution();
-  //! Деструктор
-  virtual ~Solution() {}
+   Solution(){}
+   //! Деструктор
+   virtual ~Solution() {}
 protected:
 };
 
