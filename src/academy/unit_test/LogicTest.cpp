@@ -2,6 +2,8 @@
 
 #include "tut.h"
 #include "TstUtils.h"
+#include "Mind.h"
+#include "HoleCards.h"
 
 namespace tut
 {
@@ -40,8 +42,45 @@ namespace tut
          Две пары -  2
          Топ-Пару -  1 (на 1й улице)
       */
-
-      tensure(__FILE__, __LINE__, true);
+      {
+      HoleCards hole("Qs", "Ad");
+      tensure(__FILE__, __LINE__, hole.fullName() == "AdQs");
+      tensure(__FILE__, __LINE__, hole.suitedName() == "AQo");
+      tensure(__FILE__, __LINE__, !hole.isSuited());
+      }
+      {
+      HoleCards hole("Kd", "4d");
+      tensure(__FILE__, __LINE__, hole.fullName() == "Kd4d");
+      tensure(__FILE__, __LINE__, hole.suitedName() == "K4s");
+      tensure(__FILE__, __LINE__, hole.isSuited());
+      }
+      {
+      HoleCards hole("7c", "Qs");
+      tensure(__FILE__, __LINE__, hole.fullName() == "Qs7c");
+      tensure(__FILE__, __LINE__, hole.suitedName() == "Q7o");
+      tensure(__FILE__, __LINE__, !hole.isSuited());
+      }
+      {
+      HoleCards hole("Tc", "Ts");
+      tensure(__FILE__, __LINE__, hole.fullName() == "TcTs");
+      tensure(__FILE__, __LINE__, hole.suitedName() == "TTo");
+      tensure(__FILE__, __LINE__, !hole.isSuited());
+      }
+      {
+      HoleCards hole("Qs", "As");
+      tensure(__FILE__, __LINE__, hole.fullName() == "AsQs");
+      //Ts5d2d
+      QStringList board;
+      board.append("Ts");
+      board.append("5d");
+      board.append("2d");
+      //
+      Mind mind;
+      mind.setHole("Qs", "As");
+      mind.setBoard(board);
+      mind.currentCombs();
+      
+      }
    }
 }
 
