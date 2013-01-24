@@ -263,7 +263,7 @@ void Executor::saveStats(const QString & session)
    {
       //новая сессия
       //сохранить в БД предыдущую сессию
-      //saveToDB();
+      saveToDB();
       //начать запись новой сессии
       currentSession_.history_.clear();
       currentSession_.sessionID_ = session;

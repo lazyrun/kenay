@@ -18,14 +18,14 @@
 class Mind
 {
 public:
-      OverCard    = 1, // A2 
-      OverCards   = 2, // AK
+      //OverCard    = 1, // A2 
+      //OverCards   = 2, // AK
    
-      BDStraight  = 3, // Бэкдорный стрит
-      BDFlash     = 3, // Бэкдорный флеш
-      Gutshot     = 3, // Гатшот
-      OESD        = 3, // двусторонний
-      FlashDraw   = 4,
+      //BDStraight  = 3, // Бэкдорный стрит
+      //BDFlash     = 3, // Бэкдорный флеш
+      //Gutshot     = 3, // Гатшот
+      //OESD        = 3, // двусторонний
+      //FlashDraw   = 4,
 
    //сила пары
    enum PairPower
