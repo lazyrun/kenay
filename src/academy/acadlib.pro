@@ -13,7 +13,7 @@ DEFINES += MAKE_EXEC_DLL
 }
 
 DEFINES += _CRT_SECURE_NO_DEPRECATE
-QT += xml
+QT += xml sql
 
 CONFIG += debug_and_release
 CONFIG -= flat
@@ -22,21 +22,23 @@ CONFIG += precompile_header
 # Use Precompiled headers (PCH)
 PRECOMPILED_HEADER  = qtincludes.h
 
-INCLUDEPATH  += ./ src ../common/common ../common/utils
-DEPENDPATH   += ./ src ../common/common ../common/utils
+INCLUDEPATH  += ./ src ../common/common ../common/utils src/sqlite
+DEPENDPATH   += ./ src ../common/common ../common/utils src/sqlite
 
 # Input
 HEADERS += qtincludes.h \
            $$files(src/*.h) \
            SettingsData.h \
            Config.h \
-           Hooker.h
+           Hooker.h \
+           DBManager.h
 
 SOURCES += $$files(src/*.cpp) \
            SettingsData.cpp \
            Config.cpp \
-           Hooker.cpp
-
+           Hooker.cpp \
+           DBManager.cpp
+           
 contains(DEFINES, EXECUTOR_EXE) {
 SOURCES += main.cpp
 } else {

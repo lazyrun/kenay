@@ -4,6 +4,9 @@
 #include "TstUtils.h"
 #include "Mind.h"
 #include "HoleCards.h"
+#include "DBManager.h"
+#include "Session.h"
+#include "ProcAcad.h"
 
 namespace tut
 {
@@ -70,17 +73,33 @@ namespace tut
       HoleCards hole("Qs", "As");
       tensure(__FILE__, __LINE__, hole.fullName() == "AsQs");
       //Ts5d2d
-      QStringList board;
-      board.append("Ts");
-      board.append("5d");
-      board.append("2d");
-      //
-      Mind mind;
-      mind.setHole("Qs", "As");
-      mind.setBoard(board);
-      mind.currentCombs();
+      //QStringList board;
+      //board.append("Ts");
+      //board.append("5d");
+      //board.append("2d");
+      ////
+      //Mind mind;
+      //mind.setHole("Qs", "As");
+      //mind.setBoard(board);
+      //mind.currentCombs();
       
       }
+   }
+   
+   template<>   template<>
+   void testlogic::test<2>()
+   {
+      DBManager db;
+      tensure(__FILE__, __LINE__, db.isGood());
+
+      ProcAcad proc("map/acad.xml");
+      QImage imgTable("sshot/acad_2.bmp");
+      tensure(__FILE__, __LINE__, !imgTable.isNull());
+      proc.setImage(imgTable);
+      QString sid = proc.holeCard("first") + proc.holeCard("second");
+      Session ses(&proc);
+      ses.saveStats(sid);
+      ses.saveStats("save");
    }
 }
 

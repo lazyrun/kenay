@@ -2,6 +2,7 @@
 #define IMAGEPROC_H
 
 #include "BoolMatrix.h"
+#include "Opp.h"
 
 /*!
 \class CardProcessing
@@ -46,6 +47,7 @@ public:
    virtual qreal pot() const = 0;
    virtual qreal stack() const = 0;
 
+   virtual Opp opp(const QString & num) = 0;
 protected:
    //! проверка цвета пикселя
    bool controlPixel(const QString & sx, const QString & sy, 

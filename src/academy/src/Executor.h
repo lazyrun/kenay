@@ -10,8 +10,8 @@ class CardBase;
 class AlarmWidget;
 class MindFL6max;
 class Clicker;
-
-//class DBManager;
+class DBManager;
+class Session;
 
 class Executor : public QObject
 {
@@ -21,13 +21,6 @@ public:
    Executor(QObject * parent = 0);
    ~Executor();
    
-   typedef QList<Opp::Action> ActionList;
-   struct Session
-   {
-      QString sessionID_;
-      QMap<CardProcessing::Street, QMap<int, ActionList> > history_;
-   };
-
 public slots:
    void start();
    void stop();
@@ -42,8 +35,8 @@ protected:
    ProcAcad * cardProc_;
    MindFL6max * mind_;
    Clicker * clicker_;
+   DBManager * dbManager_;
 
-   //DBManager * dbManager_;
    CardBase * cardBase_;
    QStringList playingCard_;
    SettingsData data_;
@@ -61,13 +54,14 @@ protected:
    void clickTo(WId hwnd, int x, int y);
    void foldOrCheck(WId hwnd, bool realClick = true);
    //QString cardFromHash(unsigned long long hash);
-   QString cardFromImage(QImage & img);
-   QString cardString(int nom, int suit);
-   QString cardRangeFromHoles(const QString & first, const QString & second);
+   //QString cardFromImage(QImage & img);
+   //QString cardString(int nom, int suit);
+   //QString cardRangeFromHoles(const QString & first, const QString & second);
    
-   void saveStats(const QString & session);
+   //void saveStats(const QString & session);
+   //void saveToDB();
    
-   Session currentSession_;
+   Session * session_;
    //ActionList oppAction(const QString & sid, 
    //   CardProcessing::Street street, 
    //   int oppPos);

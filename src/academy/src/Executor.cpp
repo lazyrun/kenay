@@ -1,10 +1,11 @@
 #include "Executor.h"
 #include "ProcAcad.h"
-#include "CardBase.h"
 #include "Hooker.h"
 #include "AlarmWidget.h"
 #include "MindFL6max.h"
 #include "Clicker.h"
+#include "DBManager.h"
+#include "Session.h"
 
 #ifdef EXECUTOR_EXE
 #include "qxtglobalshortcut.h"
@@ -59,6 +60,8 @@ void Executor::init()
    alarm_ = new AlarmWidget();
    mind_ = new MindFL6max(cardProc_);
    clicker_ = new Clicker();
+   dbManager_ = new DBManager();
+   session_ = new Session(cardProc_);
 }
 
 Executor::~Executor()
@@ -68,6 +71,8 @@ Executor::~Executor()
    delete alarm_;
    delete mind_;
    delete clicker_;
+   delete dbManager_;
+   delete session_;
 }
 
 void Executor::start()
@@ -131,8 +136,7 @@ void Executor::timerEvent(QTimerEvent *)
 
       QString card1 = cardProc_->holeCard("first");
       QString card2 = cardProc_->holeCard("second");
-      QString range = cardRangeFromHoles(card1, card2);
-      saveStats(card1 + card2);
+      session_->saveStats(card1 + card2);
       clickCheck(FgWnd);
    }
 #if 0
@@ -257,6 +261,7 @@ void Executor::timerEvent(QTimerEvent *)
 #endif
 }
 
+#if 0
 void Executor::saveStats(const QString & session)
 {
    if (session != currentSession_.sessionID_)
@@ -271,19 +276,89 @@ void Executor::saveStats(const QString & session)
    CardProcessing::Street street = cardProc_->street();
    QMap<int, ActionList> & oppHist = currentSession_.history_[street];
 
-   QList<Opp> oppList;
+   //QList<Opp> oppList;
    for (int i = 1; i <= 6; i++)
    {
       Opp opp = cardProc_->opp(QString::number(i));
       Opp::Action act = opp.action();
-      if (act != Opp::Nope && act != Opp::SmallBlind && act != Opp::BigBlind)
-      {
-         oppHist[i].append(act);
-      }
-      oppList << opp;
+      oppHist[i].append(act);
+      currentSession_.opps_.insert(i, opp);
+      //if (act != Opp::Nope && act != Opp::SmallBlind && act != Opp::BigBlind)
+      //{
+        // oppHist[i].append(act);
+      //}
+      //oppList << opp;
    }
 
 }
+
+void Executor::saveToDB()
+{
+   if (currentSession_.history_.isEmpty())
+      return;
+   const QMap<int, ActionList> & oppActions = currentSession_.history_[CardProcessing::Preflop];
+   const QMap<int, Opp> & opps = currentSession_.opps_;
+   dbManager_->database().transaction();
+   foreach (int oppId, opps.keys())
+   {
+      const Opp & opp = opps.value(oppId);
+      const ActionList & actions = oppActions.value(oppId);
+      QString nick = opp.nick().hash();
+      
+      QSqlQuery sel_query(dbManager_->database());
+      sel_query.prepare("SELECT * FROM FREFLOP WHERE NICK=:nick");
+      sel_query.bindValue(":nick", nick);
+      int cnt = 0, fold = 0, pfr = 0, vpip = 0, limp = 0;
+      if (sel_query.exec())
+      {
+         sel_query.first();
+         QSqlRecord rec = sel_query.record();
+         cnt = rec.value("CNT").toInt();
+         fold = rec.value("FOLD").toInt();
+         pfr = rec.value("PFR").toInt();
+         vpip = rec.value("VPIP").toInt();
+         limp = rec.value("LIMP").toInt();
+         sel_query.finish();
+      }
+      else
+      {
+         //записи нет
+         //создать
+         cnt = fold = pfr = vpip = limp = 0;
+         QSqlQuery ins_query(dbManager_->database());
+         ins_query.prepare("INSERT INTO PREFLOP (NICK, CNT, FOLD, VPIP, PFR, LIMP) "
+            "VALUES(:nick, 0, 0, 0, 0, 0)");
+         ins_query.exec();
+      }
+      
+      if (actions.count() > 0)
+      {
+         cnt++;
+         if (actions.at(0) == Opp::Fold)
+         {
+            fold++;
+         }
+         else if (actions.at(0) == Opp::Raise)
+         {
+            pfr++;
+            vpip++;
+         }
+         else if (actions.at(0) == Opp::Call)
+         {
+            limp++;
+            vpip++;
+         }
+         //сохраним новые значения
+         QSqlQuery upd_query(dbManager_->database());
+         upd_query.prepare("INSERT INTO PREFLOP (NICK, CNT, FOLD, VPIP, PFR, LIMP) "
+            "VALUES(:nick, 0, 0, 0, 0, 0)");
+         ins_query.exec();
+         
+      }
+   }
+   dbManager_->database().commit();
+}
+#endif
 
 HWND Executor::findTables(const QString & tClass, HWND BeginHandle)
 {
@@ -427,7 +502,7 @@ void Executor::foldOrCheck(WId hwnd, bool realClick)
    }
 #endif
 }
-
+#if 0
 QString Executor::cardFromImage(QImage & img)
 {
    int imgW = img.width();
@@ -479,6 +554,7 @@ QString Executor::cardString(int nom, int suit)
    return res;
 }
 
+
 QString Executor::cardRangeFromHoles(const QString & f, const QString & s)
 {
    QString range;
@@ -519,3 +595,4 @@ QString Executor::cardRangeFromHoles(const QString & f, const QString & s)
    }
    return range;
 }
+#endif
