@@ -2,7 +2,7 @@
 
 #include "tut.h"
 #include "TstUtils.h"
-#include "Mind.h"
+#include "MindFL6max.h"
 #include "HoleCards.h"
 #include "DBManager.h"
 #include "Session.h"
@@ -24,27 +24,7 @@ namespace tut
    template<>   template<>
    void testlogic::test<1>()
    {
-      //вычисление аутов
-      //анализ стола
-      /*
-         Дано:
-         AsQs
-         Флоп
-         Ts5d2d
-
-         Посчитать:
-         Текущую комбинацию.
-         Возможность собрать комбинацию на одной, двух улицах.
-         По убыванию:
-         Каре -      0 (нет возможности)
-         Фулл-хаус - 0
-         Флеш -      2 (на 2х улицах)
-         Стрит -     2
-         Сет -       2
-         Допер -     2
-         Две пары -  2
-         Топ-Пару -  1 (на 1й улице)
-      */
+      //проверка HoleCards
       {
       HoleCards hole("Qs", "Ad");
       tensure(__FILE__, __LINE__, hole.fullName() == "AdQs");
@@ -72,34 +52,74 @@ namespace tut
       {
       HoleCards hole("Qs", "As");
       tensure(__FILE__, __LINE__, hole.fullName() == "AsQs");
-      //Ts5d2d
-      //QStringList board;
-      //board.append("Ts");
-      //board.append("5d");
-      //board.append("2d");
-      ////
-      //Mind mind;
-      //mind.setHole("Qs", "As");
-      //mind.setBoard(board);
-      //mind.currentCombs();
-      
       }
    }
    
    template<>   template<>
    void testlogic::test<2>()
    {
+      //проверка сохранения статистики
       DBManager db;
       tensure(__FILE__, __LINE__, db.isGood());
+      //очистить таблицу
+      tensure(__FILE__, __LINE__, db.clearTable("PREFLOP"));
 
       ProcAcad proc("map/acad.xml");
-      QImage imgTable("sshot/acad_2.bmp");
+      Session ses(&proc);
+
+      QDir test_dir("sshot");
+      tensure(__FILE__, __LINE__, test_dir.exists());
+      
+      QFileInfoList files = test_dir.entryInfoList(QDir::Files);
+      foreach (QFileInfo fi, files)
+      {
+         QString s = fi.absoluteFilePath();
+         QImage imgTable(fi.absoluteFilePath());
+         tensure(__FILE__, __LINE__, !imgTable.isNull());
+         proc.setImage(imgTable);
+         QString sid = proc.holeCard("first") + proc.holeCard("second");
+         ses.saveStats(sid);
+      }  
+
+      ses.saveStats("save");
+   }
+   
+   template<>   template<>
+   void testlogic::test<3>()
+   {
+      ProcAcad proc("map/acad.xml");
+      Session ses(&proc);
+      MindFL6max mind(&proc, &ses);
+      {
+      QImage imgTable("sshot/acad_1.bmp");
       tensure(__FILE__, __LINE__, !imgTable.isNull());
       proc.setImage(imgTable);
-      QString sid = proc.holeCard("first") + proc.holeCard("second");
-      Session ses(&proc);
-      ses.saveStats(sid);
-      ses.saveStats("save");
+      if (proc.hasFold())
+      {
+         Solution sol = mind.think();
+      }
+      }
    }
 }
 
+//вычисление аутов
+//анализ стола
+/*
+   Дано:
+   AsQs
+   Флоп
+   Ts5d2d
+
+   Посчитать:
+   Текущую комбинацию.
+   Возможность собрать комбинацию на одной, двух улицах.
+   По убыванию:
+   Каре -      0 (нет возможности)
+   Фулл-хаус - 0
+   Флеш -      2 (на 2х улицах)
+   Стрит -     2
+   Сет -       2
+   Допер -     2
+   Две пары -  2
+   Топ-Пару -  1 (на 1й улице)
+*/

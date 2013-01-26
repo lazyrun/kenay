@@ -136,3 +136,13 @@ bool DBManager::alterTable(const QString & tableName,
    return se.trimmed().isEmpty();
 }
 
+bool DBManager::clearTable(const QString & tableName)
+{
+   QString del_sql = QString("DELETE FROM %1").arg(tableName);
+   QString vac_sql = QString("VACUUM %1").arg(tableName);
+
+   db_.exec(del_sql);
+   db_.exec(vac_sql);
+   
+   return !db_.lastError().isValid();
+}

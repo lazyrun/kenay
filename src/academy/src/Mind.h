@@ -10,6 +10,7 @@
 #include "ImageProc.h"
 #include "Solution.h"
 #include "HoleCards.h"
+#include "Session.h"
 
 /*!
 \class Mind
@@ -18,15 +19,6 @@
 class Mind
 {
 public:
-      //OverCard    = 1, // A2 
-      //OverCards   = 2, // AK
-   
-      //BDStraight  = 3, // Бэкдорный стрит
-      //BDFlash     = 3, // Бэкдорный флеш
-      //Gutshot     = 3, // Гатшот
-      //OESD        = 3, // двусторонний
-      //FlashDraw   = 4,
-
    //сила пары
    enum PairPower
    {
@@ -107,44 +99,48 @@ public:
       //6. я участвую двумя картами сверху
       //7. я участвую двумя картами как-то иначе
    };
-   //! Текущие комбы
+   //! Возможные комбинации, без учета их силы
    enum Combs
    {
-      Trash       = 0, //мусор
-      LowPair     = 3,
-      MiddlePair  = 4,
-      TopPair     = 5,
-      TPTK        = 6, //Top Pair Top Kicker
-      OverPair    = 7,
-      
-
-      TwoPair     = 8, // 2 любые пары с моим участием
-      Doper       = 9, // допер
-      Trips       = 9, // 2 на столе, 1 у меня
-      Set         = 9, // 2 у меня, 1 на столе
-      Straight    = 10,
-      
-      Flash,
-      FullHouse   = 12,
-      Care        = 13,
-      StraightFlash
+      Trash,         //мусор
+      Card,          //старшая карта
+      Pair,          //пара    
+      TwoPair,       //две пары
+      ThreeOfKind,   //тройка
+      Straight,      //стрит
+      Flash,         //флеш
+      FullHouse,     //фулл
+      Care,          //каре
+      StraightFlash  //стрит флеш
    };
       
+   //! Варианты имеющие шансы на усиление
+   // предполагается, что часть карт от этих дро есть на руках
+   enum Draws
+   {
+      OverCard,   // A2 
+      OverCards,  // AK
+      BDStraight, // Бэкдорный стрит
+      BDFlash,    // Бэкдорный флеш
+      Gutshot,    // Гатшот
+      OESD,       // двусторонний или двойной белли бастер
+      FlashDraw1, //флеш дро с 1й картой
+      FlashDraw2, //флеш дро с 2мя картами
+   };
+
    //! Конструктор
-   Mind(const CardProcessing * proc);
+   Mind(CardProcessing * const proc, Session * const session);
    //! Деструктор
    virtual ~Mind() {}
    //! 
-   //virtual Solution think() = 0;
+   virtual Solution think() = 0;
    //! 
-   void setHole(const QString & f, const QString & s);
-   //! 
-   void setBoard(const QStringList & board);
-   //! Текущая комбинация
-   
 protected:
    //! Обработчик изображений
-   const CardProcessing * proc_;
+   CardProcessing * const proc_;
+   //! Текущая сессия
+   Session * const session_;
+
    //! Карманные карты
    HoleCards hole_;
    //! Карты стола

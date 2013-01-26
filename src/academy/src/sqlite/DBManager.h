@@ -32,6 +32,8 @@ public:
    \return Ссылка на БД
    */
    const QSqlDatabase & database() const { return db_; }
+   //!
+   bool clearTable(const QString & table);
 protected:
    //! Установить соединение с БД
    /*!

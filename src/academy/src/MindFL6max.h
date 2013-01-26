@@ -17,7 +17,7 @@ class MindFL6max : public Mind
 {
 public:
    //! Конструктор
-   MindFL6max(const CardProcessing * proc);
+   MindFL6max(CardProcessing * const proc, Session * const session);
    //! Деструктор
    virtual ~MindFL6max() {}
    //!

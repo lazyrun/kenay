@@ -58,10 +58,10 @@ void Executor::init()
    cardBase_ = new CardBase();
    cardProc_ = new ProcAcad("map/acad.xml");
    alarm_ = new AlarmWidget();
-   mind_ = new MindFL6max(cardProc_);
    clicker_ = new Clicker();
    dbManager_ = new DBManager();
    session_ = new Session(cardProc_);
+   mind_ = new MindFL6max(cardProc_, session_);
 }
 
 Executor::~Executor()
@@ -132,12 +132,12 @@ void Executor::timerEvent(QTimerEvent *)
    {
       //наш ход
       //imgTable.save("table.bmp");
-      //Solution sol = mind_.think();
+      Solution sol = mind_->think();
 
-      QString card1 = cardProc_->holeCard("first");
-      QString card2 = cardProc_->holeCard("second");
-      session_->saveStats(card1 + card2);
-      clickCheck(FgWnd);
+      //QString card1 = cardProc_->holeCard("first");
+      //QString card2 = cardProc_->holeCard("second");
+      //session_->saveStats(card1 + card2);
+      //clickCheck(FgWnd);
    }
 #if 0
    //наш ход
@@ -260,105 +260,6 @@ void Executor::timerEvent(QTimerEvent *)
    }
 #endif
 }
-
-#if 0
-void Executor::saveStats(const QString & session)
-{
-   if (session != currentSession_.sessionID_)
-   {
-      //новая сессия
-      //сохранить в БД предыдущую сессию
-      saveToDB();
-      //начать запись новой сессии
-      currentSession_.history_.clear();
-      currentSession_.sessionID_ = session;
-   }
-   CardProcessing::Street street = cardProc_->street();
-   QMap<int, ActionList> & oppHist = currentSession_.history_[street];
-
-   //QList<Opp> oppList;
-   for (int i = 1; i <= 6; i++)
-   {
-      Opp opp = cardProc_->opp(QString::number(i));
-      Opp::Action act = opp.action();
-      oppHist[i].append(act);
-      currentSession_.opps_.insert(i, opp);
-      //if (act != Opp::Nope && act != Opp::SmallBlind && act != Opp::BigBlind)
-      //{
-        // oppHist[i].append(act);
-      //}
-      //oppList << opp;
-   }
-
-}
-
-void Executor::saveToDB()
-{
-   if (currentSession_.history_.isEmpty())
-      return;
-   const QMap<int, ActionList> & oppActions = currentSession_.history_[CardProcessing::Preflop];
-   const QMap<int, Opp> & opps = currentSession_.opps_;
-   dbManager_->database().transaction();
-   foreach (int oppId, opps.keys())
-   {
-      const Opp & opp = opps.value(oppId);
-      const ActionList & actions = oppActions.value(oppId);
-      QString nick = opp.nick().hash();
-      
-      QSqlQuery sel_query(dbManager_->database());
-      sel_query.prepare("SELECT * FROM FREFLOP WHERE NICK=:nick");
-      sel_query.bindValue(":nick", nick);
-      int cnt = 0, fold = 0, pfr = 0, vpip = 0, limp = 0;
-      if (sel_query.exec())
-      {
-         sel_query.first();
-         QSqlRecord rec = sel_query.record();
-         cnt = rec.value("CNT").toInt();
-         fold = rec.value("FOLD").toInt();
-         pfr = rec.value("PFR").toInt();
-         vpip = rec.value("VPIP").toInt();
-         limp = rec.value("LIMP").toInt();
-         sel_query.finish();
-      }
-      else
-      {
-         //записи нет
-         //создать
-         cnt = fold = pfr = vpip = limp = 0;
-         QSqlQuery ins_query(dbManager_->database());
-         ins_query.prepare("INSERT INTO PREFLOP (NICK, CNT, FOLD, VPIP, PFR, LIMP) "
-            "VALUES(:nick, 0, 0, 0, 0, 0)");
-         ins_query.exec();
-      }
-      
-      if (actions.count() > 0)
-      {
-         cnt++;
-         if (actions.at(0) == Opp::Fold)
-         {
-            fold++;
-         }
-         else if (actions.at(0) == Opp::Raise)
-         {
-            pfr++;
-            vpip++;
-         }
-         else if (actions.at(0) == Opp::Call)
-         {
-            limp++;
-            vpip++;
-         }
-         //сохраним новые значения
-         QSqlQuery upd_query(dbManager_->database());
-         upd_query.prepare("INSERT INTO PREFLOP (NICK, CNT, FOLD, VPIP, PFR, LIMP) "
-            "VALUES(:nick, 0, 0, 0, 0, 0)");
-         ins_query.exec();
-         
-      }
-   }
-   dbManager_->database().commit();
-}
-#endif
 
 HWND Executor::findTables(const QString & tClass, HWND BeginHandle)
 {
@@ -502,97 +403,3 @@ void Executor::foldOrCheck(WId hwnd, bool realClick)
    }
 #endif
 }
-#if 0
-QString Executor::cardFromImage(QImage & img)
-{
-   int imgW = img.width();
-   int imgH = img.height();
-
-   int minDist = imgW * imgH;
-   int minIdx = 0;
-   
-   BoolMatrix * whatMatrix = new BoolMatrix(img, 200);
-   const int baseCount = cardBase_->count();
-   for (int i = 0; i < baseCount; ++i)
-   {
-      const BoolMatrix * bm = cardBase_->matrix(i);
-      //изображение подтягивается под эталон
-      if ((bm->width()  != imgW) ||
-          (bm->height() != imgH) )
-      {
-         img = img.scaled(imgW, imgH);
-         delete whatMatrix;
-         whatMatrix = new BoolMatrix(img, 200);
-      }
-      int res = *whatMatrix - *bm;
-
-      if (res < minDist)
-      {
-         minDist = res;
-         minIdx = i;
-      }
-      if (res == 0)
-         break;
-   }
-   delete whatMatrix;
-   
-   return cardBase_->nominal(minIdx);
-}
-
-
-QString Executor::cardString(int nom, int suit)
-{
-   QString res;
-   QStringList nomList;
-   nomList << "" << "2" << "3" << "4" << "5" << "6" << "7" 
-      << "8" << "9" << "T" << "J" << "Q" << "K" << "A";
-
-   QStringList suiList;
-   suiList << "" << "h" << "d" << "c" << "s";
-
-   res = nomList.at(nom) + suiList.at(suit);
-   return res;
-}
-
-
-QString Executor::cardRangeFromHoles(const QString & f, const QString & s)
-{
-   QString range;
-   QStringList nomList;
-   nomList << "" << "2" << "3" << "4" << "5" << "6" << "7" 
-      << "8" << "9" << "T" << "J" << "Q" << "K" << "A";
-
-   QString fNom  = f.left(1);
-   QString fSuit = f.right(1);
-   QString sNom  = s.left(1);
-   QString sSuit = s.right(1);
-   int n1 = nomList.indexOf(fNom);
-   int n2 = nomList.indexOf(sNom);
-   if (n2 > n1)
-   {
-      QString swap = sNom;
-      sNom = fNom;
-      fNom = swap;
-      
-      swap = sSuit;
-      sSuit = fSuit;
-      fSuit = swap;
-   }
-   if (fNom == sNom)
-   {
-      range = fNom + sNom;
-   }
-   else
-   {
-      if (fSuit == sSuit)
-      {
-         range = fNom + sNom + "s";
-      }
-      else
-      {
-         range = fNom + sNom + "o";
-      }
-   }
-   return range;
-}
-#endif

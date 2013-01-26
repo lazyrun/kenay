@@ -43,7 +43,7 @@ QString OppNick::hash() const
    {
       lst << letter.hash();
    }
-   return lst.join(";");
+   return lst.join("/");
 }
 
 QString OppNick::OppLetter::hash() const

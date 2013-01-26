@@ -1,18 +1,6 @@
 #include "Mind.h"
 
-Mind::Mind(const CardProcessing * proc)
+Mind::Mind(CardProcessing * const proc, Session * const session) : proc_(proc), session_(session)
 {
-   proc_ = proc;
 }
-
-void Mind::setHole(const QString & f, const QString & s)
-{
-   hole_.setCards(f, s);;
-}
-
-void Mind::setBoard(const QStringList & board)
-{
-   board_ = board;
-}
-
 
