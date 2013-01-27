@@ -29,7 +29,7 @@
          <control x="382" y="473">#000000</control>
       </second>
    </hole>
-   <pot x="71" y="323" w="133" h="14">#FFFF00</pot>
+   <pot x="71" y="323" w="200" h="14">#FFFF00</pot>
    <stack x="358" y="588" w="84" h="16">#00FF00</stack>
    <dealer x="444" y="513">#EDEEBC</dealer>
    <river  x="528" y="303">#FFFFFF</river>

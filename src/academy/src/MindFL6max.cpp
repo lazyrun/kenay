@@ -19,7 +19,7 @@ Solution MindFL6max::think()
       Opp opp = proc_->opp(QString::number(i));
       oppList << opp;
       //получить статистику по оппу
-      session_->stat(opp.nick().hash());
+      //session_->stat(opp.nick().hash());
    }
    return Solution();
 }

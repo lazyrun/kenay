@@ -14,7 +14,7 @@ class DBManager : public QObject
    Q_OBJECT
 public:
    //! Конструктор
-   DBManager();
+   DBManager(const QString & file);
    //! Деструктор
    ~DBManager();
    //! Успешно ли соединение с БД
@@ -39,7 +39,7 @@ protected:
    /*!
    \return Результат соединения
    */
-   bool connectDB();
+   bool connectDB(const QString & connect);
    //! Проверить структуру БД
    /*!
    \return Результат проверки

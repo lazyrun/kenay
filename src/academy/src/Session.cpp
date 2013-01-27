@@ -18,10 +18,17 @@ void Session::saveStats(const QString & session)
    CardProcessing::Street street = proc_->street();
    QMap<int, ActionList> & oppHist = history_[street];
 
+   //nopeMap_.clear();
+   opps_.clear();
    for (int i = 1; i < 6; i++)
    {
       Opp opp = proc_->opp(QString::number(i));
       Opp::Action act = opp.action();
+      //if (street == CardProcessing::Preflop && 
+      //   (act == Opp::Nope || act == Opp::SmallBlind || act == Opp::BigBlind))
+      //{
+      //   nopeMap_.insert(opp.nick().hash(), opp);
+      //}
       oppHist[i].append(act);
       opps_.insert(i, opp);
    }
@@ -93,6 +100,40 @@ void Session::saveToDB()
             limp++;
             vpip++;
          }
+         else if (actions.at(0) == Opp::Nope       || 
+                  actions.at(0) == Opp::SmallBlind)
+                  //actions.at(0) == Opp::BigBlind) 
+                  //ББ не проверяем, т.к. никак не понять чекал ли юзер или рейзил
+         {
+            //взять текущего игрока на этом месте
+            Opp currentOpp = proc_->opp(QString::number(oppId));
+            //приплюсовать к стеку сумму нынешней ставки
+            qreal currentStack = currentOpp.stack();
+            //if (currentOpp.action() == Opp::SmallBlind ||
+            //    currentOpp.action() == Opp::BigBlind)
+            {
+               currentStack += currentOpp.bet();
+            }
+            if (currentOpp.nick() == opp.nick())
+            {
+               //убеждаемся, что на том месте всё тот же игрок
+               if (qFuzzyCompare(opp.stack(), currentStack))
+               {
+                  //стек не изменился - юзер сфолдил 
+                  cnt++;
+                  fold++;
+               }
+               else
+               {
+                  //поучаствовал в раздаче
+                  //но неизвстно каким именно образом, лимпом или рейзом
+                  cnt++;
+                  vpip++;
+               }
+
+            }
+         }
+
          //сохраним новые значения
          QSqlQuery upd_query(db);
          upd_query.prepare("UPDATE PREFLOP SET CNT=:cnt, "

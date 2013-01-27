@@ -86,6 +86,10 @@ public:
    qreal vpip() const {return 0.;}
    //! Preflop raiser
    qreal pfr() const {return 0.;}
+   //! 
+   qreal fold() const {return 0.;}
+   //!
+   qreal limp() const {return 0.;}
 protected:
    OppNick nick_;
    qreal stack_;

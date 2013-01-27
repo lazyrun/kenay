@@ -137,7 +137,7 @@ void Executor::timerEvent(QTimerEvent *)
       //QString card1 = cardProc_->holeCard("first");
       //QString card2 = cardProc_->holeCard("second");
       //session_->saveStats(card1 + card2);
-      //clickCheck(FgWnd);
+      clickFold(FgWnd);
    }
 #if 0
    //наш ход

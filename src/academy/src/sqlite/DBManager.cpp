@@ -6,9 +6,9 @@
 
 #include "DBManager.h"
 
-DBManager::DBManager()
+DBManager::DBManager(const QString & file)
 {
-   connectDB();
+   connectDB(file);
 }
 
 DBManager::~DBManager()
@@ -16,47 +16,31 @@ DBManager::~DBManager()
    db_.close();
 }
 
-bool DBManager::connectDB()
+bool DBManager::connectDB(const QString & connect)
 {
    db_is_good_ = false;
 
    //извлечь из DBSettingsGlobal
-   std::string driver;
-   std::string connect;
-   std::string user;
-   std::string passwd;
+   QString driver;
    
    driver  = "QSQLITE";
-   connect = "stat/stat_acad.db";
-   user    = "";
-   passwd  = "";
-      
-   if (!QSqlDatabase::isDriverAvailable(driver.c_str()))
+   if (!QSqlDatabase::isDriverAvailable(driver))
    {
       QString err_msg = tr("Database driver not installed");
-      lastError_ = QString("\"%1\" : %2").arg(QString::fromStdString(driver)).arg(err_msg);
+      lastError_ = QString("\"%1\" : %2").arg(driver).arg(err_msg);
       return false;
    }
    else
    {
-      db_ = QSqlDatabase::addDatabase(QString::fromStdString(driver), "STAT_DB");
-      db_.setDatabaseName(QString::fromStdString(connect));
+      db_ = QSqlDatabase::addDatabase(driver, "STAT_DB");
+      db_.setDatabaseName(connect);
       
-      if (user.length())
-      {
-         db_.setUserName(QString::fromStdString(user));
-      }
-      if (passwd.length())
-      {
-         db_.setPassword(QString::fromStdString(passwd));
-      }
       if (!db_.open())
       {
          QString err_msg = tr("Can't establish connection to");
-         lastError_ = QString("%1 : %2").arg(err_msg).arg(QString::fromStdString(connect));
+         lastError_ = QString("%1 : %2").arg(err_msg).arg(connect);
          return false;
       }
-      fprintf(stdout, "%s %s %s %s\n", "Database connected: driver", driver.c_str(), "connection", connect.c_str());
 
       db_is_good_ = (CheckDBStruct() == 1);
   

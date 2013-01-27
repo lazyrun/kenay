@@ -194,15 +194,45 @@ qreal ProcAcad::pot() const
       ImgUtils::splitByLetters(*potMatrix);
    
    delete potMatrix;
-   //отбрасываем 4 первые буквы слова Pot:
-   QList<BoolMatrix> potLetts = letts.mid(4);
-   
-   //for (int i = 0; i < potLetts.count(); i++)
-   //{
-   //   potLetts.at(i).save(QString("let_%1.bmp").arg(i));
-   //}
-   PotParser potParser;
-   qreal val = ImgUtils::parseRealNumber(potLetts, &potParser);
+   qreal val = 0.0;
+   if (letts.count() > 14)
+   {
+      //отбрасываем 5 первых букв слова Pots:
+      QList<BoolMatrix> potLetts = letts.mid(5);
+
+      //Pots: $1, Main: $
+      //ищем M в слове Main
+      int Midx = 0;
+      int maxWidth = 0;
+      for (int i = 0; i < potLetts.count(); i++)
+      {
+         int lettWidth = potLetts.at(i).width();
+         if (lettWidth > maxWidth)
+         {
+            maxWidth = lettWidth;
+            Midx = i;
+         }
+      }
+      //отбрасываем 5 первых букв слова Pots:
+      potLetts = letts.mid(5, Midx - 1);
+      PotParser potParser;
+      val = ImgUtils::parseRealNumber(potLetts, &potParser);
+
+      potLetts = letts.mid(Midx + 11);
+      val += ImgUtils::parseRealNumber(potLetts, &potParser);
+   }
+   else if (letts.count() > 4)
+   {
+      //отбрасываем 4 первые буквы слова Pot:
+      QList<BoolMatrix> potLetts = letts.mid(4);
+      
+      //for (int i = 0; i < potLetts.count(); i++)
+      //{
+      //   potLetts.at(i).save(QString("let_%1.bmp").arg(i));
+      //}
+      PotParser potParser;
+      val = ImgUtils::parseRealNumber(potLetts, &potParser);
+   }
    return val;
 }
 
@@ -233,18 +263,21 @@ qreal ProcAcad::stack() const
    //нарезаем по буквам
    QList<BoolMatrix> letts = 
       ImgUtils::splitByLetters(*stackMatrix);
-   //отбрасываем 1
-   QList<BoolMatrix> stackLetts = letts.mid(1);
-
    delete stackMatrix;
+   qreal val = 0.0;
+   if (letts.count() > 1)
+   {
+      //отбрасываем 1
+      QList<BoolMatrix> stackLetts = letts.mid(1);
 
-   //for (int i = 0; i < stackLetts.count(); i++)
-   //{
-   //   stackLetts.at(i).save(QString("stack_%1.bmp").arg(i));
-   //}
+      //for (int i = 0; i < stackLetts.count(); i++)
+      //{
+      //   stackLetts.at(i).save(QString("stack_%1.bmp").arg(i));
+      //}
 
-   StackParser stackParser;
-   qreal val = ImgUtils::parseRealNumber(stackLetts, &stackParser);
+      StackParser stackParser;
+      val = ImgUtils::parseRealNumber(stackLetts, &stackParser);
+   }
    return val;
 }
 
@@ -391,12 +424,16 @@ void ProcAcad::parseOppStack(const QDomNode & dnOpp, Opp & opp)
          //нарезаем по буквам
          QList<BoolMatrix> letts = 
             ImgUtils::splitByLetters(*stackMatrix);
-         //отбрасываем 1
-         QList<BoolMatrix> stackLetts = letts.mid(1);
+         
          delete stackMatrix;
 
-         StackParser stackParser;
-         stack = ImgUtils::parseRealNumber(stackLetts, &stackParser);
+         //отбрасываем 1
+         if (letts.count() > 1)
+         {
+            QList<BoolMatrix> stackLetts = letts.mid(1);
+            StackParser stackParser;
+            stack = ImgUtils::parseRealNumber(stackLetts, &stackParser);
+         }
       }
    }
    opp.setStack(stack);
@@ -487,10 +524,10 @@ void ProcAcad::parseOppBet(const QDomNode & dnOpp, Opp & opp)
          // Raise $ - 1 дырка {из за того что слитно, то первая буква идет как Ra = 2 дырки, но зато 4-я с дыркой}
          // Fold
          
-         for (int i = 0; i < letts.count(); i++)
-         {
-            letts.at(i).save(QString("bet_%1.bmp").arg(i));
-         }
+         //for (int i = 0; i < letts.count(); i++)
+         //{
+         //   letts.at(i).save(QString("bet_%1.bmp").arg(i));
+         //}
 
          QList<PointList> areasFirst = ImgUtils::closedAreas(letts.at(0),
                ImgUtils::Four);
@@ -549,6 +586,10 @@ void ProcAcad::parseOppBet(const QDomNode & dnOpp, Opp & opp)
                   opp.setAction(Opp::SmallBlind);
                }
                else if (qFuzzyCompare(bet, bigBlind))
+               {
+                  opp.setAction(Opp::BigBlind);
+               }
+               else
                {
                   opp.setAction(Opp::BigBlind);
                }

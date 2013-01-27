@@ -9,7 +9,7 @@ OppNick::OppNick()
 
 OppNick::OppNick(const QString & hash)
 {
-   QStringList letts = hash.split(";");
+   QStringList letts = hash.split("/");
    foreach (QString let, letts)
    {
       bool ok = false;

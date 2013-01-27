@@ -27,6 +27,7 @@ protected:
    QString sessionID_;
    QMap<CardProcessing::Street, QMap<int, ActionList> > history_;
    QMap<int, Opp> opps_;
+   QMap<QString, Opp> nopeMap_;
 };
 
 #endif

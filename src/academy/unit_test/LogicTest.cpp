@@ -25,8 +25,7 @@ namespace tut
    void testlogic::test<1>()
    {
       //проверка HoleCards
-      {
-      HoleCards hole("Qs", "Ad");
+      {HoleCards hole("Qs", "Ad");
       tensure(__FILE__, __LINE__, hole.fullName() == "AdQs");
       tensure(__FILE__, __LINE__, hole.suitedName() == "AQo");
       tensure(__FILE__, __LINE__, !hole.isSuited());
@@ -59,15 +58,15 @@ namespace tut
    void testlogic::test<2>()
    {
       //проверка сохранения статистики
-      DBManager db;
+      DBManager db("stat/stat_acad6max.db");
       tensure(__FILE__, __LINE__, db.isGood());
       //очистить таблицу
       tensure(__FILE__, __LINE__, db.clearTable("PREFLOP"));
 
-      ProcAcad proc("map/acad.xml");
+      ProcAcad proc("map/acad_6max.xml");
       Session ses(&proc);
 
-      QDir test_dir("sshot");
+      QDir test_dir("sshot/acad_6max");
       tensure(__FILE__, __LINE__, test_dir.exists());
       
       QFileInfoList files = test_dir.entryInfoList(QDir::Files);
@@ -87,11 +86,11 @@ namespace tut
    template<>   template<>
    void testlogic::test<3>()
    {
-      ProcAcad proc("map/acad.xml");
+      ProcAcad proc("map/acad_6max.xml");
       Session ses(&proc);
       MindFL6max mind(&proc, &ses);
       {
-      QImage imgTable("sshot/acad_1.bmp");
+      QImage imgTable("sshot/acad_6max/acad_1.bmp");
       tensure(__FILE__, __LINE__, !imgTable.isNull());
       proc.setImage(imgTable);
       if (proc.hasFold())
