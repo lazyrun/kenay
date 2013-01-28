@@ -20,7 +20,10 @@ class Session
 {
 public:   
    Session(CardProcessing * proc);
+   //! сохранить статистику из текущей истории
    void saveStats(const QString & sessionId);
+   //! «аполнить статистику оппа
+   void stat(Opp & opp);
 protected:   
    void saveToDB();
    CardProcessing * proc_;

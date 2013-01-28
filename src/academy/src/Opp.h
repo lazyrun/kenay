@@ -62,7 +62,8 @@ public:
       Raise
    };
    
-   Opp() {bet_ = 0.; stack_ = 0.; hasCards_ = false; isDealer_ = false; action_ = Nope;}
+   Opp() {bet_ = 0.; stack_ = 0.; hasCards_ = false; isDealer_ = false; action_ = Nope;
+          vpip_ = 0.; pfr_ = 0.; fold_ = 0.; limp_ = 0.;}
    
    void setCards(bool v) {hasCards_ = v;}
    bool hasCards() const {return hasCards_;}
@@ -83,13 +84,17 @@ public:
    Action action() const {return action_;}
 
    //!http://propokerpro.ru/shkola/cash-statistika.htm
-   qreal vpip() const {return 0.;}
+   qreal vpip() const      {return vpip_;}
+   void setVpip(qreal vpip){vpip_ = vpip; }
    //! Preflop raiser
-   qreal pfr() const {return 0.;}
-   //! 
-   qreal fold() const {return 0.;}
-   //!
-   qreal limp() const {return 0.;}
+   qreal pfr() const       {return pfr_;}
+   void setPfr(qreal pfr)  {pfr_ = pfr;}
+   //! Fold
+   qreal fold() const      {return fold_;}
+   void setFold(qreal fold){fold_ = fold;}
+   //! Limp
+   qreal limp() const      {return limp_;}
+   void setLimp(qreal limp){limp_ = limp;}
 protected:
    OppNick nick_;
    qreal stack_;
@@ -97,6 +102,10 @@ protected:
    bool hasCards_;
    bool isDealer_;
    Action action_;
+   qreal vpip_;
+   qreal pfr_;
+   qreal fold_;
+   qreal limp_;
 };
 
 #endif

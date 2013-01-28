@@ -99,6 +99,26 @@ namespace tut
       }
       }
    }
+
+   template<>   template<>
+   void testlogic::test<4>()
+   {
+      DBManager db("stat/stat_acad6max.db");
+      tensure(__FILE__, __LINE__, db.isGood());
+
+      ProcAcad proc("map/acad_6max.xml");
+      Session ses(&proc);
+      {
+      QImage imgTable("sshot/acad_6max/acad_1.bmp");
+      tensure(__FILE__, __LINE__, !imgTable.isNull());
+      proc.setImage(imgTable);
+      
+      Opp opp = proc.opp("1");
+      ses.stat(opp);
+      
+      }
+   }
+
 }
 
 //вычисление аутов

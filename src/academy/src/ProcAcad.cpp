@@ -9,7 +9,10 @@
 ProcAcad::ProcAcad(const QString & mapfile)
 : CardProcessing()
 {
-   ConfigGlobal<MainConfig>::Instance(mapfile, "root");
+   QString fn = ConfigGlobal<MainConfig>::Instance(mapfile, "root").fileName();
+   QString rn = ConfigGlobal<MainConfig>::Instance(mapfile, "root").rootName();
+   if (fn != mapfile)
+      ConfigGlobal<MainConfig>::Instance(mapfile, "root").init(mapfile, rn);
 }
 
 ProcAcad::~ProcAcad()
@@ -345,6 +348,7 @@ Opp ProcAcad::opp(const QString & num)
    parseOppInGame(dnOpp, opp);
    parseOppIsDealer(dnOpp, opp);
    parseOppBet(dnOpp, opp);
+   
    return opp;
 }
 
@@ -431,6 +435,12 @@ void ProcAcad::parseOppStack(const QDomNode & dnOpp, Opp & opp)
          if (letts.count() > 1)
          {
             QList<BoolMatrix> stackLetts = letts.mid(1);
+            
+            //for (int i = 0; i < stackLetts.count(); i++)
+            //{
+            //   stackLetts.at(i).save(QString("stack_%1.bmp").arg(i));
+            //}
+
             StackParser stackParser;
             stack = ImgUtils::parseRealNumber(stackLetts, &stackParser);
          }

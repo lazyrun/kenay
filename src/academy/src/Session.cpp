@@ -151,3 +151,39 @@ void Session::saveToDB()
    }
    db.commit();
 }
+
+void Session::stat(Opp & opp)
+{
+   QString nick = opp.nick().hash();
+   QString sel_sql = "SELECT CNT, VPIP, PFR, FOLD, LIMP FROM PREFLOP WHERE NICK=:nick";
+   QSqlDatabase db = QSqlDatabase::database("STAT_DB");
+   QSqlQuery sel_query(db);
+   sel_query.prepare(sel_sql);
+   sel_query.bindValue(":nick", nick);
+   int cnt = 0, fold = 0, pfr = 0, vpip = 0, limp = 0;
+   if (sel_query.exec())
+   {
+      if (sel_query.first())
+      {
+         QSqlRecord rec = sel_query.record();
+         cnt  = rec.value("CNT").toInt();
+         vpip = rec.value("VPIP").toInt();
+         fold = rec.value("FOLD").toInt();
+         pfr  = rec.value("PFR").toInt();
+         limp = rec.value("LIMP").toInt();
+         sel_query.finish();
+         sel_query.clear();
+      }
+      else
+      {
+         //записи нет
+         return;
+      }
+      //преобразование в процентное выражение
+      opp.setVpip(qreal(vpip) * 100. / qreal(cnt));
+      opp.setPfr(qreal(pfr) * 100. / qreal(cnt));
+      opp.setFold(qreal(fold) * 100. / qreal(cnt));
+      opp.setLimp(qreal(limp) * 100. / qreal(cnt));
+   }
+}
+

@@ -78,9 +78,10 @@ public:
    QString fileName() const { return fileName_; }
 
    QDomElement & root() { return rootElement_; }
-protected: 
    //! Инициализация
    void init(const QString & filename = "", const QString & rootName = "" );
+
+protected: 
    //! Записывает массив настроек в документ
    void saveTag(QDomDocument * domDocument, QDomElement * parent,
                   const DirectVariantMap & map);
@@ -125,10 +126,10 @@ public:
    \param[in] filename Имя файла
    \param[in] rootName Название root-элемента
    */
-   static ConfigGlobal<T>& Instance(const QString & filename = "",
+   static ConfigGlobal<T>& Instance(const QString & fileName = "",
       const QString & rootName = "")
    {
-      static ConfigGlobal<T> Instance_(filename, rootName);
+      static ConfigGlobal<T> Instance_(fileName, rootName);
       return Instance_;
    }
 
