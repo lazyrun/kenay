@@ -1011,40 +1011,73 @@ namespace tut
 
          tensure(__FILE__, __LINE__, qFuzzyCompare(proc.pot(), 0.55));
          tensure(__FILE__, __LINE__, qFuzzyCompare(proc.stack(), 10.0));
+         Opp opp1 = proc.opp("1");
          Opp opp2 = proc.opp("2");
+         Opp opp3 = proc.opp("3");
          Opp opp4 = proc.opp("4");
          Opp opp5 = proc.opp("5");
          Opp opp6 = proc.opp("6");
+         Opp opp7 = proc.opp("7");
          Opp opp8 = proc.opp("8");
+         Opp opp9 = proc.opp("9");
+         tensure(__FILE__, __LINE__, qFuzzyCompare(opp1.stack(), 10));
          tensure(__FILE__, __LINE__, qFuzzyCompare(opp2.stack(), 9.95));
+         tensure(__FILE__, __LINE__, qFuzzyCompare(opp3.stack(), 9.90));
          tensure(__FILE__, __LINE__, qFuzzyCompare(opp4.stack(), 9.90));
          tensure(__FILE__, __LINE__, qFuzzyCompare(opp5.stack(), 10));
          tensure(__FILE__, __LINE__, qFuzzyCompare(opp6.stack(), 9.90));
+         tensure(__FILE__, __LINE__, qFuzzyCompare(opp7.stack(), 9.80));
          tensure(__FILE__, __LINE__, qFuzzyCompare(opp8.stack(), 10.0));
+         tensure(__FILE__, __LINE__, qFuzzyCompare(opp9.stack(), 10));
 
+         tensure(__FILE__, __LINE__,  opp1.hasCards());
          tensure(__FILE__, __LINE__,  opp2.hasCards());
+         tensure(__FILE__, __LINE__,  opp3.hasCards());
          tensure(__FILE__, __LINE__,  opp4.hasCards());
          tensure(__FILE__, __LINE__, !opp5.hasCards());
          tensure(__FILE__, __LINE__,  opp6.hasCards());
+         tensure(__FILE__, __LINE__,  opp7.hasCards());
          tensure(__FILE__, __LINE__, !opp8.hasCards());
+         tensure(__FILE__, __LINE__,  !opp9.hasCards());
 
+         tensure(__FILE__, __LINE__, opp1.isDealer());
          tensure(__FILE__, __LINE__, !opp2.isDealer());
+         tensure(__FILE__, __LINE__, !opp3.isDealer());
          tensure(__FILE__, __LINE__, !opp4.isDealer());
          tensure(__FILE__, __LINE__, !opp5.isDealer());
          tensure(__FILE__, __LINE__, !opp6.isDealer());
+         tensure(__FILE__, __LINE__, !opp7.isDealer());
          tensure(__FILE__, __LINE__, !opp8.isDealer());
+         tensure(__FILE__, __LINE__, !opp9.isDealer());
          
+         tensure(__FILE__, __LINE__, qFuzzyCompare(opp1.bet(), 0));
+         tensure(__FILE__, __LINE__,               opp1.action() == Opp::Nope);
          tensure(__FILE__, __LINE__, qFuzzyCompare(opp2.bet(), 0.05));
          tensure(__FILE__, __LINE__,               opp2.action() == Opp::SmallBlind);
+         tensure(__FILE__, __LINE__, qFuzzyCompare(opp3.bet(), 0.10));
+         tensure(__FILE__, __LINE__,               opp3.action() == Opp::BigBlind);
          tensure(__FILE__, __LINE__, qFuzzyCompare(opp4.bet(), 0.10));
          tensure(__FILE__, __LINE__,               opp4.action() == Opp::Call);
          tensure(__FILE__, __LINE__, qFuzzyCompare(opp5.bet(), 0.00));
          tensure(__FILE__, __LINE__,               opp5.action() == Opp::Fold);
          tensure(__FILE__, __LINE__, qFuzzyCompare(opp6.bet(), 0.10));
          tensure(__FILE__, __LINE__,               opp6.action() == Opp::Call);
+         tensure(__FILE__, __LINE__, qFuzzyCompare(opp7.bet(), 0.10));
+         tensure(__FILE__, __LINE__,               opp7.action() == Opp::Raise);
          tensure(__FILE__, __LINE__, qFuzzyCompare(opp8.bet(), 0.00));
          tensure(__FILE__, __LINE__,               opp8.action() == Opp::Fold);
+         tensure(__FILE__, __LINE__, qFuzzyCompare(opp9.bet(), 0.));
+         tensure(__FILE__, __LINE__,               opp9.action() == Opp::Fold);
 
+         tensure(__FILE__, __LINE__, opp1.nick().hash().split("/").count() == 6);
+         tensure(__FILE__, __LINE__, opp2.nick().hash().split("/").count() == 8);
+         tensure(__FILE__, __LINE__, opp3.nick().hash().split("/").count() == 5);
+         tensure(__FILE__, __LINE__, opp4.nick().hash().split("/").count() == 6);
+         tensure(__FILE__, __LINE__, opp5.nick().hash().split("/").count() == 5);
+         tensure(__FILE__, __LINE__, opp6.nick().hash().split("/").count() == 5);
+         tensure(__FILE__, __LINE__, opp7.nick().hash().split("/").count() == 6);
+         tensure(__FILE__, __LINE__, opp8.nick().hash().split("/").count() == 5);
+         tensure(__FILE__, __LINE__, opp9.nick().hash().split("/").count() == 4);
 
       }
    }

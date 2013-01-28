@@ -9,6 +9,7 @@
 class CardBase;
 class AlarmWidget;
 class MindFL6max;
+class MindFLfull;
 class Clicker;
 class DBManager;
 class Session;
@@ -33,7 +34,7 @@ protected:
 
    QString cache_;
    ProcAcad * cardProc_;
-   MindFL6max * mind_;
+   MindFLfull * mind_;
    Clicker * clicker_;
    DBManager * dbManager_;
 

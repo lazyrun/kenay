@@ -3,6 +3,7 @@
 #include "Hooker.h"
 #include "AlarmWidget.h"
 #include "MindFL6max.h"
+#include "MindFLfull.h"
 #include "Clicker.h"
 #include "DBManager.h"
 #include "Session.h"
@@ -56,12 +57,12 @@ void Executor::init()
    screen_res_y_ = GetSystemMetrics(SM_CYSCREEN);//Получить высоту экрана
 
    cardBase_ = new CardBase();
-   cardProc_ = new ProcAcad("map/acad.xml");
+   cardProc_ = new ProcAcad("map/acad_fr.xml");
    alarm_ = new AlarmWidget();
    clicker_ = new Clicker();
-   dbManager_ = new DBManager();
+   dbManager_ = new DBManager("stat/stat_acad6max.db");
    session_ = new Session(cardProc_);
-   mind_ = new MindFL6max(cardProc_, session_);
+   mind_ = new MindFLfull(cardProc_, session_);
 }
 
 Executor::~Executor()

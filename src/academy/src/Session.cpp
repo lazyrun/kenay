@@ -20,7 +20,7 @@ void Session::saveStats(const QString & session)
 
    //nopeMap_.clear();
    opps_.clear();
-   for (int i = 1; i < 6; i++)
+   for (int i = 1; i < 10; i++)
    {
       Opp opp = proc_->opp(QString::number(i));
       Opp::Action act = opp.action();
