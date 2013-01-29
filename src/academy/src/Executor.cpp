@@ -61,7 +61,7 @@ void Executor::init()
    alarm_ = new AlarmWidget();
    clicker_ = new Clicker();
    dbManager_ = new DBManager("stat/stat_acad6max.db");
-   session_ = new Session(cardProc_);
+   session_ = new Session(cardProc_, 10);
    mind_ = new MindFLfull(cardProc_, session_);
 }
 

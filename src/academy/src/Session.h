@@ -19,7 +19,7 @@ typedef QList<Opp::Action> ActionList;
 class Session
 {
 public:   
-   Session(CardProcessing * proc);
+   Session(CardProcessing * proc, int cnt);
    //! сохранить статистику из текущей истории
    void saveStats(const QString & sessionId);
    //! «аполнить статистику оппа
@@ -30,7 +30,7 @@ protected:
    QString sessionID_;
    QMap<CardProcessing::Street, QMap<int, ActionList> > history_;
    QMap<int, Opp> opps_;
-   QMap<QString, Opp> nopeMap_;
+   int cnt_;
 };
 
 #endif

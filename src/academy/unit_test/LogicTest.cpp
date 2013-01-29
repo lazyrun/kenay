@@ -64,7 +64,7 @@ namespace tut
       tensure(__FILE__, __LINE__, db.clearTable("PREFLOP"));
 
       ProcAcad proc("map/acad_6max.xml");
-      Session ses(&proc);
+      Session ses(&proc, 6);
 
       QDir test_dir("sshot/acad_6max");
       tensure(__FILE__, __LINE__, test_dir.exists());
@@ -87,7 +87,7 @@ namespace tut
    void testlogic::test<3>()
    {
       ProcAcad proc("map/acad_6max.xml");
-      Session ses(&proc);
+      Session ses(&proc, 6);
       MindFL6max mind(&proc, &ses);
       {
       QImage imgTable("sshot/acad_6max/acad_1.bmp");
@@ -107,7 +107,7 @@ namespace tut
       tensure(__FILE__, __LINE__, db.isGood());
 
       ProcAcad proc("map/acad_6max.xml");
-      Session ses(&proc);
+      Session ses(&proc, 6);
       {
       QImage imgTable("sshot/acad_6max/acad_1.bmp");
       tensure(__FILE__, __LINE__, !imgTable.isNull());

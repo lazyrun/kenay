@@ -14,12 +14,23 @@ Solution MindFLfull::think()
    //определение стиля стола (тайтовый стол или лузовый)
    //посчитать коэффициенты тайтовости/лузовости для каждого игрока
    QList<Opp> oppList;
+   int tight = 0;
    for (int i = 1; i < 10; i++)
    {
       Opp opp = proc_->opp(QString::number(i));
-      oppList << opp;
       //получить статистику по оппу
-      //session_->stat(opp.nick().hash());
+      session_->stat(opp);
+      if (opp.vpip() > 1. && opp.vpip() < 20. )
+         tight++;
+      oppList << opp;
+   }
+   if (tight > 4)
+   {
+      //стол тайтовый
+   }
+   else
+   {
+      //стол лузовый
    }
    return Solution();
 }

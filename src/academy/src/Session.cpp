@@ -1,7 +1,8 @@
 #include "Session.h"
 
-Session::Session(CardProcessing * proc): proc_(proc)
+Session::Session(CardProcessing * proc, int cnt): proc_(proc)
 {
+   cnt_ = cnt;
 }
 
 void Session::saveStats(const QString & session)
@@ -18,17 +19,11 @@ void Session::saveStats(const QString & session)
    CardProcessing::Street street = proc_->street();
    QMap<int, ActionList> & oppHist = history_[street];
 
-   //nopeMap_.clear();
    opps_.clear();
-   for (int i = 1; i < 10; i++)
+   for (int i = 1; i < cnt_; i++)
    {
       Opp opp = proc_->opp(QString::number(i));
       Opp::Action act = opp.action();
-      //if (street == CardProcessing::Preflop && 
-      //   (act == Opp::Nope || act == Opp::SmallBlind || act == Opp::BigBlind))
-      //{
-      //   nopeMap_.insert(opp.nick().hash(), opp);
-      //}
       oppHist[i].append(act);
       opps_.insert(i, opp);
    }
@@ -181,8 +176,10 @@ void Session::stat(Opp & opp)
       }
       //преобразование в процентное выражение
       opp.setVpip(qreal(vpip) * 100. / qreal(cnt));
-      opp.setPfr(qreal(pfr) * 100. / qreal(cnt));
       opp.setFold(qreal(fold) * 100. / qreal(cnt));
+
+      cnt = cnt - (vpip - (pfr + limp));
+      opp.setPfr(qreal(pfr) * 100. / qreal(cnt));
       opp.setLimp(qreal(limp) * 100. / qreal(cnt));
    }
 }
