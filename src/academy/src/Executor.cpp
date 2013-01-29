@@ -60,7 +60,7 @@ void Executor::init()
    cardProc_ = new ProcAcad("map/acad_fr.xml");
    alarm_ = new AlarmWidget();
    clicker_ = new Clicker();
-   dbManager_ = new DBManager("stat/stat_acad6max.db");
+   dbManager_ = new DBManager("stat/stat_acadfr.db");
    session_ = new Session(cardProc_, 10);
    mind_ = new MindFLfull(cardProc_, session_);
 }

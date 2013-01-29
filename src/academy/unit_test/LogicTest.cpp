@@ -3,6 +3,7 @@
 #include "tut.h"
 #include "TstUtils.h"
 #include "MindFL6max.h"
+#include "MindFLfull.h"
 #include "HoleCards.h"
 #include "DBManager.h"
 #include "Session.h"
@@ -116,6 +117,30 @@ namespace tut
       Opp opp = proc.opp("1");
       ses.stat(opp);
       
+      }
+   }
+   template<>   template<>
+   void testlogic::test<5>()
+   {
+      DBManager db("stat/stat_acadfr.db");
+      tensure(__FILE__, __LINE__, db.isGood());
+
+      ProcAcad proc("map/acad_fr.xml");
+      Session ses(&proc, 10);
+      {
+      QImage imgTable("sshot/acad_fr/acad_1.bmp");
+      tensure(__FILE__, __LINE__, !imgTable.isNull());
+      proc.setImage(imgTable);
+      
+      for (int i = 1; i < 10; i++)
+      {
+         Opp opp = proc.opp(QString::number(i));
+         ses.stat(opp);
+         qDebug() << opp.vpip() << "/" << opp.pfr() << "/" << opp.limp();
+      }
+      MindFLfull mind(&proc, &ses);
+      mind.think();
+      tensure(__FILE__, __LINE__, !imgTable.isNull());
       }
    }
 

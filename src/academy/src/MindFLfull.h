@@ -23,6 +23,8 @@ public:
    //!
    virtual Solution think();
 protected:
+   void tightPreflop();
+   void loosePreflop();
 };
 
 #endif

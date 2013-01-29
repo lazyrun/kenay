@@ -20,19 +20,31 @@ Solution MindFLfull::think()
       Opp opp = proc_->opp(QString::number(i));
       //получить статистику по оппу
       session_->stat(opp);
-      if (opp.vpip() > 1. && opp.vpip() < 20. )
+      if (opp.vpip() > 1. && opp.vpip() < 28. )
          tight++;
       oppList << opp;
    }
-   if (tight > 4)
+   if (tight > 4)//порог
    {
       //стол тайтовый
+      tightPreflop();
    }
    else
    {
       //стол лузовый
+      loosePreflop();
    }
    return Solution();
 }
 
+void MindFLfull::tightPreflop()
+{
+   //определить позицию
+   Position pos = position();
+
+}
+
+void MindFLfull::loosePreflop()
+{
+}
 

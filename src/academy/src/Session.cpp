@@ -104,11 +104,13 @@ void Session::saveToDB()
             Opp currentOpp = proc_->opp(QString::number(oppId));
             //приплюсовать к стеку сумму нынешней ставки
             qreal currentStack = currentOpp.stack();
-            //if (currentOpp.action() == Opp::SmallBlind ||
-            //    currentOpp.action() == Opp::BigBlind)
+            //игрок уже не играет, не считать его статистику
+            if (currentStack <= 0.001 && actions.at(0) == Opp::Nope)
             {
-               currentStack += currentOpp.bet();
+               continue;
             }
+            currentStack += currentOpp.bet();
+
             if (currentOpp.nick() == opp.nick())
             {
                //убеждаемся, что на том месте всё тот же игрок
@@ -174,13 +176,17 @@ void Session::stat(Opp & opp)
          //записи нет
          return;
       }
-      //преобразование в процентное выражение
-      opp.setVpip(qreal(vpip) * 100. / qreal(cnt));
-      opp.setFold(qreal(fold) * 100. / qreal(cnt));
+      //статистика имеет смысл с какого-то значения
+      if (cnt > 20.)
+      {
+         //преобразование в процентное выражение
+         opp.setVpip(qreal(vpip) * 100. / qreal(cnt));
+         opp.setFold(qreal(fold) * 100. / qreal(cnt));
 
-      cnt = cnt - (vpip - (pfr + limp));
-      opp.setPfr(qreal(pfr) * 100. / qreal(cnt));
-      opp.setLimp(qreal(limp) * 100. / qreal(cnt));
+         cnt = cnt - (vpip - (pfr + limp));
+         opp.setPfr(qreal(pfr) * 100. / qreal(cnt));
+         opp.setLimp(qreal(limp) * 100. / qreal(cnt));
+      }
    }
 }
 
