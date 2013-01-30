@@ -15,6 +15,7 @@
 */
 class MindFLfull : public Mind
 {
+friend class MindFLfullPrivate;
 public:
    //! Конструктор
    MindFLfull(CardProcessing * const proc, Session * const session);
@@ -22,26 +23,52 @@ public:
    virtual ~MindFLfull() {}
 protected:
    //!
-   virtual Solution preflopSolution();
-   //!
    virtual Solution flopSolution();
    //!
    virtual Solution turnSolution();
    //!
    virtual Solution riverSolution();
    //!
-   void preflopPosition();
-   
-   PreflopPosition preflopPos_;
-
    int tradeInPreflop();
+   //! 
+   void preflopPosition();
 
-   //!
-   Solution round0Solution();
-   //!
-   Solution tightPreflop();
+   virtual Solution preflopSolution();
+      Solution round0Solution();
+         Solution tightPreflop();
+            Solution sbTight();
+               Solution sbTightNoRaise();
+               Solution sbTightOneRaise();
+               Solution sbTightMoreRaise();
+            Solution bbTight();
+            Solution utgTight();
+            Solution mTight();
+            Solution buTight();
+
    //!
    Solution loosePreflop();
+protected:
+   //!
+   PreflopPosition preflopPos_;
+   //!
+   int limpers_;
+   //!
+   int raisers_;
+};
+
+/*!
+\class MindFLfullPrivate
+\brief 
+*/
+class MindFLfullPrivate
+{
+public:
+   MindFLfullPrivate(MindFLfull * const mind) { mind_ = mind;}
+   Mind::PreflopPosition preflopPos() {return mind_->preflopPos_;}
+   int limpers() {return mind_->limpers_;}
+   int raisers() {return mind_->raisers_;}
+protected:
+   MindFLfull * mind_;
 };
 
 #endif

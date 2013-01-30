@@ -42,17 +42,17 @@ Solution MindFLfull::round0Solution()
    qreal tightPercent = qreal(tight) * 100. / qreal(live);
 
    //количество активных оппов
-   int limpers = 0;
-   int raisers = 0;
+   limpers_ = 0;
+   raisers_ = 0;
    foreach (Opp opp, oppList_)
    {
       //опп с картами и уже чо то сказал
       if (opp.hasCards() && opp.action() != Opp::Nope)
       {
          if (opp.action() == Opp::Call)
-            limpers++;
+            limpers_++;
          else if (opp.action() == Opp::Raise)
-            raisers++;
+            raisers_++;
       }
    }
    //использовать рекомендации для тайтовой игры
@@ -60,16 +60,18 @@ Solution MindFLfull::round0Solution()
    //первый круг
    if (preflopPos_ == HighJack || preflopPos_ == Button)
    {
-      if ((limpers + raisers <= 3) && (limpers + raisers > 0) && preflopPos_ == Button)
+      if ((limpers_ + raisers_ <= 3) && (limpers_ + raisers_ > 0) && 
+          preflopPos_ == Button)
       {
          //1, 2 лимпера и 1 рейзер
          useTight = true;
       }
-      else if ((limpers + raisers <= 2) && (limpers + raisers > 0) && preflopPos_ == HighJack)
+      else if ((limpers_ + raisers_ <= 2) && (limpers_ + raisers_ > 0) && 
+               preflopPos_ == HighJack)
       {
          useTight = true;
       }
-      else if (limpers + raisers == 0)
+      else if (limpers_ + raisers_ == 0)
       {
          //играть лузовее
          useTight = false;
@@ -127,7 +129,8 @@ void MindFLfull::preflopPosition()
             break;
          }
       }
-      Q_ASSERT_X(dpos != -1, "preflopPosition", "Dealer position isn't found!");
+      Q_ASSERT_X(dpos != -1, "preflopPosition", 
+         "Dealer position isn't found!");
       
       int me = liveOpps.count() - dpos;
       if (me == 1)
@@ -158,6 +161,98 @@ int MindFLfull::tradeInPreflop()
    return 0;
 }
 
+Solution MindFLfull::tightPreflop()
+{
+   switch (preflopPos_)
+   {
+      case SmallBlind: 
+         return sbTight();
+      case BigBlind: 
+         return bbTight();
+      case UTG: 
+         return utgTight();
+      case Middle: 
+         return mTight();
+      case HighJack:
+      case Button:
+         return buTight();
+   }
+   return Solution();
+}
+
+Solution MindFLfull::sbTight()
+{
+   /*
+   Не было рейза
+     лимп
+     рейз
+   Был рейз
+     лимп
+     рейз
+   Был рейз и ререйз
+     лимп
+     рейз
+   */
+
+   if (raisers_ == 0)
+   {
+      return sbTightNoRaise();
+   }
+   else if (raisers_ == 1)
+   {
+      return sbTightOneRaise();
+   }
+   else if (raisers_ > 1)
+   {
+      return sbTightMoreRaise();
+   }
+
+   return Solution();
+}
+
+Solution MindFLfull::sbTightNoRaise()
+{
+   
+   return Solution();
+}
+
+Solution MindFLfull::sbTightOneRaise()
+{
+   //учесть что рейзер может быть лузовым - тогда играть шире
+   //также учесть как долго я не играю
+   return Solution();
+}
+
+Solution MindFLfull::sbTightMoreRaise()
+{
+   return Solution();
+}
+
+Solution MindFLfull::bbTight()
+{
+   return Solution();
+}
+
+Solution MindFLfull::utgTight()
+{
+   return Solution();
+}
+
+Solution MindFLfull::mTight()
+{
+   return Solution();
+}
+
+Solution MindFLfull::buTight()
+{
+   return Solution();
+}
+
+Solution MindFLfull::loosePreflop()
+{
+   return Solution();
+}
+
 Solution MindFLfull::flopSolution()
 {
    return Solution();
@@ -169,16 +264,6 @@ Solution MindFLfull::turnSolution()
 }
 
 Solution MindFLfull::riverSolution()
-{
-   return Solution();
-}
-
-Solution MindFLfull::tightPreflop()
-{
-   return Solution();
-}
-
-Solution MindFLfull::loosePreflop()
 {
    return Solution();
 }

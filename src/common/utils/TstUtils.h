@@ -7,8 +7,8 @@
 
 namespace tut
 {
-int run_tests(int argc, char* argv[]);
-void tensure(const char *file, int line, bool check_res, const char *msg=0);
+   int run_tests(int argc, char* argv[]);
+   void tensure(const char *file, int line, bool check_res, const char *msg=0);
 }
 
 #endif

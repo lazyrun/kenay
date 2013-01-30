@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-#include "tut.h"
+//#include "tut.h"
 #include "TstUtils.h"
 #include "MindFL6max.h"
 #include "MindFLfull.h"
@@ -20,7 +20,7 @@ namespace tut
    typedef tg_logic::object testlogic;
 
    tg_logic group_logic("LOGIC");
-
+   
    // Определение тестов
    template<>   template<>
    void testlogic::test<1>()
@@ -140,10 +140,157 @@ namespace tut
       }
       MindFLfull mind(&proc, &ses);
       mind.think();
-      tensure(__FILE__, __LINE__, !imgTable.isNull());
+      MindFLfullPrivate p(&mind);
+      tensure(__FILE__, __LINE__, p.preflopPos() == Mind::HighJack);
+      tensure(__FILE__, __LINE__, p.limpers() == 2);
+      tensure(__FILE__, __LINE__, p.raisers() == 1);
       }
-   }
+      {
+      QImage imgTable("sshot/acad_fr/acad_2.bmp");
+      tensure(__FILE__, __LINE__, !imgTable.isNull());
+      proc.setImage(imgTable);
+      MindFLfull mind(&proc, &ses);
+      MindFLfullPrivate p(&mind);
+      mind.think();
+      tensure(__FILE__, __LINE__, p.preflopPos() == Mind::Middle);
+      tensure(__FILE__, __LINE__, p.limpers() == 1);
+      tensure(__FILE__, __LINE__, p.raisers() == 1);
+      }
+      {
+      QImage imgTable("sshot/acad_fr/acad_3.bmp");
+      tensure(__FILE__, __LINE__, !imgTable.isNull());
+      proc.setImage(imgTable);
+      MindFLfull mind(&proc, &ses);
+      mind.think();
+      MindFLfullPrivate p(&mind);
+      tensure(__FILE__, __LINE__, p.preflopPos() == Mind::Middle);
+      tensure(__FILE__, __LINE__, p.limpers() == 0);
+      tensure(__FILE__, __LINE__, p.raisers() == 0);
+      }
+      {
+      QImage imgTable("sshot/acad_fr/acad_4.bmp");
+      tensure(__FILE__, __LINE__, !imgTable.isNull());
+      proc.setImage(imgTable);
+      MindFLfull mind(&proc, &ses);
+      mind.think();
+      MindFLfullPrivate p(&mind);
+      tensure(__FILE__, __LINE__, p.preflopPos() == Mind::Middle);
+      tensure(__FILE__, __LINE__, p.limpers() == 0);
+      tensure(__FILE__, __LINE__, p.raisers() == 1);
+      }
+      {
+      QImage imgTable("sshot/acad_fr/acad_5.bmp");
+      tensure(__FILE__, __LINE__, !imgTable.isNull());
+      proc.setImage(imgTable);
+      MindFLfull mind(&proc, &ses);
+      mind.think();
+      MindFLfullPrivate p(&mind);
+      tensure(__FILE__, __LINE__, p.preflopPos() == Mind::UTG);
+      tensure(__FILE__, __LINE__, p.limpers() == 2);
+      tensure(__FILE__, __LINE__, p.raisers() == 0);
+      }
+      {
+      QImage imgTable("sshot/acad_fr/acad_6.bmp");
+      tensure(__FILE__, __LINE__, !imgTable.isNull());
+      proc.setImage(imgTable);
+      MindFLfull mind(&proc, &ses);
+      mind.think();
+      MindFLfullPrivate p(&mind);
+      tensure(__FILE__, __LINE__, p.preflopPos() == Mind::UTG);
+      tensure(__FILE__, __LINE__, p.limpers() == 1);
+      tensure(__FILE__, __LINE__, p.raisers() == 0);
+      }
+      {
+      QImage imgTable("sshot/acad_fr/acad_7.bmp");
+      tensure(__FILE__, __LINE__, !imgTable.isNull());
+      proc.setImage(imgTable);
+      MindFLfull mind(&proc, &ses);
+      mind.think();
+      MindFLfullPrivate p(&mind);
+      tensure(__FILE__, __LINE__, p.preflopPos() == Mind::UTG);
+      tensure(__FILE__, __LINE__, p.limpers() == 0);
+      tensure(__FILE__, __LINE__, p.raisers() == 0);
+      }
+      {
+      QImage imgTable("sshot/acad_fr/acad_8.bmp");
+      tensure(__FILE__, __LINE__, !imgTable.isNull());
+      proc.setImage(imgTable);
+      MindFLfull mind(&proc, &ses);
+      mind.think();
+      MindFLfullPrivate p(&mind);
+      tensure(__FILE__, __LINE__, p.preflopPos() == Mind::BigBlind);
+      tensure(__FILE__, __LINE__, p.limpers() == 1);
+      tensure(__FILE__, __LINE__, p.raisers() == 1);
+      }
+      {
+      QImage imgTable("sshot/acad_fr/acad_9.bmp");
+      tensure(__FILE__, __LINE__, !imgTable.isNull());
+      proc.setImage(imgTable);
+      MindFLfull mind(&proc, &ses);
+      mind.think();
+      MindFLfullPrivate p(&mind);
+      tensure(__FILE__, __LINE__, p.preflopPos() == Mind::SmallBlind);
+      tensure(__FILE__, __LINE__, p.limpers() == 2);
+      tensure(__FILE__, __LINE__, p.raisers() == 1);
+      }
+      {
+      QImage imgTable("sshot/acad_fr/acad_10.bmp");
+      tensure(__FILE__, __LINE__, !imgTable.isNull());
+      proc.setImage(imgTable);
+      MindFLfull mind(&proc, &ses);
+      mind.think();
+      MindFLfullPrivate p(&mind);
+      tensure(__FILE__, __LINE__, p.preflopPos() == Mind::Button);
+      tensure(__FILE__, __LINE__, p.limpers() == 1);
+      tensure(__FILE__, __LINE__, p.raisers() == 0);
+      }
+      {
+      QImage imgTable("sshot/acad_fr/acad_11.bmp");
+      tensure(__FILE__, __LINE__, !imgTable.isNull());
+      proc.setImage(imgTable);
+      MindFLfull mind(&proc, &ses);
+      mind.think();
+      MindFLfullPrivate p(&mind);
+      tensure(__FILE__, __LINE__, p.preflopPos() == Mind::Middle);
+      }
+      {
+      QImage imgTable("sshot/acad_fr/acad_12.bmp");
+      tensure(__FILE__, __LINE__, !imgTable.isNull());
+      proc.setImage(imgTable);
+      MindFLfull mind(&proc, &ses);
+      mind.think();
+      MindFLfullPrivate p(&mind);
+      tensure(__FILE__, __LINE__, p.preflopPos() == Mind::Middle);
+      }
+      {
+      QImage imgTable("sshot/acad_fr/acad_13.bmp");
+      tensure(__FILE__, __LINE__, !imgTable.isNull());
+      proc.setImage(imgTable);
+      MindFLfull mind(&proc, &ses);
+      mind.think();
+      MindFLfullPrivate p(&mind);
+      tensure(__FILE__, __LINE__, p.preflopPos() == Mind::Middle);
+      }
+      {
+      QImage imgTable("sshot/acad_fr/acad_14.bmp");
+      tensure(__FILE__, __LINE__, !imgTable.isNull());
+      proc.setImage(imgTable);
+      MindFLfull mind(&proc, &ses);
+      mind.think();
+      MindFLfullPrivate p(&mind);
+      tensure(__FILE__, __LINE__, p.preflopPos() == Mind::HighJack);
+      }
+      {
+      QImage imgTable("sshot/acad_fr/acad_15.bmp");
+      tensure(__FILE__, __LINE__, !imgTable.isNull());
+      proc.setImage(imgTable);
+      MindFLfull mind(&proc, &ses);
+      mind.think();
+      MindFLfullPrivate p(&mind);
+      tensure(__FILE__, __LINE__, p.preflopPos() == Mind::UTG);
+      }
 
+   }
 }
 
 //вычисление аутов
