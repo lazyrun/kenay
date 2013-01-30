@@ -1,6 +1,6 @@
 #include "Session.h"
 
-Session::Session(CardProcessing * proc, int cnt): proc_(proc)
+Session::Session(CardProcessing * const proc, int cnt): proc_(proc)
 {
    cnt_ = cnt;
 }

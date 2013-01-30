@@ -128,13 +128,32 @@ public:
       FlashDraw2, //флеш дро с 2мя картами
    };
 
+   enum PreflopPosition
+   {
+      SmallBlind,
+      BigBlind,
+      UTG,//3
+      Middle,//3
+      HighJack,//1
+      Button//1
+   };
+
    //! Конструктор
    Mind(CardProcessing * const proc, Session * const session);
    //! Деструктор
    virtual ~Mind() {}
    //! 
-   virtual Solution think() = 0;
+   virtual Solution think();
    //! 
+protected:
+   virtual Solution preflopSolution() = 0;
+   //!
+   virtual Solution flopSolution() = 0;
+   //!
+   virtual Solution turnSolution() = 0;
+   //!
+   virtual Solution riverSolution() = 0;
+
 protected:
    //! Обработчик изображений
    CardProcessing * const proc_;
@@ -145,6 +164,8 @@ protected:
    HoleCards hole_;
    //! Карты стола
    QStringList board_;
+   //! Список оппов
+   QList<Opp> oppList_;
 };
 
 #endif

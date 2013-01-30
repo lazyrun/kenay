@@ -46,7 +46,7 @@ public:
    virtual QString holeCard(const QString & card) const = 0;
    virtual qreal pot() const = 0;
    virtual qreal stack() const = 0;
-
+   virtual bool isDealer() const = 0;
    virtual Opp opp(const QString & num) = 0;
 protected:
    //! проверка цвета пикселя

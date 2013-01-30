@@ -13,7 +13,7 @@
 \class MindFL6max
 \brief 
 */
-class MindFL6max : public Mind
+class MindFL6max //: public Mind
 {
 public:
    //! Конструктор

@@ -20,11 +20,28 @@ public:
    MindFLfull(CardProcessing * const proc, Session * const session);
    //! Деструктор
    virtual ~MindFLfull() {}
-   //!
-   virtual Solution think();
 protected:
-   void tightPreflop();
-   void loosePreflop();
+   //!
+   virtual Solution preflopSolution();
+   //!
+   virtual Solution flopSolution();
+   //!
+   virtual Solution turnSolution();
+   //!
+   virtual Solution riverSolution();
+   //!
+   void preflopPosition();
+   
+   PreflopPosition preflopPos_;
+
+   int tradeInPreflop();
+
+   //!
+   Solution round0Solution();
+   //!
+   Solution tightPreflop();
+   //!
+   Solution loosePreflop();
 };
 
 #endif

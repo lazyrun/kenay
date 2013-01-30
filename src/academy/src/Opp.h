@@ -63,7 +63,7 @@ public:
    };
    
    Opp() {bet_ = 0.; stack_ = 0.; hasCards_ = false; isDealer_ = false; action_ = Nope;
-          vpip_ = 0.; pfr_ = 0.; fold_ = 0.; limp_ = 0.;}
+          vpip_ = 0.; pfr_ = 0.; fold_ = 0.; limp_ = 0.; isInGame_ = false; }
    
    void setCards(bool v) {hasCards_ = v;}
    bool hasCards() const {return hasCards_;}
@@ -71,6 +71,9 @@ public:
    void setDealer(bool v) {isDealer_ = v;}
    bool isDealer() const {return isDealer_;}
    
+   void setInGame(bool v) {isInGame_ = v;}
+   bool isInGame() const {return isInGame_;}
+
    void setStack(qreal v) {stack_ = v;}
    qreal stack() const {return stack_;}
    
@@ -101,6 +104,7 @@ protected:
    qreal bet_;
    bool hasCards_;
    bool isDealer_;
+   bool isInGame_;
    Action action_;
    qreal vpip_;
    qreal pfr_;

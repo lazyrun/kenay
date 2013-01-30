@@ -34,8 +34,9 @@ protected:
    void parseOppNick(const QDomNode & dnOpp, Opp & opp);
    void parseOppStack(const QDomNode & dnOpp, Opp & opp);
    void parseOppBet(const QDomNode & dnOpp, Opp & opp);
-   void parseOppInGame(const QDomNode & dnOpp, Opp & opp);
+   void parseOppHasCards(const QDomNode & dnOpp, Opp & opp);
    void parseOppIsDealer(const QDomNode & dnOpp, Opp & opp);
+   void parseOppInGame(Opp & opp);
 
    const QRect buttonRect(const char * btn) const;
    //! База карт

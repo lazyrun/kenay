@@ -345,10 +345,11 @@ Opp ProcAcad::opp(const QString & num)
    Opp opp;
    parseOppNick(dnOpp, opp);
    parseOppStack(dnOpp, opp);
-   parseOppInGame(dnOpp, opp);
+   parseOppHasCards(dnOpp, opp);
    parseOppIsDealer(dnOpp, opp);
    parseOppBet(dnOpp, opp);
-   
+   parseOppInGame(opp);
+
    return opp;
 }
 
@@ -449,7 +450,19 @@ void ProcAcad::parseOppStack(const QDomNode & dnOpp, Opp & opp)
    opp.setStack(stack);
 }
 
-void ProcAcad::parseOppInGame(const QDomNode & dnOpp, Opp & opp)
+void ProcAcad::parseOppInGame(Opp & opp)
+{
+   if (opp.stack() < 0.001 && !opp.hasCards())
+   {
+      opp.setInGame(false);
+   }
+   else
+   {
+      opp.setInGame(true);
+   }
+}
+
+void ProcAcad::parseOppHasCards(const QDomNode & dnOpp, Opp & opp)
 {
    //наличие карт у оппонента
    bool hasCards = false;

@@ -19,14 +19,16 @@ typedef QList<Opp::Action> ActionList;
 class Session
 {
 public:   
-   Session(CardProcessing * proc, int cnt);
+   Session(CardProcessing * const proc, int cnt);
    //! сохранить статистику из текущей истории
    void saveStats(const QString & sessionId);
    //! «аполнить статистику оппа
    void stat(Opp & opp);
+   //!
+   int tableFormat() const {return cnt_; };
 protected:   
    void saveToDB();
-   CardProcessing * proc_;
+   CardProcessing * const proc_;
    QString sessionID_;
    QMap<CardProcessing::Street, QMap<int, ActionList> > history_;
    QMap<int, Opp> opps_;
