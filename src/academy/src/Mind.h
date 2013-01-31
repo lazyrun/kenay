@@ -144,7 +144,7 @@ public:
    virtual ~Mind() {}
    //! 
    virtual Solution think();
-   //! 
+   
 protected:
    virtual Solution preflopSolution() = 0;
    //!
@@ -153,7 +153,8 @@ protected:
    virtual Solution turnSolution() = 0;
    //!
    virtual Solution riverSolution() = 0;
-
+   //
+   QStringList parseRange(const QString & range);
 protected:
    //! Обработчик изображений
    CardProcessing * const proc_;

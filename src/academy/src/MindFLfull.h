@@ -67,6 +67,7 @@ public:
    Mind::PreflopPosition preflopPos() {return mind_->preflopPos_;}
    int limpers() {return mind_->limpers_;}
    int raisers() {return mind_->raisers_;}
+   QStringList parseRange(const QString & range) {return mind_->parseRange(range);}
 protected:
    MindFLfull * mind_;
 };

@@ -19,11 +19,12 @@ public:
    QString fullName()    const;
    //! с меткой одномастности
    QString suitedName()  const;
+   //! номиналы
+   QString nominalName() const;
+
    //! признак одномастности
    bool isSuited() const;
 protected:
-   //! номиналы
-   QString nominalName() const;
    //! первая карта
    QString first_;
    //! вторая карта

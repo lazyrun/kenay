@@ -289,7 +289,59 @@ namespace tut
       MindFLfullPrivate p(&mind);
       tensure(__FILE__, __LINE__, p.preflopPos() == Mind::UTG);
       }
+   }
+   
+   template<>   template<>
+   void testlogic::test<6>()
+   {
+      ProcAcad proc("map/acad_fr.xml");
+      Session ses(&proc, 10);
+      {
+      MindFLfull mind(&proc, &ses);
+      MindFLfullPrivate p(&mind);
+      QString range = p.parseRange("77+").join(", ");
+      tensure(__FILE__, __LINE__, range == "77, 88, 99, TT, JJ, QQ, KK, AA");
 
+      range = p.parseRange("ATs+").join(", ");
+      tensure(__FILE__, __LINE__, range == "ATs, AJs, AQs, AKs");
+
+      range = p.parseRange("KJs+").join(", ");
+      tensure(__FILE__, __LINE__, range == "KJs, KQs");
+
+      range = p.parseRange("AQo+").join(", ");
+      tensure(__FILE__, __LINE__, range == "AQo, AKo");
+
+      range = p.parseRange("JTs+").join(", ");
+      tensure(__FILE__, __LINE__, range == "JTs");
+      
+      range = p.parseRange("QTs+").join(", ");
+      tensure(__FILE__, __LINE__, range == "QTs, QJs");
+
+      range = p.parseRange("KTs+").join(", ");
+      tensure(__FILE__, __LINE__, range == "KTs, KJs, KQs");
+
+      range = p.parseRange("ATs+").join(", ");
+      tensure(__FILE__, __LINE__, range == "ATs, AJs, AQs, AKs");
+
+      range = p.parseRange("AJo+").join(", ");
+      tensure(__FILE__, __LINE__, range == "AJo, AQo, AKo");
+
+      range = p.parseRange("A2s+").join(", ");
+      tensure(__FILE__, __LINE__, range == "A2s, A3s, A4s, A5s, A6s, A7s, A8s, A9s, ATs, AJs, AQs, AKs");
+
+      range = p.parseRange("K9s+").join(", ");
+      tensure(__FILE__, __LINE__, range == "K9s, KTs, KJs, KQs");
+
+      range = p.parseRange("Q9s+").join(", ");
+      tensure(__FILE__, __LINE__, range == "Q9s, QTs, QJs");
+
+      range = p.parseRange("J9s+").join(", ");
+      tensure(__FILE__, __LINE__, range == "J9s, JTs");
+
+      range = p.parseRange("J9s+").join(", ");
+      tensure(__FILE__, __LINE__, range == "J9s, JTs");
+
+      }
    }
 }
 

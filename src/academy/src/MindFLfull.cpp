@@ -220,6 +220,10 @@ Solution MindFLfull::sbTightOneRaise()
 {
    //учесть что рейзер может быть лузовым - тогда играть шире
    //также учесть как долго я не играю
+   QString suited = hole_.suitedName();
+   QString nominal = hole_.nominalName();
+   QStringList limpRagne = 
+   
    return Solution();
 }
 
