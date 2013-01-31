@@ -225,7 +225,6 @@ Solution MindFLfull::sbTightOneRaise()
 {
    QString suited = hole_.suitedName();
    QString nominal = hole_.nominalName();
-   //QStringList limpRagne = 
    
    return Solution();
 }
@@ -403,17 +402,85 @@ Solution MindFLfull::mTight()
 
 Solution MindFLfull::mTightNoRaise()
 {
-   return Solution();
+   QString suited = hole_.suitedName();
+   QString nominal = hole_.nominalName();
+   QStringList limpRagne;
+   QStringList raiseRagne;
+   raiseRagne << parseRange("99+") 
+              << parseRange("ATs+") 
+              << parseRange("KJs+")
+              << parseRange("AJo+")
+              << "KQo";
+   limpRagne << parseRange("22+") 
+             << parseRange("A2s+")
+             << parseRange("K9s+")
+             << parseRange("Q9s+")
+             << parseRange("J9s+")
+             << parseRange("ATo+")
+             << parseRange("KJo+")
+             << "T9s" << "98s";
+   
+   Solution sol;
+   if (raiseRagne.contains(suited) || raiseRagne.contains(nominal))
+   {
+      sol.setAction(Solution::Raise);
+   }
+   else if (limpRagne.contains(suited) || limpRagne.contains(nominal))
+   {
+      sol.setAction(Solution::Call);
+   }
+   else
+   {
+      sol.setAction(Solution::Fold);
+   }
+   return sol;
+
 }
 
 Solution MindFLfull::mTightOneRaise()
 {
-   return Solution();
+   QString suited = hole_.suitedName();
+   QString nominal = hole_.nominalName();
+   QStringList limpRagne;
+   QStringList raiseRagne;
+   raiseRagne << parseRange("TT+") << "AKs" << "AKo";
+   limpRagne << parseRange("AJs+")
+             << "AKo+"
+             << "KQs";
+   
+   Solution sol;
+   if (raiseRagne.contains(suited) || raiseRagne.contains(nominal))
+   {
+      sol.setAction(Solution::Raise);
+   }
+   else if (limpRagne.contains(suited) || limpRagne.contains(nominal))
+   {
+      sol.setAction(Solution::Call);
+   }
+   else
+   {
+      sol.setAction(Solution::Fold);
+   }
+   return sol;
 }
 
 Solution MindFLfull::mTightMoreRaise()
 {
-   return Solution();
+   QString suited = hole_.suitedName();
+   QString nominal = hole_.nominalName();
+   QStringList raiseRagne;
+   raiseRagne << parseRange("QQ+") << "AKs";
+   
+   Solution sol;
+   if (raiseRagne.contains(suited) || raiseRagne.contains(nominal))
+   {
+      sol.setAction(Solution::Raise);
+   }
+   else
+   {
+      sol.setAction(Solution::Fold);
+   }
+   return sol;
 }
 
 //
