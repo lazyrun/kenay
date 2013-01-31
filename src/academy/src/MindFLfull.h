@@ -41,9 +41,21 @@ protected:
                Solution sbTightOneRaise();
                Solution sbTightMoreRaise();
             Solution bbTight();
+               Solution bbTightNoRaise();
+               Solution bbTightOneRaise();
+               Solution bbTightMoreRaise();
             Solution utgTight();
+               Solution utgTightNoRaise();
+               Solution utgTightOneRaise();
+               Solution utgTightMoreRaise();
             Solution mTight();
+               Solution mTightNoRaise();
+               Solution mTightOneRaise();
+               Solution mTightMoreRaise();
             Solution buTight();
+               Solution buTightNoRaise();
+               Solution buTightOneRaise();
+               Solution buTightMoreRaise();
 
    //!
    Solution loosePreflop();

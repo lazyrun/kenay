@@ -180,6 +180,9 @@ Solution MindFLfull::tightPreflop()
    return Solution();
 }
 
+//
+/* ----------SB Tight----------------- */
+//
 Solution MindFLfull::sbTight()
 {
    /*
@@ -193,21 +196,23 @@ Solution MindFLfull::sbTight()
      лимп
      рейз
    */
-
+   Solution sol;
    if (raisers_ == 0)
    {
-      return sbTightNoRaise();
+       sol = sbTightNoRaise();
    }
    else if (raisers_ == 1)
    {
-      return sbTightOneRaise();
+      sol = sbTightOneRaise();
    }
    else if (raisers_ > 1)
    {
-      return sbTightMoreRaise();
+      sol = sbTightMoreRaise();
    }
+   //учесть что рейзер может быть лузовым - тогда играть шире
+   //также учесть как долго я не играю
 
-   return Solution();
+   return sol;
 }
 
 Solution MindFLfull::sbTightNoRaise()
@@ -218,11 +223,9 @@ Solution MindFLfull::sbTightNoRaise()
 
 Solution MindFLfull::sbTightOneRaise()
 {
-   //учесть что рейзер может быть лузовым - тогда играть шире
-   //также учесть как долго я не играю
    QString suited = hole_.suitedName();
    QString nominal = hole_.nominalName();
-   QStringList limpRagne = 
+   //QStringList limpRagne = 
    
    return Solution();
 }
@@ -232,26 +235,229 @@ Solution MindFLfull::sbTightMoreRaise()
    return Solution();
 }
 
+//
+/* ----------BB Tight----------------- */
+//
 Solution MindFLfull::bbTight()
 {
+   Solution sol;
+   if (raisers_ == 0)
+   {
+       sol = bbTightNoRaise();
+   }
+   else if (raisers_ == 1)
+   {
+      sol = bbTightOneRaise();
+   }
+   else if (raisers_ > 1)
+   {
+      sol = bbTightMoreRaise();
+   }
+   //учесть что рейзер может быть лузовым - тогда играть шире
+   //также учесть как долго я не играю
+
+   return sol;
+
+}
+
+Solution MindFLfull::bbTightNoRaise()
+{
    return Solution();
 }
 
+Solution MindFLfull::bbTightOneRaise()
+{
+   return Solution();
+}
+
+Solution MindFLfull::bbTightMoreRaise()
+{
+   return Solution();
+}
+
+//
+/* ----------UTG Tight----------------- */
+//
 Solution MindFLfull::utgTight()
 {
-   return Solution();
+   Solution sol;
+   if (raisers_ == 0)
+   {
+       sol = utgTightNoRaise();
+   }
+   else if (raisers_ == 1)
+   {
+      sol = utgTightOneRaise();
+   }
+   else if (raisers_ > 1)
+   {
+      sol = utgTightMoreRaise();
+   }
+   //учесть что рейзер может быть лузовым - тогда играть шире
+   //также учесть как долго я не играю
+
+   return sol;
+
 }
 
+Solution MindFLfull::utgTightNoRaise()
+{
+   QString suited = hole_.suitedName();
+   QString nominal = hole_.nominalName();
+   QStringList limpRagne;
+   QStringList raiseRagne;
+   raiseRagne << parseRange("TT+") << parseRange("AJs+") << parseRange("AQo+");
+   limpRagne << parseRange("77+") 
+             << parseRange("AJo+")
+             << parseRange("JTs+")
+             << parseRange("QTs+")
+             << parseRange("KTs+")
+             << parseRange("ATs+")
+             << "KQo";
+   
+   Solution sol;
+   if (raiseRagne.contains(suited) || raiseRagne.contains(nominal))
+   {
+      sol.setAction(Solution::Raise);
+   }
+   else if (limpRagne.contains(suited) || limpRagne.contains(nominal))
+   {
+      sol.setAction(Solution::Call);
+   }
+   else
+   {
+      sol.setAction(Solution::Fold);
+   }
+   return sol;
+}
+
+Solution MindFLfull::utgTightOneRaise()
+{
+   QString suited = hole_.suitedName();
+   QString nominal = hole_.nominalName();
+   QStringList limpRagne;
+   QStringList raiseRagne;
+   raiseRagne << parseRange("TT+") << "AKs" << "AKo";
+   limpRagne << parseRange("AJs+")
+             << "AKo+"
+             << "KQs";
+   
+   Solution sol;
+   if (raiseRagne.contains(suited) || raiseRagne.contains(nominal))
+   {
+      sol.setAction(Solution::Raise);
+   }
+   else if (limpRagne.contains(suited) || limpRagne.contains(nominal))
+   {
+      sol.setAction(Solution::Call);
+   }
+   else
+   {
+      sol.setAction(Solution::Fold);
+   }
+   return sol;
+}
+
+Solution MindFLfull::utgTightMoreRaise()
+{
+   QString suited = hole_.suitedName();
+   QString nominal = hole_.nominalName();
+   QStringList raiseRagne;
+   raiseRagne << parseRange("QQ+") << "AKs";
+   
+   Solution sol;
+   if (raiseRagne.contains(suited) || raiseRagne.contains(nominal))
+   {
+      sol.setAction(Solution::Raise);
+   }
+   else
+   {
+      sol.setAction(Solution::Fold);
+   }
+   return sol;
+}
+
+//
+/* ----------Middle Tight----------------- */
+//
 Solution MindFLfull::mTight()
 {
-   return Solution();
+   Solution sol;
+   if (raisers_ == 0)
+   {
+       sol = mTightNoRaise();
+   }
+   else if (raisers_ == 1)
+   {
+      sol = mTightOneRaise();
+   }
+   else if (raisers_ > 1)
+   {
+      sol = mTightMoreRaise();
+   }
+   //учесть что рейзер может быть лузовым - тогда играть шире
+   //также учесть как долго я не играю
+
+   return sol;
 }
 
-Solution MindFLfull::buTight()
+Solution MindFLfull::mTightNoRaise()
 {
    return Solution();
 }
 
+Solution MindFLfull::mTightOneRaise()
+{
+   return Solution();
+}
+
+Solution MindFLfull::mTightMoreRaise()
+{
+   return Solution();
+}
+
+//
+/* ----------Button, HJ Tight----------------- */
+//
+Solution MindFLfull::buTight()
+{
+   Solution sol;
+   if (raisers_ == 0)
+   {
+       sol = buTightNoRaise();
+   }
+   else if (raisers_ == 1)
+   {
+      sol = buTightOneRaise();
+   }
+   else if (raisers_ > 1)
+   {
+      sol = buTightMoreRaise();
+   }
+   //учесть что рейзер может быть лузовым - тогда играть шире
+   //также учесть как долго я не играю
+
+   return sol;
+}
+
+Solution MindFLfull::buTightNoRaise()
+{
+   return Solution();
+}
+
+Solution MindFLfull::buTightOneRaise()
+{
+   return Solution();
+}
+
+Solution MindFLfull::buTightMoreRaise()
+{
+   return Solution();
+}
+
+//
+// Loose Preflop
+//
 Solution MindFLfull::loosePreflop()
 {
    return Solution();
