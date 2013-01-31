@@ -19,10 +19,12 @@ public:
       Fold,
       Call,
       Raise,
-      Bet
+      Bet,
+      Check,
+      Nope
    };
    //! Конструктор
-   Solution(){}
+   Solution(){action_ = Nope;}
    //! Деструктор
    virtual ~Solution() {}
    Action action() const {return action_;}

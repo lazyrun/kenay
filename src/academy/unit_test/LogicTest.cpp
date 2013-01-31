@@ -289,6 +289,27 @@ namespace tut
       MindFLfullPrivate p(&mind);
       tensure(__FILE__, __LINE__, p.preflopPos() == Mind::UTG);
       }
+      {
+      QImage imgTable("sshot/acad_fr/acad_16.bmp");
+      tensure(__FILE__, __LINE__, !imgTable.isNull());
+      proc.setImage(imgTable);
+      MindFLfull mind(&proc, &ses);
+      mind.think();
+      MindFLfullPrivate p(&mind);
+      tensure(__FILE__, __LINE__, p.preflopPos() == Mind::SmallBlind);
+      }
+      {
+      QImage imgTable("sshot/acad_fr/acad_17.bmp");
+      tensure(__FILE__, __LINE__, !imgTable.isNull());
+      proc.setImage(imgTable);
+      MindFLfull mind(&proc, &ses);
+      mind.think();
+      MindFLfullPrivate p(&mind);
+      tensure(__FILE__, __LINE__, p.preflopPos() == Mind::UTG);
+      tensure(__FILE__, __LINE__, p.limpers() == 1);
+      tensure(__FILE__, __LINE__, p.raisers() == 1);
+      }
+
    }
    
    template<>   template<>

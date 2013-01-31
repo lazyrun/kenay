@@ -22,11 +22,11 @@ public:
    virtual qreal stack() const;
    virtual bool isDealer() const;
    virtual Street street();
-   const QRect foldRect() const;
-   const QRect checkRect() const;
-   const QRect callRect() const;
-   const QRect raiseRect() const;
-   const QRect betRect() const;
+   virtual const QRect foldRect() const;
+   virtual const QRect checkRect() const;
+   virtual const QRect callRect() const;
+   virtual const QRect raiseRect() const;
+   virtual const QRect betRect() const;
    QString cardFromImage(QImage & img) const;
    
    virtual Opp opp(const QString & num);

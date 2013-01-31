@@ -14,6 +14,7 @@ Solution Mind::think()
    //сохранить статистику
    session_->saveStats(hole.fullName());
 
+   oppList_.clear();
    for (int i = 1; i < session_->tableFormat(); i++)
    {
       Opp opp = proc_->opp(QString::number(i));

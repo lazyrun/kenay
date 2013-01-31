@@ -48,6 +48,11 @@ public:
    virtual qreal stack() const = 0;
    virtual bool isDealer() const = 0;
    virtual Opp opp(const QString & num) = 0;
+   virtual const QRect foldRect() const = 0;
+   virtual const QRect checkRect() const = 0;
+   virtual const QRect callRect() const = 0;
+   virtual const QRect raiseRect() const = 0;
+   virtual const QRect betRect() const = 0;
 protected:
    //! проверка цвета пикселя
    bool controlPixel(const QString & sx, const QString & sy, 
