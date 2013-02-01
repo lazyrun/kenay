@@ -1,8 +1,10 @@
 #include "MindFLfull.h"
+#include "GlobVars.h"
 
 MindFLfull::MindFLfull(CardProcessing * const proc, Session * const session)
 : Mind(proc, session)
 {
+   CGlobal::Instance().SetDbg(5);
 }
 
 Solution MindFLfull::preflopSolution()
@@ -94,14 +96,20 @@ Solution MindFLfull::round0Solution()
       }
    }
    
-   //дет теста
-   return tightPreflop();
+   //для теста
+   //return tightPreflop();
+   CGlobal::Instance().ap1(QString("Tight opps: %1%%").arg(tightPercent));
+   CGlobal::Instance().ap1(QString("Raisers: %1").arg(raisers_));
+   CGlobal::Instance().ap1(QString("Limpers: %1").arg(limpers_));
+
+   if (useTight)
+   {
+      CGlobal::Instance().ap1(QString("tightPreflop()"));
+      return tightPreflop();
+   }
    
-   //if (useTight)
-   //{
-   //   return tightPreflop();
-   //}
-   //
+   CGlobal::Instance().ap1(QString("loosePreflop()"));
+   return tightPreflop();
    //return loosePreflop();
 }
 
@@ -109,6 +117,7 @@ void MindFLfull::preflopPosition()
 {
    if (proc_->isDealer())
    {
+      CGlobal::Instance().ap1(QString("Position: Button"));
       preflopPos_ = Button;
    }
    else 
@@ -122,6 +131,7 @@ void MindFLfull::preflopPosition()
             liveOpps << opp;
          }
       }
+      CGlobal::Instance().ap1(QString("Opps In Game: %1").arg(liveOpps.count()));
       //позиция дилера
       int dpos = -1;
       for (int i = 0; i < liveOpps.count(); i++)
@@ -138,22 +148,27 @@ void MindFLfull::preflopPosition()
       int me = liveOpps.count() - dpos;
       if (me == 1)
       {
+         CGlobal::Instance().ap1(QString("Position: SmallBlind"));
          preflopPos_ = SmallBlind;
       }
       else if (me == 2)
       {
+         CGlobal::Instance().ap1(QString("Position: BigBlind"));
          preflopPos_ = BigBlind;
       }
       else if (me == liveOpps.count())
       {
+         CGlobal::Instance().ap1(QString("Position: HighJack"));
          preflopPos_ = HighJack;
       }
       else if (me < liveOpps.count() && me >= liveOpps.count() - 3)
       {
+         CGlobal::Instance().ap1(QString("Position: Middle"));
          preflopPos_ = Middle;
       }
       else
       {
+         CGlobal::Instance().ap1(QString("Position: UTG"));
          preflopPos_ = UTG;
       }
    }
@@ -161,7 +176,9 @@ void MindFLfull::preflopPosition()
 
 int MindFLfull::tradeInPreflop()
 {
-   return 0;
+   int r = 0;
+   CGlobal::Instance().ap1(QString("Trade Round: %1").arg(r));
+   return r;
 }
 
 Solution MindFLfull::tightPreflop()
@@ -202,14 +219,17 @@ Solution MindFLfull::sbTight()
    Solution sol;
    if (raisers_ == 0)
    {
-       sol = sbTightNoRaise();
+      CGlobal::Instance().ap2(QString("sbTightNoRaise()")); 
+      sol = sbTightNoRaise();
    }
    else if (raisers_ == 1)
    {
+      CGlobal::Instance().ap2(QString("sbTightOneRaise()")); 
       sol = sbTightOneRaise();
    }
    else if (raisers_ >= 1)
    {
+      CGlobal::Instance().ap2(QString("sbTightMoreRaise()"));
       sol = sbTightMoreRaise();
    }
 
@@ -223,13 +243,13 @@ Solution MindFLfull::sbTightNoRaise()
 {
    QString suited = hole_.suitedName();
    QString nominal = hole_.nominalName();
-   QStringList limpRagne;
-   QStringList raiseRagne;
-   raiseRagne << parseRange("99+") 
+   QStringList limpRange;
+   QStringList raiseRange;
+   raiseRange << parseRange("99+") 
               << parseRange("ATs+") 
               << parseRange("KJs+")
               << parseRange("AQo+");
-   limpRagne << parseRange("22+") 
+   limpRange << parseRange("22+") 
              << parseRange("A2s+")
              << parseRange("K9s+")
              << parseRange("Q9s+")
@@ -242,21 +262,28 @@ Solution MindFLfull::sbTightNoRaise()
              << parseRange("QTo+")
              << parseRange("KTo+");
    
+   CGlobal::Instance().ap2(QString("suited: %1 nominal: %2").arg(suited).arg(nominal));
+   CGlobal::Instance().ap2(QString("Raise Range: %1").arg(raiseRange.join(", ")));
+   CGlobal::Instance().ap2(QString("Limp Range: %1").arg(limpRange.join(", ")));
    Solution sol;
-   if (raiseRagne.contains(suited) || raiseRagne.contains(nominal))
+   if (raiseRange.contains(suited) || raiseRange.contains(nominal))
    {
+      CGlobal::Instance().ap1(QString("Solution::Raise"));
       sol.setAction(Solution::Raise);
    }
-   else if (limpRagne.contains(suited) || limpRagne.contains(nominal))
+   else if (limpRange.contains(suited) || limpRange.contains(nominal))
    {
+      CGlobal::Instance().ap1(QString("Solution::Call"));
       sol.setAction(Solution::Call);
    }
    else if (hole_.isSuited())
    {
+      CGlobal::Instance().ap1(QString("isSuited() -> Solution::Call"));
       sol.setAction(Solution::Call);
    }
    else
    {
+      CGlobal::Instance().ap1(QString("Solution::Fold"));
       sol.setAction(Solution::Fold);
    }
    return sol;
@@ -266,27 +293,30 @@ Solution MindFLfull::sbTightOneRaise()
 {
    QString suited = hole_.suitedName();
    QString nominal = hole_.nominalName();
-   QStringList limpRagne;
-   QStringList raiseRagne;
-   raiseRagne << parseRange("TT+") << "AKs" << "AKo";
-   limpRagne << parseRange("AJs+")
+   QStringList limpRange;
+   QStringList raiseRange;
+   raiseRange << parseRange("TT+") << "AKs" << "AKo";
+   limpRange << parseRange("AJs+")
              << "AKo"
              << "KQs";
    
+   CGlobal::Instance().ap2(QString("suited: %1 nominal: %2").arg(suited).arg(nominal));
+   CGlobal::Instance().ap2(QString("Raise Range: %1").arg(raiseRange.join(", ")));
+   CGlobal::Instance().ap2(QString("Limp Range: %1").arg(limpRange.join(", ")));
    Solution sol;
-   if (raiseRagne.contains(suited) || raiseRagne.contains(nominal))
+   if (raiseRange.contains(suited) || raiseRange.contains(nominal))
    {
       sol.setAction(Solution::Raise);
    }
-   else if (limpRagne.contains(suited) || limpRagne.contains(nominal))
+   else if (limpRange.contains(suited) || limpRange.contains(nominal))
    {
       sol.setAction(Solution::Call);
    }
    else if (raisers_ == 1 && limpers_ >= 1)
    {
-      limpRagne.clear();
-      limpRagne << parseRange("22+");
-      if (limpRagne.contains(suited) || limpRagne.contains(nominal))
+      limpRange.clear();
+      limpRange << parseRange("22+");
+      if (limpRange.contains(suited) || limpRange.contains(nominal))
       {
          sol.setAction(Solution::Call);
       }
@@ -306,11 +336,11 @@ Solution MindFLfull::sbTightMoreRaise()
 {
    QString suited = hole_.suitedName();
    QString nominal = hole_.nominalName();
-   QStringList raiseRagne;
-   raiseRagne << parseRange("QQ+") << "AKs";
+   QStringList raiseRange;
+   raiseRange << parseRange("QQ+") << "AKs";
    
    Solution sol;
-   if (raiseRagne.contains(suited) || raiseRagne.contains(nominal))
+   if (raiseRange.contains(suited) || raiseRange.contains(nominal))
    {
       sol.setAction(Solution::Raise);
    }
@@ -351,15 +381,15 @@ Solution MindFLfull::bbTightNoRaise()
 {
    QString suited = hole_.suitedName();
    QString nominal = hole_.nominalName();
-   QStringList limpRagne;
-   QStringList raiseRagne;
-   raiseRagne << parseRange("99+") 
+   QStringList limpRange;
+   QStringList raiseRange;
+   raiseRange << parseRange("99+") 
               << parseRange("ATs+") 
               << parseRange("KJs+")
               << parseRange("AQo+");
    
    Solution sol;
-   if (raiseRagne.contains(suited) || raiseRagne.contains(nominal))
+   if (raiseRange.contains(suited) || raiseRange.contains(nominal))
    {
       sol.setAction(Solution::Raise);
    }
@@ -374,10 +404,10 @@ Solution MindFLfull::bbTightOneRaise()
 {
    QString suited = hole_.suitedName();
    QString nominal = hole_.nominalName();
-   QStringList limpRagne;
-   QStringList raiseRagne;
-   raiseRagne << parseRange("TT+") << "AKs" << "AKo";
-   limpRagne << parseRange("22+")
+   QStringList limpRange;
+   QStringList raiseRange;
+   raiseRange << parseRange("TT+") << "AKs" << "AKo";
+   limpRange << parseRange("22+")
              << parseRange("ATs+")
              << "JTs"
              << parseRange("QTs+")
@@ -386,11 +416,11 @@ Solution MindFLfull::bbTightOneRaise()
              << "KQo";
    
    Solution sol;
-   if (raiseRagne.contains(suited) || raiseRagne.contains(nominal))
+   if (raiseRange.contains(suited) || raiseRange.contains(nominal))
    {
       sol.setAction(Solution::Raise);
    }
-   else if (limpRagne.contains(suited) || limpRagne.contains(nominal))
+   else if (limpRange.contains(suited) || limpRange.contains(nominal))
    {
       sol.setAction(Solution::Call);
    }
@@ -405,11 +435,11 @@ Solution MindFLfull::bbTightMoreRaise()
 {
    QString suited = hole_.suitedName();
    QString nominal = hole_.nominalName();
-   QStringList raiseRagne;
-   raiseRagne << parseRange("QQ+") << "AKs";
+   QStringList raiseRange;
+   raiseRange << parseRange("QQ+") << "AKs";
    
    Solution sol;
-   if (raiseRagne.contains(suited) || raiseRagne.contains(nominal))
+   if (raiseRange.contains(suited) || raiseRange.contains(nominal))
    {
       sol.setAction(Solution::Raise);
    }
@@ -449,12 +479,12 @@ Solution MindFLfull::utgTightNoRaise()
 {
    QString suited = hole_.suitedName();
    QString nominal = hole_.nominalName();
-   QStringList limpRagne;
-   QStringList raiseRagne;
-   raiseRagne << parseRange("TT+") 
+   QStringList limpRange;
+   QStringList raiseRange;
+   raiseRange << parseRange("TT+") 
               << parseRange("AJs+") 
               << parseRange("AQo+");
-   limpRagne << parseRange("77+") 
+   limpRange << parseRange("77+") 
              << parseRange("AJo+")
              << parseRange("JTs+")
              << parseRange("QTs+")
@@ -463,11 +493,11 @@ Solution MindFLfull::utgTightNoRaise()
              << "KQo";
    
    Solution sol;
-   if (raiseRagne.contains(suited) || raiseRagne.contains(nominal))
+   if (raiseRange.contains(suited) || raiseRange.contains(nominal))
    {
       sol.setAction(Solution::Raise);
    }
-   else if (limpRagne.contains(suited) || limpRagne.contains(nominal))
+   else if (limpRange.contains(suited) || limpRange.contains(nominal))
    {
       sol.setAction(Solution::Call);
    }
@@ -482,19 +512,19 @@ Solution MindFLfull::utgTightOneRaise()
 {
    QString suited = hole_.suitedName();
    QString nominal = hole_.nominalName();
-   QStringList limpRagne;
-   QStringList raiseRagne;
-   raiseRagne << parseRange("TT+") << "AKs" << "AKo";
-   limpRagne << parseRange("AJs+")
+   QStringList limpRange;
+   QStringList raiseRange;
+   raiseRange << parseRange("TT+") << "AKs" << "AKo";
+   limpRange << parseRange("AJs+")
              << "AKo"
              << "KQs";
    
    Solution sol;
-   if (raiseRagne.contains(suited) || raiseRagne.contains(nominal))
+   if (raiseRange.contains(suited) || raiseRange.contains(nominal))
    {
       sol.setAction(Solution::Raise);
    }
-   else if (limpRagne.contains(suited) || limpRagne.contains(nominal))
+   else if (limpRange.contains(suited) || limpRange.contains(nominal))
    {
       sol.setAction(Solution::Call);
    }
@@ -509,11 +539,11 @@ Solution MindFLfull::utgTightMoreRaise()
 {
    QString suited = hole_.suitedName();
    QString nominal = hole_.nominalName();
-   QStringList raiseRagne;
-   raiseRagne << parseRange("QQ+") << "AKs";
+   QStringList raiseRange;
+   raiseRange << parseRange("QQ+") << "AKs";
    
    Solution sol;
-   if (raiseRagne.contains(suited) || raiseRagne.contains(nominal))
+   if (raiseRange.contains(suited) || raiseRange.contains(nominal))
    {
       sol.setAction(Solution::Raise);
    }
@@ -552,14 +582,14 @@ Solution MindFLfull::mTightNoRaise()
 {
    QString suited = hole_.suitedName();
    QString nominal = hole_.nominalName();
-   QStringList limpRagne;
-   QStringList raiseRagne;
-   raiseRagne << parseRange("99+") 
+   QStringList limpRange;
+   QStringList raiseRange;
+   raiseRange << parseRange("99+") 
               << parseRange("ATs+") 
               << parseRange("KJs+")
               << parseRange("AJo+")
               << "KQo";
-   limpRagne << parseRange("22+") 
+   limpRange << parseRange("22+") 
              << parseRange("A2s+")
              << parseRange("K9s+")
              << parseRange("Q9s+")
@@ -569,11 +599,11 @@ Solution MindFLfull::mTightNoRaise()
              << "T9s" << "98s";
    
    Solution sol;
-   if (raiseRagne.contains(suited) || raiseRagne.contains(nominal))
+   if (raiseRange.contains(suited) || raiseRange.contains(nominal))
    {
       sol.setAction(Solution::Raise);
    }
-   else if (limpRagne.contains(suited) || limpRagne.contains(nominal))
+   else if (limpRange.contains(suited) || limpRange.contains(nominal))
    {
       sol.setAction(Solution::Call);
    }
@@ -588,19 +618,19 @@ Solution MindFLfull::mTightOneRaise()
 {
    QString suited = hole_.suitedName();
    QString nominal = hole_.nominalName();
-   QStringList limpRagne;
-   QStringList raiseRagne;
-   raiseRagne << parseRange("TT+") << "AKs" << "AKo";
-   limpRagne << parseRange("AJs+")
+   QStringList limpRange;
+   QStringList raiseRange;
+   raiseRange << parseRange("TT+") << "AKs" << "AKo";
+   limpRange << parseRange("AJs+")
              << "AKo"
              << "KQs";
    
    Solution sol;
-   if (raiseRagne.contains(suited) || raiseRagne.contains(nominal))
+   if (raiseRange.contains(suited) || raiseRange.contains(nominal))
    {
       sol.setAction(Solution::Raise);
    }
-   else if (limpRagne.contains(suited) || limpRagne.contains(nominal))
+   else if (limpRange.contains(suited) || limpRange.contains(nominal))
    {
       sol.setAction(Solution::Call);
    }
@@ -615,11 +645,11 @@ Solution MindFLfull::mTightMoreRaise()
 {
    QString suited = hole_.suitedName();
    QString nominal = hole_.nominalName();
-   QStringList raiseRagne;
-   raiseRagne << parseRange("QQ+") << "AKs";
+   QStringList raiseRange;
+   raiseRange << parseRange("QQ+") << "AKs";
    
    Solution sol;
-   if (raiseRagne.contains(suited) || raiseRagne.contains(nominal))
+   if (raiseRange.contains(suited) || raiseRange.contains(nominal))
    {
       sol.setAction(Solution::Raise);
    }
@@ -658,14 +688,14 @@ Solution MindFLfull::buTightNoRaise()
 {
    QString suited = hole_.suitedName();
    QString nominal = hole_.nominalName();
-   QStringList limpRagne;
-   QStringList raiseRagne;
-   raiseRagne << parseRange("99+") 
+   QStringList limpRange;
+   QStringList raiseRange;
+   raiseRange << parseRange("99+") 
               << parseRange("A8s+") 
               << parseRange("KTs+")
               << parseRange("ATo+")
               << "QJs" << "KQo";
-   limpRagne << parseRange("22+") 
+   limpRange << parseRange("22+") 
              << parseRange("A2s+")
              << parseRange("K9s+")
              << parseRange("Q9s+")
@@ -679,11 +709,11 @@ Solution MindFLfull::buTightNoRaise()
              << parseRange("KTo+");
    
    Solution sol;
-   if (raiseRagne.contains(suited) || raiseRagne.contains(nominal))
+   if (raiseRange.contains(suited) || raiseRange.contains(nominal))
    {
       sol.setAction(Solution::Raise);
    }
-   else if (limpRagne.contains(suited) || limpRagne.contains(nominal))
+   else if (limpRange.contains(suited) || limpRange.contains(nominal))
    {
       sol.setAction(Solution::Call);
    }
@@ -698,27 +728,27 @@ Solution MindFLfull::buTightOneRaise()
 {
    QString suited = hole_.suitedName();
    QString nominal = hole_.nominalName();
-   QStringList limpRagne;
-   QStringList raiseRagne;
-   raiseRagne << parseRange("TT+") << "AKs" << "AKo";
-   limpRagne << parseRange("AJs+")
+   QStringList limpRange;
+   QStringList raiseRange;
+   raiseRange << parseRange("TT+") << "AKs" << "AKo";
+   limpRange << parseRange("AJs+")
              << "AKo"
              << "KQs";
    
    Solution sol;
-   if (raiseRagne.contains(suited) || raiseRagne.contains(nominal))
+   if (raiseRange.contains(suited) || raiseRange.contains(nominal))
    {
       sol.setAction(Solution::Raise);
    }
-   else if (limpRagne.contains(suited) || limpRagne.contains(nominal))
+   else if (limpRange.contains(suited) || limpRange.contains(nominal))
    {
       sol.setAction(Solution::Call);
    }
    else if (limpers_ == 2 && raisers_ == 1)
    {
-      limpRagne.clear();
-      limpRagne << parseRange("22+") << "QJs" << "JTs" << "T9s";
-      if (limpRagne.contains(suited) || limpRagne.contains(nominal))
+      limpRange.clear();
+      limpRange << parseRange("22+") << "QJs" << "JTs" << "T9s";
+      if (limpRange.contains(suited) || limpRange.contains(nominal))
       {
          sol.setAction(Solution::Call);
       }
@@ -738,11 +768,11 @@ Solution MindFLfull::buTightMoreRaise()
 {
    QString suited = hole_.suitedName();
    QString nominal = hole_.nominalName();
-   QStringList raiseRagne;
-   raiseRagne << parseRange("QQ+") << "AKs";
+   QStringList raiseRange;
+   raiseRange << parseRange("QQ+") << "AKs";
    
    Solution sol;
-   if (raiseRagne.contains(suited) || raiseRagne.contains(nominal))
+   if (raiseRange.contains(suited) || raiseRange.contains(nominal))
    {
       sol.setAction(Solution::Raise);
    }

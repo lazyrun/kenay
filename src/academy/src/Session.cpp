@@ -1,4 +1,5 @@
 #include "Session.h"
+#include "GlobVars.h"
 
 Session::Session(CardProcessing * const proc, int cnt): proc_(proc)
 {
@@ -9,12 +10,15 @@ void Session::saveStats(const QString & session)
 {
    if (session != sessionID_ && !sessionID_.isEmpty())
    {
+      CGlobal::Instance().ap1(QString("<<< END SESSION: %1 >>>\n").arg(sessionID_));
+      CGlobal::Instance().ap1(QString("<<< BEGIN SESSION: %1 >>>").arg(session));
       //новая сессия
       //сохранить в БД предыдущую сессию
       saveToDB();
       //начать запись новой сессии
       history_.clear();
    }
+   
    sessionID_ = session;
    CardProcessing::Street street = proc_->street();
    QMap<int, ActionList> & oppHist = history_[street];

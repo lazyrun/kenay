@@ -28,14 +28,14 @@ DEPENDPATH   += ./ src ../common/common ../common/utils src/sqlite
 # Input
 HEADERS += qtincludes.h \
            $$files(src/*.h) \
-           SettingsData.h \
            Config.h \
+           GlobVars.h \
            Hooker.h \
-           DBManager.h
+           DBManager.h \
 
 SOURCES += $$files(src/*.cpp) \
-           SettingsData.cpp \
            Config.cpp \
+           GlobVars.cpp \           
            Hooker.cpp \
            DBManager.cpp
            

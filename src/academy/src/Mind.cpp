@@ -1,4 +1,5 @@
 #include "Mind.h"
+#include "GlobVars.h"
 
 Mind::Mind(CardProcessing * const proc, Session * const session) 
 : proc_(proc), session_(session)
@@ -10,7 +11,7 @@ Solution Mind::think()
    //1) посмотреть свои карты
    HoleCards hole(proc_->holeCard("first"), proc_->holeCard("second"));
    hole_ = hole;
-   
+
    //сохранить статистику
    session_->saveStats(hole.fullName());
 
@@ -21,24 +22,30 @@ Solution Mind::think()
       //получить статистику по оппу
       session_->stat(opp);
       oppList_ << opp;
+      CGlobal::Instance().ap2(QString("Opp: \"%1\" %2/%3/%4")
+         .arg(opp.nick().hash()).arg(opp.vpip()).arg(opp.pfr()).arg(opp.limp()));
    }
    CardProcessing::Street street = proc_->street();
    switch (street)
    {
       case CardProcessing::Preflop:
       {
+         CGlobal::Instance().ap1(QString("Preflop"));
          return preflopSolution();
       }
       case CardProcessing::Flop:
       {
+         CGlobal::Instance().ap1(QString("Flop"));
          return flopSolution();
       }
       case CardProcessing::Turn:
       {
+         CGlobal::Instance().ap1(QString("Turn"));
          return turnSolution();
       }
       case CardProcessing::River:
       {
+         CGlobal::Instance().ap1(QString("River"));
          return riverSolution();
       }
    }
