@@ -9,8 +9,10 @@ MindFLfull::MindFLfull(CardProcessing * const proc, Session * const session)
 
 Solution MindFLfull::preflopSolution()
 {
+   CGlobal::Instance().ap2(QString("suited: %1 nominal: %2")
+      .arg(hole_.suitedName()).arg(hole_.nominalName()));
    //определить позицию
-   preflopPosition();
+   preflopPosition(); 
    //определить круг торговли
    int trade = tradeInPreflop();
    
@@ -109,8 +111,7 @@ Solution MindFLfull::round0Solution()
    }
    
    CGlobal::Instance().ap1(QString("loosePreflop()"));
-   return tightPreflop();
-   //return loosePreflop();
+   return loosePreflop();
 }
 
 void MindFLfull::preflopPosition()
@@ -262,7 +263,6 @@ Solution MindFLfull::sbTightNoRaise()
              << parseRange("QTo+")
              << parseRange("KTo+");
    
-   CGlobal::Instance().ap2(QString("suited: %1 nominal: %2").arg(suited).arg(nominal));
    CGlobal::Instance().ap2(QString("Raise Range: %1").arg(raiseRange.join(", ")));
    CGlobal::Instance().ap2(QString("Limp Range: %1").arg(limpRange.join(", ")));
    Solution sol;
@@ -278,7 +278,7 @@ Solution MindFLfull::sbTightNoRaise()
    }
    else if (hole_.isSuited())
    {
-      CGlobal::Instance().ap1(QString("isSuited() -> Solution::Call"));
+      CGlobal::Instance().ap1(QString("isSuited()==true -> Solution::Call"));
       sol.setAction(Solution::Call);
    }
    else
@@ -300,33 +300,38 @@ Solution MindFLfull::sbTightOneRaise()
              << "AKo"
              << "KQs";
    
-   CGlobal::Instance().ap2(QString("suited: %1 nominal: %2").arg(suited).arg(nominal));
    CGlobal::Instance().ap2(QString("Raise Range: %1").arg(raiseRange.join(", ")));
    CGlobal::Instance().ap2(QString("Limp Range: %1").arg(limpRange.join(", ")));
    Solution sol;
    if (raiseRange.contains(suited) || raiseRange.contains(nominal))
    {
+      CGlobal::Instance().ap1(QString("Solution::Raise"));
       sol.setAction(Solution::Raise);
    }
    else if (limpRange.contains(suited) || limpRange.contains(nominal))
    {
+      CGlobal::Instance().ap1(QString("Solution::Call"));
       sol.setAction(Solution::Call);
    }
    else if (raisers_ == 1 && limpers_ >= 1)
    {
+      CGlobal::Instance().ap1(QString("(raisers_ == 1 && limpers_ >= 1)"));
       limpRange.clear();
       limpRange << parseRange("22+");
       if (limpRange.contains(suited) || limpRange.contains(nominal))
       {
+         CGlobal::Instance().ap1(QString("Solution::Call"));
          sol.setAction(Solution::Call);
       }
       else
       {
+         CGlobal::Instance().ap1(QString("Solution::Fold"));
          sol.setAction(Solution::Fold);
       }
    }
    else
    {
+      CGlobal::Instance().ap1(QString("Solution::Fold"));
       sol.setAction(Solution::Fold);
    }
    return sol;
@@ -339,13 +344,16 @@ Solution MindFLfull::sbTightMoreRaise()
    QStringList raiseRange;
    raiseRange << parseRange("QQ+") << "AKs";
    
+   CGlobal::Instance().ap2(QString("Raise Range: %1").arg(raiseRange.join(", ")));
    Solution sol;
    if (raiseRange.contains(suited) || raiseRange.contains(nominal))
    {
+      CGlobal::Instance().ap1(QString("Solution::Raise"));
       sol.setAction(Solution::Raise);
    }
    else
    {
+      CGlobal::Instance().ap1(QString("Solution::Fold"));
       sol.setAction(Solution::Fold);
    }
    return sol;
@@ -360,14 +368,17 @@ Solution MindFLfull::bbTight()
    Solution sol;
    if (raisers_ == 0)
    {
-       sol = bbTightNoRaise();
+      CGlobal::Instance().ap2(QString("bbTightNoRaise()"));  
+      sol = bbTightNoRaise();
    }
    else if (raisers_ == 1)
    {
+      CGlobal::Instance().ap2(QString("bbTightOneRaise()"));
       sol = bbTightOneRaise();
    }
    else if (raisers_ > 1)
    {
+      CGlobal::Instance().ap2(QString("bbTightMoreRaise()"));
       sol = bbTightMoreRaise();
    }
    //учесть что рейзер может быть лузовым - тогда играть шире
@@ -388,13 +399,17 @@ Solution MindFLfull::bbTightNoRaise()
               << parseRange("KJs+")
               << parseRange("AQo+");
    
+   CGlobal::Instance().ap2(QString("Raise Range: %1").arg(raiseRange.join(", ")));
+   CGlobal::Instance().ap2(QString("Limp Range: %1").arg(limpRange.join(", ")));
    Solution sol;
    if (raiseRange.contains(suited) || raiseRange.contains(nominal))
    {
+      CGlobal::Instance().ap1(QString("Solution::Raise"));
       sol.setAction(Solution::Raise);
    }
    else
    {
+      CGlobal::Instance().ap1(QString("Solution::Check"));
       sol.setAction(Solution::Check);
    }
    return sol;
@@ -415,17 +430,22 @@ Solution MindFLfull::bbTightOneRaise()
              << parseRange("AJo+")
              << "KQo";
    
+   CGlobal::Instance().ap2(QString("Raise Range: %1").arg(raiseRange.join(", ")));
+   CGlobal::Instance().ap2(QString("Limp Range: %1").arg(limpRange.join(", ")));
    Solution sol;
    if (raiseRange.contains(suited) || raiseRange.contains(nominal))
    {
+      CGlobal::Instance().ap1(QString("Solution::Raise"));
       sol.setAction(Solution::Raise);
    }
    else if (limpRange.contains(suited) || limpRange.contains(nominal))
    {
+      CGlobal::Instance().ap1(QString("Solution::Call"));
       sol.setAction(Solution::Call);
    }
    else
    {
+      CGlobal::Instance().ap1(QString("Solution::Fold"));
       sol.setAction(Solution::Fold);
    }
    return sol;
@@ -438,13 +458,16 @@ Solution MindFLfull::bbTightMoreRaise()
    QStringList raiseRange;
    raiseRange << parseRange("QQ+") << "AKs";
    
+   CGlobal::Instance().ap2(QString("Raise Range: %1").arg(raiseRange.join(", ")));
    Solution sol;
    if (raiseRange.contains(suited) || raiseRange.contains(nominal))
    {
+      CGlobal::Instance().ap1(QString("Solution::Raise"));
       sol.setAction(Solution::Raise);
    }
    else
    {
+      CGlobal::Instance().ap1(QString("Solution::Fold"));
       sol.setAction(Solution::Fold);
    }
    return sol;
@@ -458,21 +481,23 @@ Solution MindFLfull::utgTight()
    Solution sol;
    if (raisers_ == 0)
    {
-       sol = utgTightNoRaise();
+      CGlobal::Instance().ap2(QString("utgTightNoRaise()"));   
+      sol = utgTightNoRaise();
    }
    else if (raisers_ == 1)
    {
+      CGlobal::Instance().ap2(QString("utgTightOneRaise()"));   
       sol = utgTightOneRaise();
    }
    else if (raisers_ > 1)
    {
+      CGlobal::Instance().ap2(QString("utgTightMoreRaise()")); 
       sol = utgTightMoreRaise();
    }
    //учесть что рейзер может быть лузовым - тогда играть шире
    //также учесть как долго я не играю
 
    return sol;
-
 }
 
 Solution MindFLfull::utgTightNoRaise()
@@ -492,17 +517,22 @@ Solution MindFLfull::utgTightNoRaise()
              << parseRange("ATs+")
              << "KQo";
    
+   CGlobal::Instance().ap2(QString("Raise Range: %1").arg(raiseRange.join(", ")));
+   CGlobal::Instance().ap2(QString("Limp Range: %1").arg(limpRange.join(", ")));
    Solution sol;
    if (raiseRange.contains(suited) || raiseRange.contains(nominal))
    {
+      CGlobal::Instance().ap1(QString("Solution::Raise"));
       sol.setAction(Solution::Raise);
    }
    else if (limpRange.contains(suited) || limpRange.contains(nominal))
    {
+      CGlobal::Instance().ap1(QString("Solution::Call"));
       sol.setAction(Solution::Call);
    }
    else
    {
+      CGlobal::Instance().ap1(QString("Solution::Fold"));
       sol.setAction(Solution::Fold);
    }
    return sol;
@@ -519,17 +549,22 @@ Solution MindFLfull::utgTightOneRaise()
              << "AKo"
              << "KQs";
    
+   CGlobal::Instance().ap2(QString("Raise Range: %1").arg(raiseRange.join(", ")));
+   CGlobal::Instance().ap2(QString("Limp Range: %1").arg(limpRange.join(", ")));
    Solution sol;
    if (raiseRange.contains(suited) || raiseRange.contains(nominal))
    {
+      CGlobal::Instance().ap1(QString("Solution::Raise"));
       sol.setAction(Solution::Raise);
    }
    else if (limpRange.contains(suited) || limpRange.contains(nominal))
    {
+      CGlobal::Instance().ap1(QString("Solution::Call"));
       sol.setAction(Solution::Call);
    }
    else
    {
+      CGlobal::Instance().ap1(QString("Solution::Fold"));
       sol.setAction(Solution::Fold);
    }
    return sol;
@@ -542,13 +577,16 @@ Solution MindFLfull::utgTightMoreRaise()
    QStringList raiseRange;
    raiseRange << parseRange("QQ+") << "AKs";
    
+   CGlobal::Instance().ap2(QString("Raise Range: %1").arg(raiseRange.join(", ")));
    Solution sol;
    if (raiseRange.contains(suited) || raiseRange.contains(nominal))
    {
+      CGlobal::Instance().ap1(QString("Solution::Raise"));
       sol.setAction(Solution::Raise);
    }
    else
    {
+      CGlobal::Instance().ap1(QString("Solution::Fold"));
       sol.setAction(Solution::Fold);
    }
    return sol;
@@ -562,14 +600,17 @@ Solution MindFLfull::mTight()
    Solution sol;
    if (raisers_ == 0)
    {
-       sol = mTightNoRaise();
+      CGlobal::Instance().ap2(QString("mTightNoRaise()"));
+      sol = mTightNoRaise();
    }
    else if (raisers_ == 1)
    {
+      CGlobal::Instance().ap2(QString("mTightOneRaise()"));
       sol = mTightOneRaise();
    }
    else if (raisers_ > 1)
    {
+      CGlobal::Instance().ap2(QString("mTightMoreRaise()"));
       sol = mTightMoreRaise();
    }
    //учесть что рейзер может быть лузовым - тогда играть шире
@@ -598,17 +639,22 @@ Solution MindFLfull::mTightNoRaise()
              << parseRange("KJo+")
              << "T9s" << "98s";
    
+   CGlobal::Instance().ap2(QString("Raise Range: %1").arg(raiseRange.join(", ")));
+   CGlobal::Instance().ap2(QString("Limp Range: %1").arg(limpRange.join(", ")));
    Solution sol;
    if (raiseRange.contains(suited) || raiseRange.contains(nominal))
    {
+      CGlobal::Instance().ap1(QString("Solution::Raise"));
       sol.setAction(Solution::Raise);
    }
    else if (limpRange.contains(suited) || limpRange.contains(nominal))
    {
+      CGlobal::Instance().ap1(QString("Solution::Call"));
       sol.setAction(Solution::Call);
    }
    else
    {
+      CGlobal::Instance().ap1(QString("Solution::Fold"));
       sol.setAction(Solution::Fold);
    }
    return sol;
@@ -625,17 +671,22 @@ Solution MindFLfull::mTightOneRaise()
              << "AKo"
              << "KQs";
    
+   CGlobal::Instance().ap2(QString("Raise Range: %1").arg(raiseRange.join(", ")));
+   CGlobal::Instance().ap2(QString("Limp Range: %1").arg(limpRange.join(", ")));
    Solution sol;
    if (raiseRange.contains(suited) || raiseRange.contains(nominal))
    {
+      CGlobal::Instance().ap1(QString("Solution::Raise"));
       sol.setAction(Solution::Raise);
    }
    else if (limpRange.contains(suited) || limpRange.contains(nominal))
    {
+      CGlobal::Instance().ap1(QString("Solution::Call"));
       sol.setAction(Solution::Call);
    }
    else
    {
+      CGlobal::Instance().ap1(QString("Solution::Fold"));
       sol.setAction(Solution::Fold);
    }
    return sol;
@@ -648,13 +699,16 @@ Solution MindFLfull::mTightMoreRaise()
    QStringList raiseRange;
    raiseRange << parseRange("QQ+") << "AKs";
    
+   CGlobal::Instance().ap2(QString("Raise Range: %1").arg(raiseRange.join(", ")));
    Solution sol;
    if (raiseRange.contains(suited) || raiseRange.contains(nominal))
    {
+      CGlobal::Instance().ap1(QString("Solution::Raise"));
       sol.setAction(Solution::Raise);
    }
    else
    {
+      CGlobal::Instance().ap1(QString("Solution::Fold"));
       sol.setAction(Solution::Fold);
    }
    return sol;
@@ -668,14 +722,17 @@ Solution MindFLfull::buTight()
    Solution sol;
    if (raisers_ == 0)
    {
-       sol = buTightNoRaise();
+      CGlobal::Instance().ap2(QString("buTightNoRaise()")); 
+      sol = buTightNoRaise();
    }
    else if (raisers_ == 1)
    {
+      CGlobal::Instance().ap2(QString("buTightOneRaise()")); 
       sol = buTightOneRaise();
    }
    else if (raisers_ > 1)
    {
+      CGlobal::Instance().ap2(QString("buTightMoreRaise()")); 
       sol = buTightMoreRaise();
    }
    //учесть что рейзер может быть лузовым - тогда играть шире
@@ -708,17 +765,22 @@ Solution MindFLfull::buTightNoRaise()
              << parseRange("QTo+")
              << parseRange("KTo+");
    
+   CGlobal::Instance().ap2(QString("Raise Range: %1").arg(raiseRange.join(", ")));
+   CGlobal::Instance().ap2(QString("Limp Range: %1").arg(limpRange.join(", ")));
    Solution sol;
    if (raiseRange.contains(suited) || raiseRange.contains(nominal))
    {
+      CGlobal::Instance().ap1(QString("Solution::Raise"));
       sol.setAction(Solution::Raise);
    }
    else if (limpRange.contains(suited) || limpRange.contains(nominal))
    {
+      CGlobal::Instance().ap1(QString("Solution::Call"));
       sol.setAction(Solution::Call);
    }
    else
    {
+      CGlobal::Instance().ap1(QString("Solution::Fold"));
       sol.setAction(Solution::Fold);
    }
    return sol;
@@ -735,30 +797,39 @@ Solution MindFLfull::buTightOneRaise()
              << "AKo"
              << "KQs";
    
+   CGlobal::Instance().ap2(QString("Raise Range: %1").arg(raiseRange.join(", ")));
+   CGlobal::Instance().ap2(QString("Limp Range: %1").arg(limpRange.join(", ")));
    Solution sol;
    if (raiseRange.contains(suited) || raiseRange.contains(nominal))
    {
+      CGlobal::Instance().ap1(QString("Solution::Raise"));
       sol.setAction(Solution::Raise);
    }
    else if (limpRange.contains(suited) || limpRange.contains(nominal))
    {
+      CGlobal::Instance().ap1(QString("Solution::Call"));
       sol.setAction(Solution::Call);
    }
    else if (limpers_ == 2 && raisers_ == 1)
    {
+      CGlobal::Instance().ap1(QString("(limpers_ == 2 && raisers_ == 1)"));
       limpRange.clear();
       limpRange << parseRange("22+") << "QJs" << "JTs" << "T9s";
+      CGlobal::Instance().ap2(QString("Limp Range: %1").arg(limpRange.join(", ")));
       if (limpRange.contains(suited) || limpRange.contains(nominal))
       {
+         CGlobal::Instance().ap1(QString("Solution::Call"));
          sol.setAction(Solution::Call);
       }
       else
       {
+         CGlobal::Instance().ap1(QString("Solution::Fold"));
          sol.setAction(Solution::Fold);
       }
    }
    else
    {
+      CGlobal::Instance().ap1(QString("Solution::Fold"));
       sol.setAction(Solution::Fold);
    }
    return sol;
@@ -771,13 +842,16 @@ Solution MindFLfull::buTightMoreRaise()
    QStringList raiseRange;
    raiseRange << parseRange("QQ+") << "AKs";
    
+   CGlobal::Instance().ap2(QString("Raise Range: %1").arg(raiseRange.join(", ")));
    Solution sol;
    if (raiseRange.contains(suited) || raiseRange.contains(nominal))
    {
+      CGlobal::Instance().ap1(QString("Solution::Raise"));
       sol.setAction(Solution::Raise);
    }
    else
    {
+      CGlobal::Instance().ap1(QString("Solution::Fold"));
       sol.setAction(Solution::Fold);
    }
    return sol;
