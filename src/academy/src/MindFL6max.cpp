@@ -1,6 +1,6 @@
 #include "MindFL6max.h"
 
-MindFL6max::MindFL6max(CardProcessing * const proc, Session * const session)
+MindFL6max::MindFL6max(CardProcessing * const , Session * const )
 //: Mind(proc, session)
 {
 }
