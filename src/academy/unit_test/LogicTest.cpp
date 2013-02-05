@@ -139,7 +139,7 @@ namespace tut
          qDebug() << opp.vpip() << "/" << opp.pfr() << "/" << opp.limp();
       }
       MindFLfull mind(&proc, &ses);
-      mind.think();
+      Solution sol = mind.think();
       MindFLfullPrivate p(&mind);
       tensure(__FILE__, __LINE__, p.preflopPos() == Mind::HighJack);
       tensure(__FILE__, __LINE__, p.limpers() == 2);
@@ -364,6 +364,85 @@ namespace tut
 
       }
    }
+   
+   template<>   template<>
+   void testlogic::test<7>()
+   {
+      DBManager db("stat/stat_acadfr.db");
+      tensure(__FILE__, __LINE__, db.isGood());
+
+      ProcAcad proc("map/acad_fr.xml");
+      Session ses(&proc, 10);
+      {
+      QImage imgTable("sshot/acad_fr/acad_19.bmp");
+      tensure(__FILE__, __LINE__, !imgTable.isNull());
+      proc.setImage(imgTable);
+      MindFLfull mind(&proc, &ses);
+      MindFLfullPrivate p(&mind);
+      mind.think();
+      tensure(__FILE__, __LINE__, p.preflopPos() == Mind::SmallBlind);
+      tensure(__FILE__, __LINE__, p.limpers() == 1);
+      tensure(__FILE__, __LINE__, p.raisers() == 0);
+      }
+      {
+      QImage imgTable("sshot/acad_fr/acad_20.bmp");
+      tensure(__FILE__, __LINE__, !imgTable.isNull());
+      proc.setImage(imgTable);
+      MindFLfull mind(&proc, &ses);
+      MindFLfullPrivate p(&mind);
+      mind.think();
+      tensure(__FILE__, __LINE__, p.limpers() == 1);
+      tensure(__FILE__, __LINE__, p.raisers() == 1);
+      }
+   }
+
+   template<>   template<>
+   void testlogic::test<8>()
+   {
+      DBManager db("stat/stat_acadfr.db");
+      tensure(__FILE__, __LINE__, db.isGood());
+
+      ProcAcad proc("map/acad_fr.xml");
+      Session ses(&proc, 10);
+      {
+      QImage imgTable("sshot/acad_fr/flop/3c3s.bmp");
+      tensure(__FILE__, __LINE__, !imgTable.isNull());
+      proc.setImage(imgTable);
+      MindFLfull mind(&proc, &ses);
+      MindFLfullPrivate p(&mind);
+      mind.think();
+      tensure(__FILE__, __LINE__, p.street() == CardProcessing::Flop);
+      tensure(__FILE__, __LINE__, p.limpers() == 0);
+      tensure(__FILE__, __LINE__, p.raisers() == 1);
+      tensure(__FILE__, __LINE__, p.board().join("") == "8dAd7h");
+
+      imgTable.load("sshot/acad_fr/flop/3d3c.bmp");
+      tensure(__FILE__, __LINE__, !imgTable.isNull());
+      proc.setImage(imgTable);
+      mind.think();
+      tensure(__FILE__, __LINE__, p.board().join("") == "2s4sAs");
+
+      imgTable.load("sshot/acad_fr/flop/4c4s.bmp");
+      tensure(__FILE__, __LINE__, !imgTable.isNull());
+      proc.setImage(imgTable);
+      mind.think();
+      tensure(__FILE__, __LINE__, p.board().join("") == "Jd7dJs");
+
+      imgTable.load("sshot/acad_fr/flop/5d5s.bmp");
+      tensure(__FILE__, __LINE__, !imgTable.isNull());
+      proc.setImage(imgTable);
+      mind.think();
+      tensure(__FILE__, __LINE__, p.board().join("") == "TsThKs");
+
+      imgTable.load("sshot/acad_fr/flop/5s3s.bmp");
+      tensure(__FILE__, __LINE__, !imgTable.isNull());
+      proc.setImage(imgTable);
+      mind.think();
+      tensure(__FILE__, __LINE__, p.board().join("") == "6cKhJc");
+
+      }
+   }
+
 }
 
 //вычисление аутов

@@ -4,10 +4,12 @@
 Session::Session(CardProcessing * const proc, int cnt): proc_(proc)
 {
    cnt_ = cnt;
+   preflopRound_ = 0;
 }
 
 void Session::saveStats(const QString & session)
 {
+   CardProcessing::Street street = proc_->street();
    if (session != sessionID_ && !sessionID_.isEmpty())
    {
       CGlobal::Instance().ap1(QString("<<< END SESSION: %1 >>>\n").arg(sessionID_));
@@ -17,10 +19,21 @@ void Session::saveStats(const QString & session)
       saveToDB();
       //начать запись новой сессии
       history_.clear();
+      //поставить счетчик 1-го раунда на префлопе
+      preflopRound_ = 0;
+   }
+   else if (sessionID_.isEmpty())
+   {
+      preflopRound_ = 0;
+   }
+   else
+   {
+      if (street == CardProcessing::Preflop)
+         preflopRound_ = 1;
    }
    
    sessionID_ = session;
-   CardProcessing::Street street = proc_->street();
+
    QMap<int, ActionList> & oppHist = history_[street];
 
    opps_.clear();

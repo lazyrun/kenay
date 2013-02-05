@@ -26,6 +26,8 @@ public:
    void stat(Opp & opp);
    //!
    int tableFormat() const {return cnt_; };
+   //! 
+   int preflopRound() const { return preflopRound_; }
 protected:   
    void saveToDB();
    CardProcessing * const proc_;
@@ -33,6 +35,7 @@ protected:
    QMap<CardProcessing::Street, QMap<int, ActionList> > history_;
    QMap<int, Opp> opps_;
    int cnt_;
+   int preflopRound_;
 };
    // активность оппа5 на префлопе
    //история

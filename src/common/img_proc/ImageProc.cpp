@@ -23,6 +23,11 @@ void CardProcessing::setImage(const QImage & img)
    street_ = Undefined;
 }
 
+void CardProcessing::save(const QString & fname)
+{
+   img_.save(fname);
+}
+
 bool CardProcessing::controlPixel(const QString & sx, const QString & sy, 
                             const QString & scl) const
 {

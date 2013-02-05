@@ -163,9 +163,9 @@ QString ProcAcad::holeCard(const QString & scard) const
    if (sok != 4)
       return QString();
 
-   QImage imgFirst = img_.copy(x, y, w, h);
+   QImage imgCard = img_.copy(x, y, w, h);
 
-   return cardFromImage(imgFirst);
+   return cardFromImage(imgCard);
 }
 
 qreal ProcAcad::pot() const
@@ -452,7 +452,7 @@ void ProcAcad::parseOppStack(const QDomNode & dnOpp, Opp & opp)
 
 void ProcAcad::parseOppInGame(Opp & opp)
 {
-   if (opp.stack() < 0.001 && !opp.hasCards())
+   if (opp.stack() < 0.001 && !opp.hasCards() && !opp.isDealer())
    {
       opp.setInGame(false);
    }
@@ -668,3 +668,51 @@ const QRect ProcAcad::buttonRect(const char * btn) const
 
    return QRect(x, y, w, h);
 }
+
+QStringList ProcAcad::board() const
+{
+   QStringList table;
+   table << boardCard("first");
+   table << boardCard("second");
+   table << boardCard("third");
+   table << boardCard("four");
+   table << boardCard("five");
+   return table;
+}
+
+QString ProcAcad::boardCard(const QString & scard) const
+{
+   Settings & config = 
+      ConfigGlobal<MainConfig>::Instance();
+   QScopedArrayPointer<char> card(new char[scard.length() + 1]);
+   strcpy(card.data(), scard.toStdString().c_str());
+
+   //снимаем координтаты
+   //контроль карты по пикселю
+   //цвет
+   QString scl =
+      config.settingValue("board", card, "control", "").toString();
+   //координаты
+   QString sx = config.settingAttribute("x", "board", card, "control", "");
+   QString sy = config.settingAttribute("y", "board", card, "control", "");
+   if (!controlPixel(sx, sy, scl))
+      return QString();
+   //снимаем изображение
+   sx = config.settingAttribute("x", "board", card, "");
+   sy = config.settingAttribute("y", "board", card, "");
+   QString sw = config.settingAttribute("w", "board", card, "");
+   QString sh = config.settingAttribute("h", "board", card, "");
+   int sok = 0; bool ok = false;
+   int x = sx.toInt(&ok); sok += ok;
+   int y = sy.toInt(&ok); sok += ok;
+   int w = sw.toInt(&ok); sok += ok;
+   int h = sh.toInt(&ok); sok += ok;
+   if (sok != 4)
+      return QString();
+
+   QImage imgCard = img_.copy(x, y, w, h);
+
+   return cardFromImage(imgCard);
+   
+}
+

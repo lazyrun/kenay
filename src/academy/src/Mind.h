@@ -24,6 +24,7 @@ public:
    {
       //1. пара на столе, туза у меня нет
       //2. пара на столе, туз есть
+      //3. микро пара
       //3. младшая пара
       //4. средняя пара
       //5. топ пара, туза нет
@@ -118,7 +119,7 @@ public:
    // предполагается, что часть карт от этих дро есть на руках
    enum Draws
    {
-      OverCard,   // A2 
+      OverCard,   // A2
       OverCards,  // AK
       BDStraight, // Бэкдорный стрит
       BDFlash,    // Бэкдорный флеш
@@ -130,6 +131,7 @@ public:
 
    enum PreflopPosition
    {
+      Nope,
       SmallBlind,
       BigBlind,
       UTG,//3
@@ -154,12 +156,16 @@ protected:
    //!
    virtual Solution riverSolution() = 0;
    //
-   QStringList parseRange(const QString & range);
+   QStringList parseRange(const QString & range) const;
+   //!
+   Combs comb() const;
 protected:
    //! Обработчик изображений
    CardProcessing * const proc_;
    //! Текущая сессия
    Session * const session_;
+   //! Текущая улица
+   CardProcessing::Street street_;
 
    //! Карманные карты
    HoleCards hole_;
@@ -167,6 +173,12 @@ protected:
    QStringList board_;
    //! Список оппов
    QList<Opp> oppList_;
+   //! позиция на префлопе
+   PreflopPosition preflopPos_;
+   //! липеры
+   int limpers_;
+   //! рейзеры
+   int raisers_;
 };
 
 #endif

@@ -38,6 +38,8 @@ public:
    virtual Street street() = 0;
    //! Возвращает порог фильтрации
    uchar threshold() const {return threshold_; }
+   //!
+   void save(const QString & fname);
 
    virtual bool hasFold() const = 0;
    virtual bool hasCall() const = 0;
@@ -53,6 +55,7 @@ public:
    virtual const QRect callRect() const = 0;
    virtual const QRect raiseRect() const = 0;
    virtual const QRect betRect() const = 0;
+   virtual QStringList board() const = 0;
 protected:
    //! проверка цвета пикселя
    bool controlPixel(const QString & sx, const QString & sy, 

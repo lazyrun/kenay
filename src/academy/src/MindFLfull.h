@@ -57,15 +57,34 @@ protected:
                Solution buTightOneRaise();
                Solution buTightMoreRaise();
 
+            Solution sbLoose();
+               Solution sbLooseNoRaise();
+               Solution sbLooseOneRaise();
+               Solution sbLooseMoreRaise();
+            Solution bbLoose();
+               Solution bbLooseNoRaise();
+               Solution bbLooseOneRaise();
+               Solution bbLooseMoreRaise();
+            Solution utgLoose();
+               Solution utgLooseNoRaise();
+               Solution utgLooseOneRaise();
+               Solution utgLooseMoreRaise();
+            Solution mLoose();
+               Solution mLooseNoRaise();
+               Solution mLooseOneRaise();
+               Solution mLooseMoreRaise();
+            Solution buLoose();
+               Solution buLooseNoRaise();
+               Solution buLooseOneRaise();
+               Solution buLooseMoreRaise();
+      
+      Solution roundASolution();
+
    //!
    Solution loosePreflop();
 protected:
    //!
-   PreflopPosition preflopPos_;
-   //!
-   int limpers_;
-   //!
-   int raisers_;
+   const qreal tightThreshold_;
 };
 
 /*!
@@ -79,6 +98,8 @@ public:
    Mind::PreflopPosition preflopPos() {return mind_->preflopPos_;}
    int limpers() {return mind_->limpers_;}
    int raisers() {return mind_->raisers_;}
+   CardProcessing::Street street() {return mind_->street_;}
+   QStringList board() {return mind_->board_;}
    QStringList parseRange(const QString & range) {return mind_->parseRange(range);}
 protected:
    MindFLfull * mind_;

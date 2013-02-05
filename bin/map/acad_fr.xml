@@ -29,6 +29,23 @@
          <control x="382" y="473">#000000</control>
       </second>
    </hole>
+   <board>
+      <first x="281" y="301" w="15" h="29">
+         <control x="281" y="301">#000000</control>
+      </first>
+      <second x="336" y="301" w="15" h="29">
+         <control x="336" y="301">#000000</control>
+      </second>
+      <third x="391" y="301" w="15" h="29">
+         <control x="391" y="301">#000000</control>
+      </third>
+      <four x="446" y="301" w="15" h="29">
+         <control x="446" y="301">#000000</control>
+      </four>
+      <five x="501" y="301" w="15" h="29">
+         <control x="501" y="301">#000000</control>
+      </five>
+   </board>
    <pot x="71" y="323" w="200" h="14">#FFFF00</pot>
    <stack x="358" y="588" w="84" h="16">#00FF00</stack>
    <dealer x="444" y="513">#EDEEBC</dealer>
@@ -87,7 +104,7 @@
          <bet x="698" y="147" w="87" h="46">#FFFF00</bet>
       </opp>
       <opp num="8">
-         <cards x="636" y="420">#FFFFFF</cards>
+         <cards x="636" y="400">#FFFFFF</cards>
          <dealer x="704" y="427">#EDEEBC</dealer>
          <nickname x="696" y="518" w="91" h="44">#8C8C8C</nickname>
          <stack x="696" y="518" w="91" h="44">#00FF00</stack>

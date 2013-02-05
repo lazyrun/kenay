@@ -1078,7 +1078,31 @@ namespace tut
          tensure(__FILE__, __LINE__, opp7.nick().hash().split("/").count() == 6);
          tensure(__FILE__, __LINE__, opp8.nick().hash().split("/").count() == 5);
          tensure(__FILE__, __LINE__, opp9.nick().hash().split("/").count() == 4);
+      }
+      {
+         QImage imgTable("sshot/acad_fr/acad_21.bmp");
+         tensure(__FILE__, __LINE__, !imgTable.isNull());
+         proc.setImage(imgTable);
+         Opp opp1 = proc.opp("1");
+         Opp opp2 = proc.opp("2");
+         Opp opp3 = proc.opp("3");
+         Opp opp4 = proc.opp("4");
+         Opp opp5 = proc.opp("5");
+         Opp opp6 = proc.opp("6");
+         Opp opp7 = proc.opp("7");
+         Opp opp8 = proc.opp("8");
+         Opp opp9 = proc.opp("9");
+         tensure(__FILE__, __LINE__,  opp1.hasCards());
+         tensure(__FILE__, __LINE__,  opp2.hasCards());
+         tensure(__FILE__, __LINE__,  opp3.hasCards());
+         tensure(__FILE__, __LINE__,  !opp4.hasCards());
+         tensure(__FILE__, __LINE__,  opp5.hasCards());
+         tensure(__FILE__, __LINE__,  opp6.hasCards());
+         tensure(__FILE__, __LINE__,  !opp7.hasCards());
+         tensure(__FILE__, __LINE__,  opp8.hasCards());
+         tensure(__FILE__, __LINE__,  !opp9.hasCards());
 
+         tensure(__FILE__, __LINE__, opp1.isDealer());
       }
    }
 }

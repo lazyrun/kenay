@@ -30,6 +30,7 @@ public:
    QString cardFromImage(QImage & img) const;
    
    virtual Opp opp(const QString & num);
+   virtual QStringList board() const;
 protected:
    void parseOppNick(const QDomNode & dnOpp, Opp & opp);
    void parseOppStack(const QDomNode & dnOpp, Opp & opp);
@@ -39,6 +40,9 @@ protected:
    void parseOppInGame(Opp & opp);
 
    const QRect buttonRect(const char * btn) const;
+   
+   QString boardCard(const QString & card) const;
+
    //! База карт
    CardBase cardBase_;
    //!

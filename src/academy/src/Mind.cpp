@@ -8,9 +8,14 @@ Mind::Mind(CardProcessing * const proc, Session * const session)
 
 Solution Mind::think()
 {
+   preflopPos_ = Nope;
+
    //1) посмотреть свои карты
    HoleCards hole(proc_->holeCard("first"), proc_->holeCard("second"));
    hole_ = hole;
+
+   //посмотреть карты стола
+   board_ = proc_->board();
 
    //сохранить статистику
    session_->saveStats(hole.fullName());
@@ -25,34 +30,49 @@ Solution Mind::think()
       CGlobal::Instance().ap2(QString("Opp: \"%1\" %2/%3/%4")
          .arg(opp.nick().hash()).arg(opp.vpip()).arg(opp.pfr()).arg(opp.limp()));
    }
-   CardProcessing::Street street = proc_->street();
-   switch (street)
+   //количество активных оппов
+   limpers_ = 0;
+   raisers_ = 0;
+   foreach (Opp opp, oppList_)
+   {
+      //опп с картами и уже чо то сказал
+      if (opp.hasCards() && opp.action() != Opp::Nope)
+      {
+         if (opp.action() == Opp::Call)
+            limpers_++;
+         else if (opp.action() == Opp::Raise || opp.action() == Opp::Bet)
+            raisers_++;
+      }
+   }
+
+   street_ = proc_->street();
+   switch (street_)
    {
       case CardProcessing::Preflop:
       {
-         CGlobal::Instance().ap1(QString("Preflop"));
+         CGlobal::Instance().ap1(QString("PREFLOP"));
          return preflopSolution();
       }
       case CardProcessing::Flop:
       {
-         CGlobal::Instance().ap1(QString("Flop"));
+         CGlobal::Instance().ap1(QString("FLOP"));
          return flopSolution();
       }
       case CardProcessing::Turn:
       {
-         CGlobal::Instance().ap1(QString("Turn"));
+         CGlobal::Instance().ap1(QString("TURN"));
          return turnSolution();
       }
       case CardProcessing::River:
       {
-         CGlobal::Instance().ap1(QString("River"));
+         CGlobal::Instance().ap1(QString("RIVER"));
          return riverSolution();
       }
    }
    return Solution();
 }
 
-QStringList Mind::parseRange(const QString & range)
+QStringList Mind::parseRange(const QString & range) const
 {
    // "Ax", "Axs", "Axo" - любые тузы
    // "22+", "77+" - пары
@@ -166,4 +186,9 @@ QStringList Mind::parseRange(const QString & range)
    }
 
    return lst;
+}
+
+Mind::Combs Mind::comb() const
+{
+   return Trash;
 }
