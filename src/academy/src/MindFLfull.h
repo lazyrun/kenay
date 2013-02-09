@@ -85,6 +85,18 @@ protected:
 protected:
    //!
    const qreal tightThreshold_;
+   QPair<qreal, qreal> pCareful_;
+   QPair<qreal, qreal> pTight_;
+   QPair<qreal, qreal> pModerate_;
+   QPair<qreal, qreal> pLoose_;
+   QPair<qreal, qreal> pManiak_;
+
+   QString ranCareful_;
+   QString ranTight_;
+   QString ranModerate_;
+   QString ranLoose_;
+   QString ranManiak_;
+
 };
 
 /*!

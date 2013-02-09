@@ -1,10 +1,30 @@
 #include "MindFLfull.h"
 #include "GlobVars.h"
 
+// Категории игроков по VPIP
+#define MANIAK       44.
+#define LOOSE        32.
+#define MODERATE     24.
+#define TIGHT        18.
+#define EXTRATIGHT   1.
+
 MindFLfull::MindFLfull(CardProcessing * const proc, Session * const session)
-: Mind(proc, session), tightThreshold_(28.)
+: Mind(proc, session), 
+  tightThreshold_(28.)
 {
-   CGlobal::Instance().SetDbg(1);
+   pCareful_  = qMakePair(0., 18.);
+   pTight_    = qMakePair(18., 24.);
+   pModerate_ = qMakePair(24., 32.);;
+   pLoose_    = qMakePair(32., 44.);;
+   pManiak_   = qMakePair(44., 100.);;
+
+   ranCareful_    = "66+,A5s+,K9s+,Q9s+,J9s+,ATo+,KTo+,QTo+";
+   ranTight_      = "66+,A2s+,K6s+,Q8s+,J8s+,T9s,A8o+,K9o+,QTo+,JTo";
+   ranModerate_   = "55+,A2s+,K4s+,Q7s+,J8s+,T8s+,98s,A5o+,K8o+,Q9o+,J9o+,T9o";
+   ranLoose_      = "22+,A2s+,K2s+,Q4s+,J6s+,T6s+,97s+,87s,A2o+,K6o+,Q8o+,J8o+,T8o+,98o";
+   ranManiak_     = "22+,A2s+,K2s+,Q2s+,J4s+,T6s+,96s+,86s+,76s,65s,A2o+,K5o+,Q7o+,J7o+,T8o+,98o";
+
+   CGlobal::Instance().SetDbg(2);
 }
 
 Solution MindFLfull::preflopSolution()
@@ -587,6 +607,7 @@ Solution MindFLfull::utgTightOneRaise()
    
    CGlobal::Instance().ap2(QString("Raise Range: %1").arg(raiseRange.join(", ")));
    CGlobal::Instance().ap2(QString("Limp Range: %1").arg(limpRange.join(", ")));
+
    Solution sol;
    if (raiseRange.contains(suited) || raiseRange.contains(nominal))
    {
@@ -998,8 +1019,40 @@ Solution MindFLfull::utgLooseOneRaise()
              << parseRange("KTs+")
              << "QJs" << "JTs" ;
    
+   //кто рейзит
+   qreal raiserVpip = 0.;
+   foreach (Opp opp, oppList_)
+   {
+      if (opp.action() == Opp::Raise || opp.action() == Opp::Bet)
+      {
+         raiserVpip = opp.vpip();
+         break;
+      }
+   }
+   
+   CGlobal::Instance().ap1(QString("Raiser VPIP %1").arg(raiserVpip));
+   
+   if (raiserVpip > MANIAK)
+   {
+      CGlobal::Instance().ap1(QString("Raiser is MANIAK"));
+      raiseRange.clear();
+      limpRange.clear();
+      raiseRange << parseRangeList("88+,ATs+,KTs+,QJs,AJo+");
+      limpRange  << parseRangeList("55+,A5s+,K9s+,Q9s+,J9s+,T9s,A9o+,KTo+,QTo+,JTo");
+
+   }
+   else if (raiserVpip > LOOSE)
+   {
+      CGlobal::Instance().ap1(QString("Raiser is LOOSE"));
+      raiseRange.clear();
+      limpRange.clear();
+      raiseRange << parseRangeList("99+,ATs+,KTs+,AQo+");
+      limpRange  << parseRangeList("55+,A9s+,K9s+,QTs+,ATo+,KQo,QJo");
+   }
+
    CGlobal::Instance().ap2(QString("Raise Range: %1").arg(raiseRange.join(", ")));
    CGlobal::Instance().ap2(QString("Limp Range: %1").arg(limpRange.join(", ")));
+
    Solution sol;
    if (raiseRange.contains(suited) || raiseRange.contains(nominal))
    {
@@ -1135,8 +1188,40 @@ Solution MindFLfull::mLooseOneRaise()
              << parseRange("KTs+")
              << "QJs" << "JTs" ;
    
+   //кто рейзит
+   qreal raiserVpip = 0.;
+   foreach (Opp opp, oppList_)
+   {
+      if (opp.action() == Opp::Raise || opp.action() == Opp::Bet)
+      {
+         raiserVpip = opp.vpip();
+         break;
+      }
+   }
+   
+   CGlobal::Instance().ap1(QString("Raiser VPIP %1").arg(raiserVpip));
+   
+   if (raiserVpip > MANIAK)
+   {
+      CGlobal::Instance().ap1(QString("Raiser is MANIAK"));
+      raiseRange.clear();
+      limpRange.clear();
+      raiseRange << parseRangeList("88+,ATs+,KTs+,QJs,AJo+");
+      limpRange  << parseRangeList("55+,A5s+,K9s+,Q9s+,J9s+,T9s,A9o+,KTo+,QTo+,JTo");
+
+   }
+   else if (raiserVpip > LOOSE)
+   {
+      CGlobal::Instance().ap1(QString("Raiser is LOOSE"));
+      raiseRange.clear();
+      limpRange.clear();
+      raiseRange << parseRangeList("99+,ATs+,KTs+,AQo+");
+      limpRange  << parseRangeList("55+,A9s+,K9s+,QTs+,ATo+,KQo,QJo");
+   }
+
    CGlobal::Instance().ap2(QString("Raise Range: %1").arg(raiseRange.join(", ")));
    CGlobal::Instance().ap2(QString("Limp Range: %1").arg(limpRange.join(", ")));
+
    Solution sol;
    if (raiseRange.contains(suited) || raiseRange.contains(nominal))
    {
@@ -1286,8 +1371,40 @@ Solution MindFLfull::buLooseOneRaise()
              << "T9s" << "98s" << "87s" << "76s"
              << "AKo" << "AQo";
    
+   //кто рейзит
+   qreal raiserVpip = 0.;
+   foreach (Opp opp, oppList_)
+   {
+      if (opp.action() == Opp::Raise || opp.action() == Opp::Bet)
+      {
+         raiserVpip = opp.vpip();
+         break;
+      }
+   }
+   
+   CGlobal::Instance().ap1(QString("Raiser VPIP %1").arg(raiserVpip));
+   
+   if (raiserVpip > MANIAK)
+   {
+      CGlobal::Instance().ap1(QString("Raiser is MANIAK"));
+      raiseRange.clear();
+      limpRange.clear();
+      raiseRange << parseRangeList("88+,ATs+,KTs+,QJs,AJo+");
+      limpRange  << parseRangeList("55+,A5s+,K9s+,Q9s+,J9s+,T9s,A9o+,KTo+,QTo+,JTo");
+
+   }
+   else if (raiserVpip > LOOSE)
+   {
+      CGlobal::Instance().ap1(QString("Raiser is LOOSE"));
+      raiseRange.clear();
+      limpRange.clear();
+      raiseRange << parseRangeList("99+,ATs+,KTs+,AQo+");
+      limpRange  << parseRangeList("55+,A9s+,K9s+,QTs+,ATo+,KQo,QJo");
+   }
+
    CGlobal::Instance().ap2(QString("Raise Range: %1").arg(raiseRange.join(", ")));
    CGlobal::Instance().ap2(QString("Limp Range: %1").arg(limpRange.join(", ")));
+
    Solution sol;
    if (raiseRange.contains(suited) || raiseRange.contains(nominal))
    {
@@ -1620,7 +1737,9 @@ Solution MindFLfull::flopSolution()
    QStringList board = proc_->board();
    CGlobal::Instance().ap1(board.join(" "));
    //proc_->save("sshot/acad_fr/flop/" + hole_.fullName() + ".bmp");
-   return Solution();
+   Solution sol;
+   sol.setAction(Solution::Nope);
+   return sol;
 }
 
 Solution MindFLfull::turnSolution()

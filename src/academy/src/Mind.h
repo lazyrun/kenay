@@ -158,6 +158,8 @@ protected:
    //
    QStringList parseRange(const QString & range) const;
    //!
+   QStringList parseRangeList(const QString & range) const;
+   //!
    Combs comb() const;
 protected:
    //! Обработчик изображений

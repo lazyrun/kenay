@@ -72,6 +72,17 @@ Solution Mind::think()
    return Solution();
 }
 
+QStringList Mind::parseRangeList(const QString & range) const
+{
+   QStringList res;
+   QStringList splitted = range.split(",");
+   foreach (QString r, splitted)
+   {
+      res << parseRange(r);
+   }
+   return res;
+}
+
 QStringList Mind::parseRange(const QString & range) const
 {
    // "Ax", "Axs", "Axo" - любые тузы
