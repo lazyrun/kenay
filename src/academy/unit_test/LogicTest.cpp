@@ -443,6 +443,23 @@ namespace tut
       }
    }
 
+   template<>   template<>
+   void testlogic::test<9>()
+   {
+      DBManager db("stat/stat_acadfr.db");
+      tensure(__FILE__, __LINE__, db.isGood());
+
+      ProcAcad proc("map/acad_fr.xml");
+      Session ses(&proc, 10);
+      {
+      QImage imgTable("sshot/acad_fr/acad_24.bmp");
+      tensure(__FILE__, __LINE__, !imgTable.isNull());
+      proc.setImage(imgTable);
+      MindFLfull mind(&proc, &ses);
+      MindFLfullPrivate p(&mind);
+      mind.think();
+      }
+   }
 }
 
 //вычисление аутов

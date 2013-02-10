@@ -79,7 +79,8 @@ protected:
                Solution buLooseMoreRaise();
       
       Solution roundASolution();
-
+   
+   Solution pfrVpipSolution();
    //!
    Solution loosePreflop();
 protected:
@@ -97,6 +98,7 @@ protected:
    QString ranLoose_;
    QString ranManiak_;
 
+   bool useTight_;
 };
 
 /*!

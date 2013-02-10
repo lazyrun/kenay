@@ -55,63 +55,63 @@
    <preflop  x="400" y="465">#FFFFFF</preflop>
    <opps>
       <opp num="1">
-         <cards x="202" y="458">#FFFFFF</cards>
+         <cards x="237" y="458">#FFFFFF</cards>
          <dealer x="265" y="514">#EDEEBC</dealer>
          <nickname x="181" y="568" w="90" h="42">#8C8C8C</nickname>
          <stack x="181" y="568" w="90" h="42">#00FF00</stack>
          <bet x="181" y="568" w="90" h="42">#FFFF00</bet>
       </opp>
       <opp num="2">
-         <cards x="105" y="399">#FFFFFF</cards>
+         <cards x="140" y="399">#FFFFFF</cards>
          <dealer x="142" y="477">#EDEEBC</dealer>
          <nickname x="17" y="518" w="90" h="42">#8C8C8C</nickname>
          <stack x="17" y="518" w="90" h="42">#00FF00</stack>
          <bet x="17" y="518" w="90" h="42">#FFFF00</bet>
       </opp>
       <opp num="3">
-         <cards x="135" y="212">#FFFFFF</cards>
+         <cards x="170" y="212">#FFFFFF</cards>
          <dealer x="114" y="249">#EDEEBC</dealer>
          <nickname x="20" y="147" w="90" h="42">#8C8C8C</nickname>
          <stack x="20" y="147" w="90" h="42">#00FF00</stack>
          <bet x="20" y="147" w="90" h="42">#FFFF00</bet>
       </opp>
       <opp num="4">
-         <cards x="230" y="167">#FFFFFF</cards>
+         <cards x="265" y="167">#FFFFFF</cards>
          <dealer x="210" y="184">#EDEEBC</dealer>
          <nickname x="179" y="85" w="90" h="45">#8C8C8C</nickname>
          <stack x="179" y="85" w="90" h="45">#00FF00</stack>
          <bet x="179" y="85" w="90" h="45">#FFFF00</bet>
       </opp>
       <opp num="5">
-         <cards x="387" y="163">#FFFFFF</cards>
+         <cards x="413" y="163">#FFFFFF</cards>
          <dealer x="361" y="178">#EDEEBC</dealer>
          <nickname x="357" y="79" w="88" h="46">#8C8C8C</nickname>
          <stack x="357" y="79" w="88" h="46">#00FF00</stack>
          <bet x="357" y="79" w="88" h="46">#FFFF00</bet>
       </opp>
       <opp num="6">
-         <cards x="520" y="164">#FFFFFF</cards>
+         <cards x="555" y="164">#FFFFFF</cards>
          <dealer x="503" y="178">#EDEEBC</dealer>
          <nickname x="530" y="84" w="87" h="46">#8C8C8C</nickname>
          <stack x="530" y="84" w="87" h="46">#00FF00</stack>
          <bet x="530" y="84" w="87" h="46">#FFFF00</bet>
       </opp>
       <opp num="7">
-         <cards x="630" y="212">#FFFFFF</cards>
+         <cards x="665" y="212">#FFFFFF</cards>
          <dealer x="631" y="200">#EDEEBC</dealer>
          <nickname x="698" y="147" w="87" h="46">#8C8C8C</nickname>
          <stack x="698" y="147" w="87" h="46">#00FF00</stack>
          <bet x="698" y="147" w="87" h="46">#FFFF00</bet>
       </opp>
       <opp num="8">
-         <cards x="636" y="400">#FFFFFF</cards>
+         <cards x="671" y="400">#FFFFFF</cards>
          <dealer x="704" y="427">#EDEEBC</dealer>
          <nickname x="696" y="518" w="91" h="44">#8C8C8C</nickname>
          <stack x="696" y="518" w="91" h="44">#00FF00</stack>
          <bet x="696" y="518" w="91" h="44">#FFFF00</bet>
       </opp>
       <opp num="9">
-         <cards x="535" y="458">#FFFFFF</cards>
+         <cards x="570" y="458">#FFFFFF</cards>
          <dealer x="597" y="508">#EDEEBC</dealer>
          <nickname x="530" y="569" w="91" h="44">#8C8C8C</nickname>
          <stack x="530" y="569" w="91" h="44">#00FF00</stack>

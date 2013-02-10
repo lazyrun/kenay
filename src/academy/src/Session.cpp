@@ -200,9 +200,15 @@ void Session::stat(Opp & opp)
          opp.setVpip(qreal(vpip) * 100. / qreal(cnt));
          opp.setFold(qreal(fold) * 100. / qreal(cnt));
 
-         cnt = cnt - (vpip - (pfr + limp));
-         opp.setPfr(qreal(pfr) * 100. / qreal(cnt));
-         opp.setLimp(qreal(limp) * 100. / qreal(cnt));
+         int vp_cnt = pfr + limp;
+         qreal pfr_prc =  qreal(pfr) * 100. / qreal(vp_cnt);
+         qreal lmp_prc =  qreal(limp) * 100. / qreal(vp_cnt);
+         
+         qreal pfr_cnt = vpip * pfr_prc / 100.;
+         qreal lmp_cnt = vpip * lmp_prc / 100.;
+
+         opp.setPfr(qreal(pfr_cnt) * 100. / qreal(cnt));
+         opp.setLimp(qreal(lmp_cnt) * 100. / qreal(cnt));
       }
    }
 }
