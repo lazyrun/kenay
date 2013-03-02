@@ -11,6 +11,7 @@
 #include "Solution.h"
 #include "HoleCards.h"
 #include "Session.h"
+#include "Comb.h"
 
 /*!
 \class Mind
@@ -100,34 +101,7 @@ public:
       //6. я участвую двумя картами сверху
       //7. я участвую двумя картами как-то иначе
    };
-   //! Возможные комбинации, без учета их силы
-   enum Combs
-   {
-      Trash,         //мусор
-      Card,          //старшая карта
-      Pair,          //пара    
-      TwoPair,       //две пары
-      ThreeOfKind,   //тройка
-      Straight,      //стрит
-      Flash,         //флеш
-      FullHouse,     //фулл
-      Care,          //каре
-      StraightFlash  //стрит флеш
-   };
       
-   //! Варианты имеющие шансы на усиление
-   // предполагается, что часть карт от этих дро есть на руках
-   enum Draws
-   {
-      OverCard,   // A2
-      OverCards,  // AK
-      BDStraight, // Бэкдорный стрит
-      BDFlash,    // Бэкдорный флеш
-      Gutshot,    // Гатшот
-      OESD,       // двусторонний или двойной белли бастер
-      FlashDraw1, //флеш дро с 1й картой
-      FlashDraw2, //флеш дро с 2мя картами
-   };
 
    enum PreflopPosition
    {
@@ -160,7 +134,7 @@ protected:
    //!
    QStringList parseRangeList(const QString & range) const;
    //!
-   Combs comb() const;
+   Comb::Combs comb() const;
 protected:
    //! Обработчик изображений
    CardProcessing * const proc_;

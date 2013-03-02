@@ -113,6 +113,9 @@ public:
    CardProcessing::Street street() {return mind_->street_;}
    QStringList board() {return mind_->board_;}
    QStringList parseRange(const QString & range) {return mind_->parseRange(range);}
+   void setHole(const HoleCards & hole) { mind_->hole_ = hole; }
+   void setBoard(const QStringList & board) { mind_->board_ = board; }
+   Comb::Combs comb() const {return mind_->comb();}
 protected:
    MindFLfull * mind_;
 };

@@ -26,7 +26,8 @@ namespace tut
    void testlogic::test<1>()
    {
       //проверка HoleCards
-      {HoleCards hole("Qs", "Ad");
+      {
+      HoleCards hole("Qs", "Ad");
       tensure(__FILE__, __LINE__, hole.fullName() == "AdQs");
       tensure(__FILE__, __LINE__, hole.suitedName() == "AQo");
       tensure(__FILE__, __LINE__, !hole.isSuited());
@@ -441,6 +442,42 @@ namespace tut
       tensure(__FILE__, __LINE__, p.board().join("") == "6cKhJc");
 
       }
+   }
+
+   template<>   template<>
+   void testlogic::test<9>()
+   {
+      MindFLfull mind(0, 0);
+      MindFLfullPrivate p(&mind);
+      {
+      HoleCards hole("Qs", "Qd");
+      QStringList board;
+      board << "Qc" << "Qd" << "Ts";
+      p.setHole(hole);
+      p.setBoard(board);
+      Comb::Combs comb = p.comb();
+      tensure(__FILE__, __LINE__, comb == Comb::Care);
+      }
+      {
+      HoleCards hole("Qs", "Ts");
+      QStringList board;
+      board << "3s" << "As" << "6s";
+      p.setHole(hole);
+      p.setBoard(board);
+      Comb::Combs comb = p.comb();
+      tensure(__FILE__, __LINE__, comb == Comb::Flash);
+      }
+      {
+      HoleCards hole("Qs", "Ts");
+      QStringList board;
+      board << "Qd" << "Td" << "Qcs";
+      p.setHole(hole);
+      p.setBoard(board);
+      Comb::Combs comb = p.comb();
+      tensure(__FILE__, __LINE__, comb == Comb::FullHouse);
+      }
+
+
    }
 
 }
