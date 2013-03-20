@@ -470,16 +470,167 @@ namespace tut
       {
       HoleCards hole("Qs", "Ts");
       QStringList board;
-      board << "Qd" << "Td" << "Qcs";
+      board << "Qd" << "Td" << "Qc";
       p.setHole(hole);
       p.setBoard(board);
       Comb::Combs comb = p.comb();
       tensure(__FILE__, __LINE__, comb == Comb::FullHouse);
       }
-
+      {
+      HoleCards hole("Qs", "Ts");
+      QStringList board;
+      board << "Ad" << "Kd" << "Jc";
+      p.setHole(hole);
+      p.setBoard(board);
+      Comb::Combs comb = p.comb();
+      tensure(__FILE__, __LINE__, comb == Comb::Straight);
+      }
+      {
+      HoleCards hole("Qs", "Ts");
+      QStringList board;
+      board << "Qd" << "Kd" << "Jc";
+      p.setHole(hole);
+      p.setBoard(board);
+      Comb::Combs comb = p.comb();
+      tensure(__FILE__, __LINE__, comb != Comb::Straight);
+      }
+      {
+      HoleCards hole("Qs", "Ts");
+      QStringList board;
+      board << "Jd" << "Kd";
+      p.setHole(hole);
+      p.setBoard(board);
+      Comb::Combs comb = p.comb();
+      tensure(__FILE__, __LINE__, comb != Comb::Straight);
+      }
+      {
+      HoleCards hole("8s", "6s");
+      QStringList board;
+      board << "7d" << "9d" << "Tc";
+      p.setHole(hole);
+      p.setBoard(board);
+      Comb::Combs comb = p.comb();
+      tensure(__FILE__, __LINE__, comb == Comb::Straight);
+      }
+      {
+      HoleCards hole("8s", "6s");
+      QStringList board;
+      board << "7d" << "9d" << "2c";
+      p.setHole(hole);
+      p.setBoard(board);
+      Comb::Combs comb = p.comb();
+      tensure(__FILE__, __LINE__, comb != Comb::Straight);
+      }
+      {
+      HoleCards hole("As", "Ac");
+      QStringList board;
+      board << "Ad" << "Kd" << "Qc";
+      p.setHole(hole);
+      p.setBoard(board);
+      Comb::Combs comb = p.comb();
+      tensure(__FILE__, __LINE__, comb != Comb::Straight);
+      }
+      {
+      HoleCards hole("As", "2c");
+      QStringList board;
+      board << "5d" << "4d" << "3c";
+      p.setHole(hole);
+      p.setBoard(board);
+      Comb::Combs comb = p.comb();
+      tensure(__FILE__, __LINE__, comb == Comb::Straight);
+      }
+      {
+      HoleCards hole("As", "2s");
+      QStringList board;
+      board << "5s" << "4s" << "3s";
+      p.setHole(hole);
+      p.setBoard(board);
+      Comb::Combs comb = p.comb();
+      tensure(__FILE__, __LINE__, comb == Comb::StraightFlash);
+      }
+      {
+      HoleCards hole("As", "7s");
+      QStringList board;
+      board << "5s" << "4s" << "3s";
+      p.setHole(hole);
+      p.setBoard(board);
+      Comb::Combs comb = p.comb();
+      tensure(__FILE__, __LINE__, comb != Comb::StraightFlash);
+      }
+      {
+      HoleCards hole("6s", "7s");
+      QStringList board;
+      board << "5s" << "4s" << "3c";
+      p.setHole(hole);
+      p.setBoard(board);
+      Comb::Combs comb = p.comb();
+      tensure(__FILE__, __LINE__, comb != Comb::StraightFlash);
+      }
+      {
+      HoleCards hole("6s", "7s");
+      QStringList board;
+      board << "6s" << "6s" << "3c";
+      p.setHole(hole);
+      p.setBoard(board);
+      Comb::Combs comb = p.comb();
+      tensure(__FILE__, __LINE__, comb == Comb::ThreeOfKind);
+      }
+      {
+      HoleCards hole("Js", "Jc");
+      QStringList board;
+      board << "5s" << "Jd" << "3c";
+      p.setHole(hole);
+      p.setBoard(board);
+      Comb::Combs comb = p.comb();
+      tensure(__FILE__, __LINE__, comb == Comb::ThreeOfKind);
+      }
+      {
+      HoleCards hole("8s", "Ts");
+      QStringList board;
+      board << "Ts" << "8s" << "3c";
+      p.setHole(hole);
+      p.setBoard(board);
+      Comb::Combs comb = p.comb();
+      tensure(__FILE__, __LINE__, comb == Comb::TwoPair);
+      }
+      {
+      HoleCards hole("8s", "8d");
+      QStringList board;
+      board << "5s" << "5d" << "9c";
+      p.setHole(hole);
+      p.setBoard(board);
+      Comb::Combs comb = p.comb();
+      tensure(__FILE__, __LINE__, comb == Comb::TwoPair);
+      }
+      {
+      HoleCards hole("As", "Ad");
+      QStringList board;
+      board << "5s" << "4s" << "3c";
+      p.setHole(hole);
+      p.setBoard(board);
+      Comb::Combs comb = p.comb();
+      tensure(__FILE__, __LINE__, comb == Comb::Pair);
+      }
+      {
+      HoleCards hole("As", "Qd");
+      QStringList board;
+      board << "Ad" << "Ts" << "Kc";
+      p.setHole(hole);
+      p.setBoard(board);
+      Comb::Combs comb = p.comb();
+      tensure(__FILE__, __LINE__, comb == Comb::Pair);
+      }
+      {
+      HoleCards hole("As", "Qd");
+      QStringList board;
+      board << "Kd" << "Ks" << "3c";
+      p.setHole(hole);
+      p.setBoard(board);
+      Comb::Combs comb = p.comb();
+      tensure(__FILE__, __LINE__, comb == Comb::Pair);
+      }
 
    }
-
 }
 
 //вычисление аутов

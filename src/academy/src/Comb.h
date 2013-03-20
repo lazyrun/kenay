@@ -18,7 +18,6 @@ public:
    enum Combs
    {
       Trash,         //мусор
-      Card,          //старшая карта
       Pair,          //пара    
       TwoPair,       //две пары
       ThreeOfKind,   //тройка
@@ -63,6 +62,12 @@ protected:
    bool isFlash(const QStringList & cards) const;
    //!
    bool isStraight(const QStringList & cards) const;
+   //!
+   bool isThreeOfKind(const QStringList & cards) const;
+   //!
+   bool isTwoPair(const QStringList & cards) const;
+   //!
+   bool isPair(const QStringList & cards) const;
 };
 
 #endif
