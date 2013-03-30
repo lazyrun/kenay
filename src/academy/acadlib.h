@@ -23,6 +23,7 @@ EXEC_IMPEX void ExecStart(showMessageCBFunc fun);
 EXEC_IMPEX void ExecStop();
 EXEC_IMPEX void ExecKill();
 EXEC_IMPEX void ExecName(char * buf, int sz);
+EXEC_IMPEX void ExecStartRoom();
 
 #ifdef __cplusplus
 }

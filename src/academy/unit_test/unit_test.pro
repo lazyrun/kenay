@@ -18,13 +18,13 @@ DEPENDPATH   += . ../../common/tut ../../common/utils ../src ../src/sqlite
 HEADERS +=  qtincludes.h TstUtils.h CardBase.h Config.h GlobVars.h \
             ProcAcad.h PotParser.h StackParser.h BetParser.h \
             Mind.h HoleCards.h DBManager.h Session.h Opp.h \
-            MindFL6max.h MindFLfull.h 
+            MindFL6max.h MindFLfull.h Comb.h
 
 SOURCES +=  main.cpp TstUtils.cpp Config.cpp ProcAcad.cpp GlobVars.cpp \
             PotParser.cpp StackParser.cpp BetParser.cpp \
             LogicTest.cpp ProcTest.cpp Mind.cpp HoleCards.cpp \
             DBManager.cpp Session.cpp Opp.cpp MindFL6max.cpp \
-            MindFLfull.cpp
+            MindFLfull.cpp Comb.cpp
 
 QMAKE_LIBDIR += ../lib
 win32: LIBS += acad_d.lib

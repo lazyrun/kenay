@@ -9,6 +9,7 @@ typedef void (*ExecStart)(showMessageCBFunc);
 typedef void (*ExecStop)();
 typedef void (*ExecKill)();
 typedef void (*ExecName)(char *, int);
+typedef void (*ExecStartRoom)();
 
 class QxtGlobalShortcut;
 class Agent : public QObject
@@ -33,6 +34,8 @@ private slots:
    void exit();
    //!
    void iconActivated(QSystemTrayIcon::ActivationReason);
+   //!
+   void startRoom();
 private:
    void setupUi();
    //!
@@ -57,6 +60,7 @@ private:
    QList<ExecStop> f_stopList_;
    QList<ExecKill> f_killList_;
    QList<ExecName> f_nameList_;
+   ExecStartRoom f_room;
 };
 
 #endif

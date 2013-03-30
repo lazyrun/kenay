@@ -1,6 +1,6 @@
 #include "Agent.h"
 #include "qxtglobalshortcut.h"
-#include "SettingsData.h"
+//#include "SettingsData.h"
 
 static QSystemTrayIcon * trayIcon_;
 
@@ -92,7 +92,7 @@ void Agent::load(const QString & module)
    QSettings settings(regKey, "Config");
    
    QVariant sett = settings.value("Settings");
-   SettingsData data = qvariant_cast<SettingsData>(sett);
+   //SettingsData data = qvariant_cast<SettingsData>(sett);
 
    if (module.isEmpty())
    {
@@ -116,7 +116,8 @@ void Agent::load(const QString & module)
       ExecStop f_stop   = (ExecStop)  QLibrary::resolve(module, "ExecStop");
       ExecKill f_kill   = (ExecKill)  QLibrary::resolve(module, "ExecKill");
       ExecName f_name   = (ExecName)  QLibrary::resolve(module, "ExecName");
-      if (f_start && f_stop && f_kill && f_name)
+      f_room            = (ExecStartRoom)  QLibrary::resolve(module, "ExecStartRoom");
+      if (f_start && f_stop && f_kill && f_name && f_room)
       {
          loadedModules_.append(module);
          
@@ -132,18 +133,22 @@ void Agent::load(const QString & module)
             QSystemTrayIcon::Information, 5000);
          trayIcon_->setToolTip(tr("Kenay for %1.").arg(name));
 
-         if (f_start)
-         {
-            f_start(showMessageCallbackFunc);
-            stopShortcut_->setEnabled(true);
-            stopAction_->setEnabled(true);
+         //запуск рума по рассписанию
+         int n = -1;
+         n = 5000;
+         QTimer::singleShot(n, this, SLOT(startRoom()));
+         //if (f_start)
+         //{
+         //   f_start(showMessageCallbackFunc);
+         //   stopShortcut_->setEnabled(true);
+         //   stopAction_->setEnabled(true);
 
-            restartShortcut_->setEnabled(true);
-            restartAction_->setEnabled(true);
+         //   restartShortcut_->setEnabled(true);
+         //   restartAction_->setEnabled(true);
 
-            startShortcut_->setEnabled(false);
-            startAction_->setEnabled(false);
-         }
+         //   startShortcut_->setEnabled(false);
+         //   startAction_->setEnabled(false);
+         //}
       }
       else
       {
@@ -219,3 +224,8 @@ void Agent::exit()
    qApp->quit();
 }
 
+void Agent::startRoom()
+{
+   if (f_room)
+      f_room();
+}

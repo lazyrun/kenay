@@ -9,10 +9,10 @@
 ProcAcad::ProcAcad(const QString & mapfile)
 : CardProcessing()
 {
-   QString fn = ConfigGlobal<MainConfig>::Instance(mapfile, "root").fileName();
-   QString rn = ConfigGlobal<MainConfig>::Instance(mapfile, "root").rootName();
+   QString fn = ConfigGlobal<MapConfig>::Instance(mapfile, "root").fileName();
+   QString rn = ConfigGlobal<MapConfig>::Instance(mapfile, "root").rootName();
    if (fn != mapfile)
-      ConfigGlobal<MainConfig>::Instance(mapfile, "root").init(mapfile, rn);
+      ConfigGlobal<MapConfig>::Instance(mapfile, "root").init(mapfile, rn);
 }
 
 ProcAcad::~ProcAcad()
@@ -23,7 +23,7 @@ bool ProcAcad::hasFold() const
 {
    //контрольная точка фолда
    Settings & config = 
-      ConfigGlobal<MainConfig>::Instance();
+      ConfigGlobal<MapConfig>::Instance();
    //цвет
    QString scl =
       config.settingValue("buttons", "fold", "control", "").toString();
@@ -37,7 +37,7 @@ bool ProcAcad::hasFold() const
 CardProcessing::Street ProcAcad::street()
 {
    Settings & config = 
-      ConfigGlobal<MainConfig>::Instance();
+      ConfigGlobal<MapConfig>::Instance();
    //цвет
    QString scl =
       config.settingValue("river", "").toString();
@@ -78,7 +78,7 @@ bool ProcAcad::hasCall() const
 {
    //контрольная точка кола
    Settings & config = 
-      ConfigGlobal<MainConfig>::Instance();
+      ConfigGlobal<MapConfig>::Instance();
    //цвет
    QString scl =
       config.settingValue("buttons", "call", "control", "").toString();
@@ -93,7 +93,7 @@ bool ProcAcad::hasCheck() const
 {
    //контрольная точка чека
    Settings & config = 
-      ConfigGlobal<MainConfig>::Instance();
+      ConfigGlobal<MapConfig>::Instance();
    //цвет
    QString scl =
       config.settingValue("buttons", "check", "control", "").toString();
@@ -108,7 +108,7 @@ bool ProcAcad::hasRaise() const
 {
    //контрольная точка рейза
    Settings & config = 
-      ConfigGlobal<MainConfig>::Instance();
+      ConfigGlobal<MapConfig>::Instance();
    //цвет
    QString scl =
       config.settingValue("buttons", "raise", "control", "").toString();
@@ -123,7 +123,7 @@ bool ProcAcad::isDealer() const
 {
    //контрольная точка фошки дилера
    Settings & config = 
-      ConfigGlobal<MainConfig>::Instance();
+      ConfigGlobal<MapConfig>::Instance();
    //цвет
    QString scl =
       config.settingValue("dealer", "").toString();
@@ -137,7 +137,7 @@ bool ProcAcad::isDealer() const
 QString ProcAcad::holeCard(const QString & scard) const
 {
    Settings & config = 
-      ConfigGlobal<MainConfig>::Instance();
+      ConfigGlobal<MapConfig>::Instance();
    QScopedArrayPointer<char> card(new char[scard.length() + 1]);
    strcpy(card.data(), scard.toStdString().c_str());
    //снимаем координтаты
@@ -171,7 +171,7 @@ QString ProcAcad::holeCard(const QString & scard) const
 qreal ProcAcad::pot() const
 {
    Settings & config = 
-      ConfigGlobal<MainConfig>::Instance();
+      ConfigGlobal<MapConfig>::Instance();
    //цвет
    QString scl =
       config.settingValue("pot", "").toString();
@@ -242,7 +242,7 @@ qreal ProcAcad::pot() const
 qreal ProcAcad::stack() const
 {
    Settings & config = 
-      ConfigGlobal<MainConfig>::Instance();
+      ConfigGlobal<MapConfig>::Instance();
    //цвет
    QString scl =
       config.settingValue("stack", "").toString();
@@ -325,7 +325,7 @@ Opp ProcAcad::opp(const QString & num)
    if (oppMap_.isEmpty())
    {
       Settings & config = 
-         ConfigGlobal<MainConfig>::Instance();
+         ConfigGlobal<MapConfig>::Instance();
       
       QDomElement & rootNode = config.root();
       QDomElement oppsNode = rootNode.firstChildElement("opps");
@@ -524,7 +524,7 @@ void ProcAcad::parseOppBet(const QDomNode & dnOpp, Opp & opp)
             return;
 
          Settings & config = 
-            ConfigGlobal<MainConfig>::Instance();
+            ConfigGlobal<MapConfig>::Instance();
          //
          QString ssb =
             config.settingValue("smallblind", "").toString();
@@ -651,7 +651,7 @@ const QRect ProcAcad::betRect() const
 const QRect ProcAcad::buttonRect(const char * btn) const
 {
    Settings & config = 
-      ConfigGlobal<MainConfig>::Instance();
+      ConfigGlobal<MapConfig>::Instance();
    
    QString sx = config.settingAttribute("x", "buttons", btn, "");
    QString sy = config.settingAttribute("y", "buttons", btn, "");
@@ -683,7 +683,7 @@ QStringList ProcAcad::board() const
 QString ProcAcad::boardCard(const QString & scard) const
 {
    Settings & config = 
-      ConfigGlobal<MainConfig>::Instance();
+      ConfigGlobal<MapConfig>::Instance();
    QScopedArrayPointer<char> card(new char[scard.length() + 1]);
    strcpy(card.data(), scard.toStdString().c_str());
 

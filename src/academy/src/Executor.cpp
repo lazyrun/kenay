@@ -141,3 +141,20 @@ HWND Executor::findTables(const QString & tClass, HWND BeginHandle)
    return NULL;
 }
 */
+
+void Executor::startRoom()
+{
+   //запуск рума и выбор стола
+   QString path = "conf/acad_room.xml";
+   Settings & config = 
+      ConfigGlobal<RoomConfig>::Instance(path, "root");
+   QString roomPath =
+      config.settingValue("path", "").toString();
+
+   if (QFile::exists(roomPath))
+      QProcess::startDetached(roomPath, QStringList());
+   else
+      cbFun(QString("Path not found: %1").arg(roomPath).toStdString().c_str());
+
+
+}

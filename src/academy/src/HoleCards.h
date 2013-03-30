@@ -21,8 +21,11 @@ public:
    QString suitedName()  const;
    //! номиналы
    QString nominalName() const;
-
-   //! признак одномастности
+   //!
+   QString first() const { return first_; }
+   //!
+   QString second() const { return second_; }
+   //! Признак одномастности
    bool isSuited() const;
 protected:
    //! первая карта

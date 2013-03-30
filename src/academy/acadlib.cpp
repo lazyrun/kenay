@@ -26,3 +26,7 @@ EXEC_IMPEX void ExecName(char * buf, int sz)
       strcpy(buf, "Poker Academy");
 }
 
+EXEC_IMPEX void ExecStartRoom()
+{
+   s_ex->startRoom();
+}

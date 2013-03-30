@@ -24,6 +24,7 @@ public slots:
    void start();
    void stop();
    void exit();
+   void startRoom();
 protected:
    int timer_id_;
    int interval_;

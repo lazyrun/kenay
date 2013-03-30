@@ -199,7 +199,11 @@ QStringList Mind::parseRange(const QString & range) const
    return lst;
 }
 
-Mind::Combs Mind::comb() const
+Comb::Combs Mind::comb() const
 {
-   return Trash;
+   QStringList cards;
+   cards << hole_.first() << hole_.second() << board_;
+   
+   Comb comb;
+   return comb.getComb(cards);
 }

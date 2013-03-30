@@ -16,14 +16,10 @@ RESOURCES += resources/agent.qrc
 
 # Input
 HEADERS += Agent.h \
-           qtincludes.h \
-           SettingsData.h \
-           RangesData.h
+           qtincludes.h
 
 SOURCES += main.cpp \
-           Agent.cpp \
-           SettingsData.cpp \
-           RangesData.cpp
+           Agent.cpp
            
 win32:RC_FILE = resources/agent.rc
 win32:DEFINES += _CRT_SECURE_NO_DEPRECATE
